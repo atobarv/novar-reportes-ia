@@ -4,8 +4,8 @@ Prototipo final (v1.1) del proyecto de titulación de la **Maestría en Intelige
 (UDLA – FICA)**. Autor: Julio Alejandro Tobar Valencia · Tutor: MSc. Paulo Guerra Terán ·
 Sponsor: Novar Agencia (Quito, Ecuador).
 
-
-
+**Demo (video):** https://drive.google.com/file/d/1DMhVk4nvT4OnvS_TD2CkKdzhl3Ulc-r3/view?usp=sharing
+**Repositorio:** https://github.com/atobarv/novar-reportes-ia
 
 ## 1. Problema
 En Novar Agencia la consolidación mensual de métricas (Meta Ads, Google Ads, GA4 y CRM) y la redacción
@@ -114,7 +114,7 @@ origen: Exportaciones de Novar Agencia (dataset_marketing_novar_agencia.csv) (si
 (18 h → 0.50 h por cliente,
 incluida la revisión humana) y ahorro aproximado de USD 1,750 al mes.
 
-**Pruebas automatizadas:** ============================== 7 passed in 3.02s ===============================
+**Pruebas automatizadas:** ============================== 7 passed in 3.16s ===============================
 
 ## 8. Ética, privacidad y limitaciones
 Seudonimización SHA-256 con sal (LOPDP Ecuador), LLM local sin envío de datos a terceros, explicabilidad

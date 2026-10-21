@@ -9,4 +9,4 @@ tests/test_pipeline.py::test_modelo_supera_umbral PASSED                 [ 71%]
 tests/test_pipeline.py::test_guardrail_detecta_cifras_inventadas_y_mal_atribuidas PASSED [ 85%]
 tests/test_pipeline.py::test_reporte_contiene_estado_y_recomendacion PASSED [100%]
 
-============================== 7 passed in 3.02s ===============================
+============================== 7 passed in 3.16s ===============================
