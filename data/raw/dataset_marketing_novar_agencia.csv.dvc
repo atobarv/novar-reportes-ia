@@ -1,0 +1,5 @@
+outs:
+- md5: 0707a36c6d9bb46e5ba042bbc0fb7a30
+  size: 77150
+  hash: md5
+  path: dataset_marketing_novar_agencia.csv

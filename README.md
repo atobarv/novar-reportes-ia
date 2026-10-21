@@ -114,7 +114,7 @@ origen: Exportaciones de Novar Agencia (dataset_marketing_novar_agencia.csv) (si
 (18 h → 0.50 h por cliente,
 incluida la revisión humana) y ahorro aproximado de USD 1,750 al mes.
 
-**Pruebas automatizadas:** ============================== 7 passed in 3.08s ===============================
+**Pruebas automatizadas:** ============================== 7 passed in 3.02s ===============================
 
 ## 8. Ética, privacidad y limitaciones
 Seudonimización SHA-256 con sal (LOPDP Ecuador), LLM local sin envío de datos a terceros, explicabilidad
