@@ -1,0 +1,9 @@
+principio,estado,evidencia
+Transparencia / explicabilidad,Cumple,"TreeSHAP global y local, LIME y factores SHAP en cada reporte"
+Confiabilidad y seguridad,Cumple,Guardrail numérico: toda cifra se verifica contra datos calculados en Python
+Justicia y no discriminación,Cumple con monitoreo,Brecha de accuracy entre escalas presupuestarias: 9.2%; uso de variables relativas
+Privacidad (LOPDP Ecuador),Cumple,Seudonimización SHA-256 con sal; mapeo fuera del repositorio; LLM local sin envío a terceros
+Responsabilidad / rendición de cuentas,Cumple,Protocolo HITL: firma obligatoria del Director de Cuenta antes del envío
+Autonomía humana,Cumple,El sistema es copiloto; no envía reportes ni modifica campañas
+Beneficencia / sostenibilidad,Cumple,LLM de 1.5B en fp16 (bajo consumo) frente a modelos de API de gran escala
+Trazabilidad y reproducibilidad,Cumple,"Semilla 42, huella SHA-256 de datos y versionado DVC"

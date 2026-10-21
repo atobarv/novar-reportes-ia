@@ -1,0 +1,7 @@
+|--- roas <= 2.80
+|   |--- roas <= 1.81
+|   |   |--- class: Crítico
+|   |--- roas >  1.81
+|   |   |--- class: Alerta
+|--- roas >  2.80
+|   |--- class: Óptimo

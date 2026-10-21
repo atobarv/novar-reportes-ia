@@ -1,0 +1,560 @@
+{
+  "datos": {
+    "origen": "Exportaciones de Novar Agencia (dataset_marketing_novar_agencia.csv)",
+    "origen_etiqueta": "etiqueta del dataset (criterio experto)",
+    "registros": 182,
+    "cuentas": 14,
+    "plataformas": [
+      "No especificada"
+    ],
+    "rango_fechas": [
+      "2025-01-01",
+      "2026-01-01"
+    ],
+    "distribucion_clases": {
+      "Óptimo": 76,
+      "Alerta": 74,
+      "Crítico": 32
+    },
+    "calidad": {
+      "filas_entrada": 182,
+      "columnas_excluidas_por_fuga": [
+        "status_code"
+      ],
+      "nulos_numericos": {
+        "gasto_usd": 0,
+        "impresiones": 0,
+        "clics": 0,
+        "conversiones": 0,
+        "ingresos_usd": 0
+      },
+      "valores_negativos": {
+        "gasto_usd": 0,
+        "impresiones": 0,
+        "clics": 0,
+        "conversiones": 0,
+        "ingresos_usd": 0
+      },
+      "duplicados_eliminados": 0,
+      "filas_sin_actividad_eliminadas": 0,
+      "filas_salida": 182,
+      "clientes": 14,
+      "plataformas": [
+        "No especificada"
+      ]
+    },
+    "huella_sha256": {
+      "archivo": "dataset_procesado.csv",
+      "sha256": "25ea0f0d411bbf88858b8044ab6c82de7078c4549a591483cc3be7dfbc95d5a7",
+      "bytes": 98125
+    },
+    "features_base": [
+      "gasto_usd",
+      "impresiones",
+      "clics",
+      "conversiones",
+      "ingresos_usd",
+      "ctr",
+      "roas",
+      "cpa_usd"
+    ],
+    "features_nuevas": [
+      "cvr",
+      "profit_usd",
+      "cpm_usd"
+    ],
+    "verticales": {
+      "Ecommerce": 65,
+      "B2B_Servicios": 26,
+      "Salud_Clinica": 26,
+      "Inmobiliario": 13,
+      "Educacion": 13,
+      "Automotriz": 13,
+      "Retail": 13,
+      "Gastronomia": 13
+    },
+    "tiene_referencias_expertas": true,
+    "inversion_total_usd": 322984.17,
+    "ingresos_totales_usd": 903802.53
+  },
+  "modelado": {
+    "validacion": "5-Fold Stratified Cross-Validation (shuffle, semilla 42)",
+    "modelos": {
+      "Regresión Logística (baseline)": {
+        "train_accuracy": 0.9423,
+        "val_accuracy": 0.9182,
+        "val_accuracy_std": 0.0539,
+        "val_f1_weighted": 0.9181,
+        "val_f1_weighted_std": 0.0525,
+        "val_precision_weighted": 0.9282,
+        "val_recall_weighted": 0.9182,
+        "brecha_train_val_accuracy": 0.0241,
+        "n_features": 8,
+        "fit_time_s": 0.0687
+      },
+      "Árbol de Decisión d=3 (baseline)": {
+        "train_accuracy": 1.0,
+        "val_accuracy": 1.0,
+        "val_accuracy_std": 0.0,
+        "val_f1_weighted": 1.0,
+        "val_f1_weighted_std": 0.0,
+        "val_precision_weighted": 1.0,
+        "val_recall_weighted": 1.0,
+        "brecha_train_val_accuracy": 0.0,
+        "n_features": 8,
+        "fit_time_s": 0.0127
+      },
+      "Random Forest + RobustScaler (ajustado)": {
+        "train_accuracy": 0.9986,
+        "val_accuracy": 0.9617,
+        "val_accuracy_std": 0.0372,
+        "val_f1_weighted": 0.9596,
+        "val_f1_weighted_std": 0.0395,
+        "val_precision_weighted": 0.9643,
+        "val_recall_weighted": 0.9617,
+        "brecha_train_val_accuracy": 0.0369,
+        "n_features": 11,
+        "fit_time_s": 0.3203
+      }
+    },
+    "ablacion_rf_sin_variables_negocio": {
+      "train_accuracy": 0.9959,
+      "val_accuracy": 0.9452,
+      "val_accuracy_std": 0.0343,
+      "train_f1_weighted": 0.9959,
+      "val_f1_weighted": 0.9448,
+      "val_f1_weighted_std": 0.0341,
+      "train_precision_weighted": 0.996,
+      "val_precision_weighted": 0.9515,
+      "val_precision_weighted_std": 0.0279,
+      "train_recall_weighted": 0.9959,
+      "val_recall_weighted": 0.9452,
+      "val_recall_weighted_std": 0.0343,
+      "brecha_train_val_accuracy": 0.0507,
+      "fit_time_s": 0.2254
+    },
+    "busqueda_hiperparametros": {
+      "mejor": {
+        "max_depth": 6,
+        "n_estimators": 50
+      },
+      "mejor_f1_val": 0.9943,
+      "top5": [
+        {
+          "n_estimators": 50,
+          "max_depth": "6",
+          "f1_train": 1.0,
+          "f1_val": 0.9943,
+          "f1_val_std": 0.0114,
+          "brecha": 0.0057
+        },
+        {
+          "n_estimators": 200,
+          "max_depth": "None",
+          "f1_train": 1.0,
+          "f1_val": 0.9889,
+          "f1_val_std": 0.0222,
+          "brecha": 0.0111
+        },
+        {
+          "n_estimators": 100,
+          "max_depth": "6",
+          "f1_train": 1.0,
+          "f1_val": 0.9889,
+          "f1_val_std": 0.0222,
+          "brecha": 0.0111
+        },
+        {
+          "n_estimators": 100,
+          "max_depth": "None",
+          "f1_train": 1.0,
+          "f1_val": 0.9889,
+          "f1_val_std": 0.0222,
+          "brecha": 0.0111
+        },
+        {
+          "n_estimators": 50,
+          "max_depth": "None",
+          "f1_train": 1.0,
+          "f1_val": 0.9889,
+          "f1_val_std": 0.0222,
+          "brecha": 0.0111
+        }
+      ]
+    },
+    "reporte_por_clase_rf": {
+      "Alerta": {
+        "precision": 0.9240506329113924,
+        "recall": 0.9864864864864865,
+        "f1-score": 0.954248366013072,
+        "support": 74.0
+      },
+      "Crítico": {
+        "precision": 0.9629629629629629,
+        "recall": 0.8125,
+        "f1-score": 0.8813559322033898,
+        "support": 32.0
+      },
+      "Óptimo": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 76.0
+      }
+    },
+    "configuracion_final": "RobustScaler + RandomForest(n_estimators=50, max_depth=4, random_state=42)",
+    "reglas_arbol_baseline": "|--- roas <= 2.80\n|   |--- roas <= 1.81\n|   |   |--- class: Crítico\n|   |--- roas >  1.81\n|   |   |--- class: Alerta\n|--- roas >  2.80\n|   |--- class: Óptimo\n"
+  },
+  "robustez": {
+    "diseno": "5 niveles de ruido de etiqueta (0–20 %) × 4 de atribución (σ 0–0.20 lognormal en gasto e ingresos, KPIs recalculados) × 5-Fold × 5 repeticiones con números aleatorios comunes",
+    "resumen": [
+      {
+        "modelo": "Random Forest + RobustScaler (ajustado)",
+        "accuracy_datos_limpios": 0.9615,
+        "indice_robustez": 0.8383,
+        "accuracy_ruido_severo": 0.8087,
+        "peor_caso": 0.6912,
+        "caida_vs_limpio": 0.1232
+      },
+      {
+        "modelo": "Random Forest d=6 (mejor F1 en datos limpios)",
+        "accuracy_datos_limpios": 0.9813,
+        "indice_robustez": 0.8349,
+        "accuracy_ruido_severo": 0.7968,
+        "peor_caso": 0.686,
+        "caida_vs_limpio": 0.1464
+      },
+      {
+        "modelo": "Árbol de Decisión d=3 (baseline)",
+        "accuracy_datos_limpios": 1.0,
+        "indice_robustez": 0.8185,
+        "accuracy_ruido_severo": 0.7708,
+        "peor_caso": 0.6583,
+        "caida_vs_limpio": 0.1815
+      },
+      {
+        "modelo": "Regresión Logística (baseline)",
+        "accuracy_datos_limpios": 0.9057,
+        "indice_robustez": 0.7912,
+        "accuracy_ruido_severo": 0.7576,
+        "peor_caso": 0.6894,
+        "caida_vs_limpio": 0.1145
+      }
+    ],
+    "modelo_mas_robusto": "Random Forest + RobustScaler (ajustado)"
+  },
+  "interpretabilidad": {
+    "importancia_global": [
+      {
+        "feature": "roas",
+        "media_abs_shap": 0.1886,
+        "peso_pct": 50.4208
+      },
+      {
+        "feature": "profit_usd",
+        "media_abs_shap": 0.0747,
+        "peso_pct": 19.9845
+      },
+      {
+        "feature": "cpa_usd",
+        "media_abs_shap": 0.0472,
+        "peso_pct": 12.6273
+      },
+      {
+        "feature": "cvr",
+        "media_abs_shap": 0.021,
+        "peso_pct": 5.6096
+      },
+      {
+        "feature": "ingresos_usd",
+        "media_abs_shap": 0.015,
+        "peso_pct": 3.9985
+      },
+      {
+        "feature": "gasto_usd",
+        "media_abs_shap": 0.0081,
+        "peso_pct": 2.1572
+      },
+      {
+        "feature": "clics",
+        "media_abs_shap": 0.0079,
+        "peso_pct": 2.1238
+      },
+      {
+        "feature": "conversiones",
+        "media_abs_shap": 0.0041,
+        "peso_pct": 1.0942
+      },
+      {
+        "feature": "impresiones",
+        "media_abs_shap": 0.0037,
+        "peso_pct": 0.9849
+      },
+      {
+        "feature": "cpm_usd",
+        "media_abs_shap": 0.0028,
+        "peso_pct": 0.741
+      },
+      {
+        "feature": "ctr",
+        "media_abs_shap": 0.001,
+        "peso_pct": 0.2581
+      }
+    ],
+    "peso_trafico_bruto_max_pct": 2.12,
+    "caso_lime": {
+      "cliente": "CLI-e20f235a",
+      "prediccion": "Alerta",
+      "explicacion": [
+        [
+          "roas <= 1.96",
+          0.0852
+        ],
+        [
+          "1318.91 < profit_usd <= 2595.82",
+          0.0659
+        ],
+        [
+          "cpa_usd <= 23.57",
+          -0.0373
+        ],
+        [
+          "cvr > 1.33",
+          -0.0305
+        ],
+        [
+          "4516.09 < ingresos_usd <= 6709.68",
+          0.024
+        ],
+        [
+          "1.64 < ctr <= 2.19",
+          0.0182
+        ]
+      ]
+    },
+    "concordancia_shap_lime_top3": 0.88,
+    "casos_concordancia": 25
+  },
+  "etica": {
+    "auditoria_escala": [
+      {
+        "grupo": "Grande",
+        "n": 52,
+        "accuracy": 1.0,
+        "f1_weighted": 1.0,
+        "tasa_critico_real": 0.0385,
+        "tasa_critico_predicha": 0.0385
+      },
+      {
+        "grupo": "Mediana",
+        "n": 65,
+        "accuracy": 0.9077,
+        "f1_weighted": 0.9068,
+        "tasa_critico_real": 0.4615,
+        "tasa_critico_predicha": 0.3692
+      },
+      {
+        "grupo": "Pyme",
+        "n": 65,
+        "accuracy": 0.9846,
+        "f1_weighted": 0.9921,
+        "tasa_critico_real": 0.0,
+        "tasa_critico_predicha": 0.0154
+      }
+    ],
+    "dimension_categoria": "vertical de negocio",
+    "auditoria_categoria": [
+      {
+        "grupo": "Automotriz",
+        "n": 13,
+        "accuracy": 0.8462,
+        "f1_weighted": 0.9167,
+        "tasa_critico_real": 1.0,
+        "tasa_critico_predicha": 0.8462
+      },
+      {
+        "grupo": "B2B_Servicios",
+        "n": 26,
+        "accuracy": 0.9231,
+        "f1_weighted": 0.8864,
+        "tasa_critico_real": 0.0769,
+        "tasa_critico_predicha": 0.0
+      },
+      {
+        "grupo": "Ecommerce",
+        "n": 65,
+        "accuracy": 0.9692,
+        "f1_weighted": 0.9545,
+        "tasa_critico_real": 0.0308,
+        "tasa_critico_predicha": 0.0
+      },
+      {
+        "grupo": "Educacion",
+        "n": 13,
+        "accuracy": 0.9231,
+        "f1_weighted": 0.9599,
+        "tasa_critico_real": 0.0,
+        "tasa_critico_predicha": 0.0769
+      },
+      {
+        "grupo": "Gastronomia",
+        "n": 13,
+        "accuracy": 1.0,
+        "f1_weighted": 1.0,
+        "tasa_critico_real": 0.0,
+        "tasa_critico_predicha": 0.0
+      },
+      {
+        "grupo": "Inmobiliario",
+        "n": 13,
+        "accuracy": 1.0,
+        "f1_weighted": 1.0,
+        "tasa_critico_real": 1.0,
+        "tasa_critico_predicha": 1.0
+      },
+      {
+        "grupo": "Retail",
+        "n": 13,
+        "accuracy": 1.0,
+        "f1_weighted": 1.0,
+        "tasa_critico_real": 0.0,
+        "tasa_critico_predicha": 0.0
+      },
+      {
+        "grupo": "Salud_Clinica",
+        "n": 26,
+        "accuracy": 1.0,
+        "f1_weighted": 1.0,
+        "tasa_critico_real": 0.0769,
+        "tasa_critico_predicha": 0.0769
+      }
+    ],
+    "brecha_accuracy_escala": 0.0923,
+    "brecha_accuracy_categoria": 0.1538,
+    "checklist": [
+      {
+        "principio": "Transparencia / explicabilidad",
+        "estado": "Cumple",
+        "evidencia": "TreeSHAP global y local, LIME y factores SHAP en cada reporte"
+      },
+      {
+        "principio": "Confiabilidad y seguridad",
+        "estado": "Cumple",
+        "evidencia": "Guardrail numérico: toda cifra se verifica contra datos calculados en Python"
+      },
+      {
+        "principio": "Justicia y no discriminación",
+        "estado": "Cumple con monitoreo",
+        "evidencia": "Brecha de accuracy entre escalas presupuestarias: 9.2%; uso de variables relativas"
+      },
+      {
+        "principio": "Privacidad (LOPDP Ecuador)",
+        "estado": "Cumple",
+        "evidencia": "Seudonimización SHA-256 con sal; mapeo fuera del repositorio; LLM local sin envío a terceros"
+      },
+      {
+        "principio": "Responsabilidad / rendición de cuentas",
+        "estado": "Cumple",
+        "evidencia": "Protocolo HITL: firma obligatoria del Director de Cuenta antes del envío"
+      },
+      {
+        "principio": "Autonomía humana",
+        "estado": "Cumple",
+        "evidencia": "El sistema es copiloto; no envía reportes ni modifica campañas"
+      },
+      {
+        "principio": "Beneficencia / sostenibilidad",
+        "estado": "Cumple",
+        "evidencia": "LLM de 1.5B en fp16 (bajo consumo) frente a modelos de API de gran escala"
+      },
+      {
+        "principio": "Trazabilidad y reproducibilidad",
+        "estado": "Cumple",
+        "evidencia": "Semilla 42, huella SHA-256 de datos y versionado DVC"
+      }
+    ]
+  },
+  "generativo": {
+    "modelo": "Qwen/Qwen2.5-1.5B-Instruct",
+    "dispositivo": "Tesla T4",
+    "precision": "fp16",
+    "max_new_tokens": 140,
+    "temperatura": 0.1,
+    "n_test_ciego": 28,
+    "accuracy_clasificador_test_ciego": 1.0,
+    "latencia_media_s": 6.104,
+    "latencia_p95_s": 6.222,
+    "throughput_tokens_s": 22.94,
+    "fidelidad_existencia_llm_crudo": 0.9643,
+    "fidelidad_numerica_llm_crudo": 0.9643,
+    "pct_salidas_truncadas": 1.0,
+    "pct_reintento": 0.0,
+    "pct_fallback_plantilla": 0.0357,
+    "fidelidad_numerica_final": 1.0,
+    "rougeL_vs_plantilla_experta": 0.7297,
+    "bleu_vs_plantilla_experta": 0.5323,
+    "rougeL_vs_referencia_dataset": 0.2292,
+    "bleu_vs_referencia_dataset": 0.0493,
+    "palabras_media": 55.0,
+    "ejemplos": [
+      {
+        "cliente": "CLI-e20f235a",
+        "periodo": "abril de 2025",
+        "estado_predicho": "Alerta",
+        "fuente_final": "llm",
+        "texto_final": "En abril de 2025, la cuenta CLI-e20f235a invirtió $2,740.30 y generó $5,727.23 en ingresos atribuidos, con un ROAS de 2.09 y un CPA de $65.25. El ROAS mejoró +1.5 % frente al mes anterior y el CPA aumentó +20.9 %, lo que ha llevado a una clasificación de Alerta (confianza 89.7 %) según el modelo. Los factores determinantes son principalmente el ROAS y el CPA."
+      },
+      {
+        "cliente": "CLI-66e41f6f",
+        "periodo": "febrero de 2025",
+        "estado_predicho": "Alerta",
+        "fuente_final": "llm",
+        "texto_final": "En febrero de 2025, la cuenta CLI-66e41f6f invirtió $1,125.51 y generó $2,746.24 en ingresos atribuidos, con un ROAS de 2.44 y un CPA de $26.80. El ROAS mejoró +11.4 % frente al mes anterior y el CPA disminuyó -60.8 %. El modelo clasifica el desempeño como Alerta (confianza 69.1 %), explicado principalmente por el ROAS y la tasa de conversión."
+      },
+      {
+        "cliente": "CLI-d8542c30",
+        "periodo": "mayo de 2025",
+        "estado_predicho": "Crítico",
+        "fuente_final": "llm",
+        "texto_final": "En mayo de 2025, la cuenta CLI-d8542c30 invirtió $569.23 y generó $626.15 en ingresos atribuidos, con un ROAS de 1.10 y un CPA de $94.87. El ROAS disminuyó -33.3 % y el CPA aumentó +70.3 % respecto al mes anterior, lo que lleva a un estado clasificado como Crítico (confianza 92.0 %). Los factores determinantes son principalmente el ROAS y el CPA."
+      }
+    ]
+  },
+  "impacto": {
+    "segundos_automaticos_por_reporte": 6.63,
+    "minutos_revision_hitl_supuesto": 30,
+    "minutos_por_cliente_antes": 1080,
+    "minutos_por_cliente_despues": 30.11,
+    "reduccion_tiempo_pct": 0.9721,
+    "horas_ahorradas_mes": 70.0,
+    "ahorro_mensual_usd": 1749.82,
+    "costo_manual_mensual_usd": 1800,
+    "reportes_generados": 14
+  },
+  "entorno": {
+    "python": "3.13.15",
+    "gpu": "Tesla T4, 15360 MiB",
+    "versiones": {
+      "pandas": "2.2.3",
+      "numpy": "2.1.3",
+      "scikit-learn": "1.6.1",
+      "shap": "0.54.1",
+      "lime": "0.2.0.1",
+      "torch": "2.11.0+cu130",
+      "transformers": "5.20.1",
+      "accelerate": "1.15.0",
+      "streamlit": "1.66.0",
+      "weasyprint": "70.0",
+      "rouge-score": "0.1.2",
+      "sacrebleu": "2.6.0",
+      "joblib": "1.6.0",
+      "matplotlib": "3.10.0",
+      "openpyxl": "3.1.5",
+      "pytest": "8.4.2"
+    },
+    "fecha_ejecucion": "2026-10-21T06:34:08",
+    "pytest": "============================== 7 passed in 3.08s ===============================",
+    "demo_url": "",
+    "repo_url": ""
+  }
+}

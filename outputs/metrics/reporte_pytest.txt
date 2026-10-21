@@ -1,0 +1,12 @@
+============================= test session starts ==============================
+collecting ... collected 7 items
+
+tests/test_pipeline.py::test_kpis_deterministas PASSED                   [ 14%]
+tests/test_pipeline.py::test_kpis_sin_conversiones_no_divide_por_cero PASSED [ 28%]
+tests/test_pipeline.py::test_limpieza_formatos_y_fuga PASSED             [ 42%]
+tests/test_pipeline.py::test_seudonimizacion_consistente_y_no_reversible PASSED [ 57%]
+tests/test_pipeline.py::test_modelo_supera_umbral PASSED                 [ 71%]
+tests/test_pipeline.py::test_guardrail_detecta_cifras_inventadas_y_mal_atribuidas PASSED [ 85%]
+tests/test_pipeline.py::test_reporte_contiene_estado_y_recomendacion PASSED [100%]
+
+============================== 7 passed in 3.08s ===============================

@@ -1,0 +1,361 @@
+id,indice,cliente,periodo,estado_real,estado_predicho,confianza,fuente_final,fiel_crudo,fiel_existencia_crudo,truncado,cifras_no_verificadas,fidelidad_final,latencia_s,tokens,tokens_por_s,palabras,rougeL_vs_plantilla,bleu_vs_plantilla,rougeL_vs_referencia,bleu_vs_referencia,referencia_experta,datos_verificados,texto_llm_crudo,texto_final
+1,3,CLI-e20f235a,abril de 2025,Alerta,Alerta,89.7,llm,True,True,True,,True,6.04,140,23.18,65,0.6802721088435373,0.5221240452513883,0.1935483870967742,0.04380035095968643,"En el periodo 2025-04, el rendimiento se mantuvo en niveles moderados de equilibrio. La inversión de $2740.3 USD produjo 42 conversiones con un costo por adquisición de $65.25 USD. El ROAS de 2.09x refleja estabilidad pero requiere optimización en creativos y pruebas de segmentación para evitar fatiga publicitaria.","- Cuenta: CLI-e20f235a | Periodo: abril de 2025
+- Inversión: $2,740.30
+- Ingresos atribuidos: $5,727.23
+- Beneficio neto: $2,986.93
+- ROAS: 2.09
+- CPA: $65.25
+- Conversiones: 42
+- CTR: 1.02 % | Tasa de conversión: 0.64 %
+- Variación del ROAS vs mes anterior: +1.5 %
+- Variación del CPA vs mes anterior: +20.9 %
+- Estado clasificado por el modelo: Alerta (confianza 89.7 %)
+- Factores determinantes (SHAP): ROAS, beneficio neto, CPA
+- Recomendación prioritaria: revisar segmentación y creatividades, porque el CPA aumentó frente al periodo anterior","En abril de 2025, la cuenta CLI-e20f235a invirtió $2,740.30 y generó $5,727.23 en ingresos atribuidos, con un ROAS de 2.09 y un CPA de $65.25. El ROAS mejoró +1.5 % frente al mes anterior y el CPA aumentó +20.9 %, lo que ha llevado a una clasificación de Alerta (confianza 89.7 %) según el modelo. Los factores determinantes son principalmente el ROAS y el CPA.","En abril de 2025, la cuenta CLI-e20f235a invirtió $2,740.30 y generó $5,727.23 en ingresos atribuidos, con un ROAS de 2.09 y un CPA de $65.25. El ROAS mejoró +1.5 % frente al mes anterior y el CPA aumentó +20.9 %, lo que ha llevado a una clasificación de Alerta (confianza 89.7 %) según el modelo. Los factores determinantes son principalmente el ROAS y el CPA."
+2,27,CLI-66e41f6f,febrero de 2025,Alerta,Alerta,69.1,llm,True,True,True,,True,6.069,140,23.07,60,0.8082191780821918,0.6345971639834407,0.2184873949579832,0.03818610231625006,"En el periodo 2025-02, el rendimiento se mantuvo en niveles moderados de equilibrio. La inversión de $1125.51 USD produjo 42 conversiones con un costo por adquisición de $26.8 USD. El ROAS de 2.44x refleja estabilidad pero requiere optimización en creativos y pruebas de segmentación para evitar fatiga publicitaria.","- Cuenta: CLI-66e41f6f | Periodo: febrero de 2025
+- Inversión: $1,125.51
+- Ingresos atribuidos: $2,746.24
+- Beneficio neto: $1,620.73
+- ROAS: 2.44
+- CPA: $26.80
+- Conversiones: 42
+- CTR: 2.43 % | Tasa de conversión: 1.33 %
+- Variación del ROAS vs mes anterior: +11.4 %
+- Variación del CPA vs mes anterior: -60.8 %
+- Estado clasificado por el modelo: Alerta (confianza 69.1 %)
+- Factores determinantes (SHAP): ROAS, beneficio neto, tasa de conversión
+- Recomendación prioritaria: optimizar la página de destino y el formulario para mejorar la tasa de conversión","En febrero de 2025, la cuenta CLI-66e41f6f invirtió $1,125.51 y generó $2,746.24 en ingresos atribuidos, con un ROAS de 2.44 y un CPA de $26.80. El ROAS mejoró +11.4 % frente al mes anterior y el CPA disminuyó -60.8 %. El modelo clasifica el desempeño como Alerta (confianza 69.1 %), explicado principalmente por el ROAS y la tasa de conversión.","En febrero de 2025, la cuenta CLI-66e41f6f invirtió $1,125.51 y generó $2,746.24 en ingresos atribuidos, con un ROAS de 2.44 y un CPA de $26.80. El ROAS mejoró +11.4 % frente al mes anterior y el CPA disminuyó -60.8 %. El modelo clasifica el desempeño como Alerta (confianza 69.1 %), explicado principalmente por el ROAS y la tasa de conversión."
+3,95,CLI-d8542c30,mayo de 2025,Crítico,Crítico,92.0,llm,True,True,True,,True,6.143,140,22.79,62,0.6382978723404256,0.4786481787035591,0.23529411764705882,0.04745103095621299,Rendimiento por debajo del punto de equilibrio durante 2025-05. Se ejecutó un gasto de $569.23 USD obteniendo 6 conversiones a un CPA elevado de $94.87 USD. El ROAS descendió a 1.1x. Se recomienda pausar de inmediato los anuncios con baja tasa de clics y reestructurar la oferta comercial.,"- Cuenta: CLI-d8542c30 | Periodo: mayo de 2025
+- Inversión: $569.23
+- Ingresos atribuidos: $626.15
+- Beneficio neto: $56.92
+- ROAS: 1.10
+- CPA: $94.87
+- Conversiones: 6
+- CTR: 1.84 % | Tasa de conversión: 0.29 %
+- Variación del ROAS vs mes anterior: -33.3 %
+- Variación del CPA vs mes anterior: +70.3 %
+- Estado clasificado por el modelo: Crítico (confianza 92.0 %)
+- Factores determinantes (SHAP): ROAS, beneficio neto, CPA
+- Recomendación prioritaria: pausar o reestructurar los conjuntos de anuncios con retorno inferior a la inversión","En mayo de 2025, la cuenta CLI-d8542c30 invirtió $569.23 y generó $626.15 en ingresos atribuidos, con un ROAS de 1.10 y un CPA de $94.87. El ROAS disminuyó -33.3 % y el CPA aumentó +70.3 % respecto al mes anterior, lo que lleva a un estado clasificado como Crítico (confianza 92.0 %). Los factores determinantes son principalmente el ROAS y el CPA.","En mayo de 2025, la cuenta CLI-d8542c30 invirtió $569.23 y generó $626.15 en ingresos atribuidos, con un ROAS de 1.10 y un CPA de $94.87. El ROAS disminuyó -33.3 % y el CPA aumentó +70.3 % respecto al mes anterior, lo que lleva a un estado clasificado como Crítico (confianza 92.0 %). Los factores determinantes son principalmente el ROAS y el CPA."
+4,71,CLI-baa03de6,julio de 2025,Óptimo,Óptimo,97.7,llm,True,True,True,,True,6.039,140,23.18,60,0.7517730496453902,0.608806057772472,0.24193548387096775,0.03734012911893871,"La cuenta registró un desempeño sobresaliente durante el periodo 2025-07. Con un gasto consolidado de $2931.9 USD, se generaron 229 conversiones a un CPA eficiente de $12.8 USD. El ROAS alcanzado fue de 4.94x, superando el umbral de rentabilidad esperada. Se aconseja escalar el presupuesto en los conjuntos con mayor tasa de interacción.","- Cuenta: CLI-baa03de6 | Periodo: julio de 2025
+- Inversión: $2,931.90
+- Ingresos atribuidos: $14,483.59
+- Beneficio neto: $11,551.69
+- ROAS: 4.94
+- CPA: $12.80
+- Conversiones: 229
+- CTR: 1.61 % | Tasa de conversión: 2.68 %
+- Variación del ROAS vs mes anterior: +4.2 %
+- Variación del CPA vs mes anterior: -55.4 %
+- Estado clasificado por el modelo: Óptimo (confianza 97.7 %)
+- Factores determinantes (SHAP): ROAS, beneficio neto, CPA
+- Recomendación prioritaria: escalar el presupuesto de forma gradual manteniendo el control del CPA","En julio de 2025, la cuenta CLI-baa03de6 invirtió $2,931.90 y generó $14,483.59 en ingresos atribuidos, con un ROAS de 4.94 y un CPA de $12.80. El ROAS mejoró +4.2 % frente al mes anterior y el CPA disminuyó -55.4 %. El modelo clasifica el desempeño como Óptimo (confianza 97.7 %), debido a los factores determinantes como ROAS y beneficio neto.","En julio de 2025, la cuenta CLI-baa03de6 invirtió $2,931.90 y generó $14,483.59 en ingresos atribuidos, con un ROAS de 4.94 y un CPA de $12.80. El ROAS mejoró +4.2 % frente al mes anterior y el CPA disminuyó -55.4 %. El modelo clasifica el desempeño como Óptimo (confianza 97.7 %), debido a los factores determinantes como ROAS y beneficio neto."
+5,121,CLI-8182ea7d,mayo de 2025,Óptimo,Óptimo,96.2,llm,True,True,True,,True,6.215,140,22.53,58,0.7746478873239436,0.6186950103142923,0.27868852459016397,0.04811704022911769,"La cuenta registró un desempeño sobresaliente durante el periodo 2025-05. Con un gasto consolidado de $2121.6 USD, se generaron 75 conversiones a un CPA eficiente de $28.29 USD. El ROAS alcanzado fue de 4.75x, superando el umbral de rentabilidad esperada. Se aconseja escalar el presupuesto en los conjuntos con mayor tasa de interacción.","- Cuenta: CLI-8182ea7d | Periodo: mayo de 2025
+- Inversión: $2,121.60
+- Ingresos atribuidos: $10,077.60
+- Beneficio neto: $7,956.00
+- ROAS: 4.75
+- CPA: $28.29
+- Conversiones: 75
+- CTR: 3.02 % | Tasa de conversión: 0.71 %
+- Variación del ROAS vs mes anterior: +35.3 %
+- Variación del CPA vs mes anterior: +11.4 %
+- Estado clasificado por el modelo: Óptimo (confianza 96.2 %)
+- Factores determinantes (SHAP): ROAS, beneficio neto, ingresos
+- Recomendación prioritaria: optimizar la página de destino y el formulario para mejorar la tasa de conversión","En mayo de 2025, la cuenta CLI-8182ea7d invirtió $2,121.60 y generó $10,077.60 en ingresos atribuidos, con un ROAS de 4.75 y un CPA de $28.29. El ROAS mejoró +35.3 % frente al mes anterior y el CPA mejoró +11.4 %. El modelo clasifica el desempeño como Óptimo (confianza 96.2 %), explicado principalmente por el ROAS y los ingresos.","En mayo de 2025, la cuenta CLI-8182ea7d invirtió $2,121.60 y generó $10,077.60 en ingresos atribuidos, con un ROAS de 4.75 y un CPA de $28.29. El ROAS mejoró +35.3 % frente al mes anterior y el CPA mejoró +11.4 %. El modelo clasifica el desempeño como Óptimo (confianza 96.2 %), explicado principalmente por el ROAS y los ingresos."
+6,92,CLI-d8542c30,febrero de 2025,Crítico,Crítico,71.2,llm,True,True,True,,True,6.159,140,22.73,40,0.6829268292682927,0.37311280746712894,0.24242424242424243,0.05542930214132727,Rendimiento por debajo del punto de equilibrio durante 2025-02. Se ejecutó un gasto de $1376.38 USD obteniendo 21 conversiones a un CPA elevado de $65.54 USD. El ROAS descendió a 1.39x. Se recomienda pausar de inmediato los anuncios con baja tasa de clics y reestructurar la oferta comercial.,"- Cuenta: CLI-d8542c30 | Periodo: febrero de 2025
+- Inversión: $1,376.38
+- Ingresos atribuidos: $1,913.17
+- Beneficio neto: $536.79
+- ROAS: 1.39
+- CPA: $65.54
+- Conversiones: 21
+- CTR: 1.87 % | Tasa de conversión: 0.42 %
+- Variación del ROAS vs mes anterior: +85.3 %
+- Variación del CPA vs mes anterior: +21.0 %
+- Estado clasificado por el modelo: Crítico (confianza 71.2 %)
+- Factores determinantes (SHAP): ROAS, beneficio neto, CPA
+- Recomendación prioritaria: pausar o reestructurar los conjuntos de anuncios con retorno inferior a la inversión","En febrero de 2025, la cuenta CLI-d8542c30 invirtió $1,376.38 y generó $1,913.17 en ingresos atribuidos, con un ROAS de 1.39 y un CPA de $65.54. El ROAS mejoró +85.3 % frente al mes anterior y el CPA mejoró +21.0 %.","En febrero de 2025, la cuenta CLI-d8542c30 invirtió $1,376.38 y generó $1,913.17 en ingresos atribuidos, con un ROAS de 1.39 y un CPA de $65.54. El ROAS mejoró +85.3 % frente al mes anterior y el CPA mejoró +21.0 %."
+7,177,CLI-1b0dc833,septiembre de 2025,Óptimo,Óptimo,73.5,llm,True,True,True,,True,6.223,140,22.5,40,0.7154471544715447,0.37728218235455996,0.25,0.05004291628415761,"La cuenta registró un desempeño sobresaliente durante el periodo 2025-09. Con un gasto consolidado de $1206.61 USD, se generaron 32 conversiones a un CPA eficiente de $37.71 USD. El ROAS alcanzado fue de 3.24x, superando el umbral de rentabilidad esperada. Se aconseja escalar el presupuesto en los conjuntos con mayor tasa de interacción.","- Cuenta: CLI-1b0dc833 | Periodo: septiembre de 2025
+- Inversión: $1,206.61
+- Ingresos atribuidos: $3,909.42
+- Beneficio neto: $2,702.81
+- ROAS: 3.24
+- CPA: $37.71
+- Conversiones: 32
+- CTR: 2.99 % | Tasa de conversión: 0.40 %
+- Variación del ROAS vs mes anterior: +25.1 %
+- Variación del CPA vs mes anterior: +37.2 %
+- Estado clasificado por el modelo: Óptimo (confianza 73.5 %)
+- Factores determinantes (SHAP): ROAS, tasa de conversión, inversión
+- Recomendación prioritaria: revisar segmentación y creatividades, porque el CPA aumentó frente al periodo anterior","En septiembre de 2025, la cuenta CLI-1b0dc833 invirtió $1,206.61 y generó $3,909.42 en ingresos atribuidos, con un ROAS de 3.24 y un CPA de $37.71. El ROAS mejoró +25.1 % frente al mes anterior y el CPA aumentó +37.2 %.","En septiembre de 2025, la cuenta CLI-1b0dc833 invirtió $1,206.61 y generó $3,909.42 en ingresos atribuidos, con un ROAS de 3.24 y un CPA de $37.71. El ROAS mejoró +25.1 % frente al mes anterior y el CPA aumentó +37.2 %."
+8,166,CLI-b31c3e3d,noviembre de 2025,Alerta,Alerta,90.5,llm,True,True,True,,True,6.116,140,22.89,60,0.8082191780821918,0.6317060934448283,0.2184873949579832,0.048084930074280635,"En el periodo 2025-11, el rendimiento se mantuvo en niveles moderados de equilibrio. La inversión de $2129.42 USD produjo 50 conversiones con un costo por adquisición de $42.59 USD. El ROAS de 2.22x refleja estabilidad pero requiere optimización en creativos y pruebas de segmentación para evitar fatiga publicitaria.","- Cuenta: CLI-b31c3e3d | Periodo: noviembre de 2025
+- Inversión: $2,129.42
+- Ingresos atribuidos: $4,727.31
+- Beneficio neto: $2,597.89
+- ROAS: 2.22
+- CPA: $42.59
+- Conversiones: 50
+- CTR: 2.77 % | Tasa de conversión: 0.60 %
+- Variación del ROAS vs mes anterior: -9.0 %
+- Variación del CPA vs mes anterior: +1.8 %
+- Estado clasificado por el modelo: Alerta (confianza 90.5 %)
+- Factores determinantes (SHAP): ROAS, beneficio neto, tasa de conversión
+- Recomendación prioritaria: optimizar la página de destino y el formulario para mejorar la tasa de conversión","En noviembre de 2025, la cuenta CLI-b31c3e3d invirtió $2,129.42 y generó $4,727.31 en ingresos atribuidos, con un ROAS de 2.22 y un CPA de $42.59. El ROAS disminuyó -9.0 % frente al mes anterior y el CPA aumentó +1.8 %. El modelo clasifica el desempeño como Alerta (confianza 90.5 %), explicado principalmente por el ROAS y la tasa de conversión.","En noviembre de 2025, la cuenta CLI-b31c3e3d invirtió $2,129.42 y generó $4,727.31 en ingresos atribuidos, con un ROAS de 2.22 y un CPA de $42.59. El ROAS disminuyó -9.0 % frente al mes anterior y el CPA aumentó +1.8 %. El modelo clasifica el desempeño como Alerta (confianza 90.5 %), explicado principalmente por el ROAS y la tasa de conversión."
+9,63,CLI-1ce86570,diciembre de 2025,Crítico,Crítico,95.7,llm,True,True,True,,True,6.021,140,23.25,54,0.6715328467153285,0.4496806644262909,0.21238938053097348,0.048512564701004075,Rendimiento por debajo del punto de equilibrio durante 2025-12. Se ejecutó un gasto de $2664.67 USD obteniendo 21 conversiones a un CPA elevado de $126.89 USD. El ROAS descendió a 0.78x. Se recomienda pausar de inmediato los anuncios con baja tasa de clics y reestructurar la oferta comercial.,"- Cuenta: CLI-1ce86570 | Periodo: diciembre de 2025
+- Inversión: $2,664.67
+- Ingresos atribuidos: $2,078.44
+- Beneficio neto: $-586.23
+- ROAS: 0.78
+- CPA: $126.89
+- Conversiones: 21
+- CTR: 2.79 % | Tasa de conversión: 0.14 %
+- Variación del ROAS vs mes anterior: -51.6 %
+- Variación del CPA vs mes anterior: +71.8 %
+- Estado clasificado por el modelo: Crítico (confianza 95.7 %)
+- Factores determinantes (SHAP): ROAS, beneficio neto, CPA
+- Recomendación prioritaria: pausar o reestructurar los conjuntos de anuncios con retorno inferior a la inversión","En diciembre de 2025, la cuenta CLI-1ce8650 invirtió $2,664.67 y generó $2,078.44 en ingresos atribuidos, con un ROAS de 0.78 y un CPA de $126.89. El ROAS disminuyó -51.6 % y el CPA aumentó +71.8 % respecto al mes anterior, lo que llevó al modelo a clasificar el desempeño como Crítico (confianza 95.7 %).","En diciembre de 2025, la cuenta CLI-1ce8650 invirtió $2,664.67 y generó $2,078.44 en ingresos atribuidos, con un ROAS de 0.78 y un CPA de $126.89. El ROAS disminuyó -51.6 % y el CPA aumentó +71.8 % respecto al mes anterior, lo que llevó al modelo a clasificar el desempeño como Crítico (confianza 95.7 %)."
+10,41,CLI-6548fb16,marzo de 2025,Óptimo,Óptimo,92.7,llm,True,True,True,,True,6.115,140,22.9,55,0.8029197080291971,0.5594978136994352,0.2352941176470588,0.050778516198498845,"La cuenta registró un desempeño sobresaliente durante el periodo 2025-03. Con un gasto consolidado de $2211.82 USD, se generaron 74 conversiones a un CPA eficiente de $29.89 USD. El ROAS alcanzado fue de 3.33x, superando el umbral de rentabilidad esperada. Se aconseja escalar el presupuesto en los conjuntos con mayor tasa de interacción.","- Cuenta: CLI-6548fb16 | Periodo: marzo de 2025
+- Inversión: $2,211.82
+- Ingresos atribuidos: $7,365.36
+- Beneficio neto: $5,153.54
+- ROAS: 3.33
+- CPA: $29.89
+- Conversiones: 74
+- CTR: 2.72 % | Tasa de conversión: 0.77 %
+- Variación del ROAS vs mes anterior: -41.2 %
+- Variación del CPA vs mes anterior: +148.5 %
+- Estado clasificado por el modelo: Óptimo (confianza 92.7 %)
+- Factores determinantes (SHAP): ROAS, beneficio neto, ingresos
+- Recomendación prioritaria: revisar segmentación y creatividades, porque el CPA aumentó frente al periodo anterior","En marzo de 2025, la cuenta CLI-6548fb16 invirtió $2,211.82 y generó $7,365.36 en ingresos atribuidos, con un ROAS de 3.33 y un CPA de $29.89. El ROAS mejoró +41.2 % frente al mes anterior y el modelo clasifica el desempeño como Óptimo (confianza 92.7 %), explicado sobre todo por el ROAS y el beneficio neto.","En marzo de 2025, la cuenta CLI-6548fb16 invirtió $2,211.82 y generó $7,365.36 en ingresos atribuidos, con un ROAS de 3.33 y un CPA de $29.89. El ROAS mejoró +41.2 % frente al mes anterior y el modelo clasifica el desempeño como Óptimo (confianza 92.7 %), explicado sobre todo por el ROAS y el beneficio neto."
+11,113,CLI-8eb413e3,octubre de 2025,Alerta,Alerta,93.5,llm,True,True,True,,True,6.135,140,22.82,60,0.7638888888888888,0.6072418982588047,0.20168067226890757,0.04686403729536309,"En el periodo 2025-10, el rendimiento se mantuvo en niveles moderados de equilibrio. La inversión de $2257.37 USD produjo 33 conversiones con un costo por adquisición de $68.41 USD. El ROAS de 2.21x refleja estabilidad pero requiere optimización en creativos y pruebas de segmentación para evitar fatiga publicitaria.","- Cuenta: CLI-8eb413e3 | Periodo: octubre de 2025
+- Inversión: $2,257.37
+- Ingresos atribuidos: $4,988.79
+- Beneficio neto: $2,731.42
+- ROAS: 2.21
+- CPA: $68.41
+- Conversiones: 33
+- CTR: 1.71 % | Tasa de conversión: 0.53 %
+- Variación del ROAS vs mes anterior: +10.5 %
+- Variación del CPA vs mes anterior: +0.7 %
+- Estado clasificado por el modelo: Alerta (confianza 93.5 %)
+- Factores determinantes (SHAP): ROAS, beneficio neto, CPA
+- Recomendación prioritaria: optimizar la página de destino y el formulario para mejorar la tasa de conversión","En octubre de 2025, la cuenta CLI-8eb413e3 invirtió $2,257.37 y generó $4,988.79 en ingresos atribuidos, con un ROAS de 2.21 y un CPA de $68.41. El ROAS mejoró +10.5 % frente al mes anterior y el CPA mejoró +0.7 %. El modelo clasifica el desempeño como Alerta (confianza 93.5 %), explicado sobre todo por el ROAS y el beneficio neto.","En octubre de 2025, la cuenta CLI-8eb413e3 invirtió $2,257.37 y generó $4,988.79 en ingresos atribuidos, con un ROAS de 2.21 y un CPA de $68.41. El ROAS mejoró +10.5 % frente al mes anterior y el CPA mejoró +0.7 %. El modelo clasifica el desempeño como Alerta (confianza 93.5 %), explicado sobre todo por el ROAS y el beneficio neto."
+12,64,CLI-1ce86570,enero de 2026,Crítico,Crítico,62.0,llm,True,True,True,,True,6.13,140,22.84,40,0.6666666666666667,0.3656617016840232,0.24242424242424243,0.055289792185675195,Rendimiento por debajo del punto de equilibrio durante 2026-01. Se ejecutó un gasto de $2706.7 USD obteniendo 73 conversiones a un CPA elevado de $37.08 USD. El ROAS descendió a 1.32x. Se recomienda pausar de inmediato los anuncios con baja tasa de clics y reestructurar la oferta comercial.,"- Cuenta: CLI-1ce86570 | Periodo: enero de 2026
+- Inversión: $2,706.70
+- Ingresos atribuidos: $3,572.84
+- Beneficio neto: $866.14
+- ROAS: 1.32
+- CPA: $37.08
+- Conversiones: 73
+- CTR: 2.42 % | Tasa de conversión: 0.64 %
+- Variación del ROAS vs mes anterior: +69.2 %
+- Variación del CPA vs mes anterior: -70.8 %
+- Estado clasificado por el modelo: Crítico (confianza 62.0 %)
+- Factores determinantes (SHAP): ROAS, beneficio neto, clics
+- Recomendación prioritaria: pausar o reestructurar los conjuntos de anuncios con retorno inferior a la inversión","En enero de 2026, la cuenta CLI-1ce86570 invirtió $2,706.70 y generó $3,572.84 en ingresos atribuidos, con un ROAS de 1.32 y un CPA de $37.08. El ROAS mejoró +69.2 % frente al mes anterior y el CPA disminuyó -70.8 %.","En enero de 2026, la cuenta CLI-1ce86570 invirtió $2,706.70 y generó $3,572.84 en ingresos atribuidos, con un ROAS de 1.32 y un CPA de $37.08. El ROAS mejoró +69.2 % frente al mes anterior y el CPA disminuyó -70.8 %."
+13,26,CLI-66e41f6f,enero de 2025,Alerta,Alerta,90.5,plantilla_fallback,False,False,True,+1.19; roas≠+1.19%,True,6.062,140,23.09,61,0.7230769230769231,0.5883185064690936,0.21052631578947367,0.051321679192821545,"En el periodo 2025-01, el rendimiento se mantuvo en niveles moderados de equilibrio. La inversión de $2873.62 USD produjo 42 conversiones con un costo por adquisición de $68.42 USD. El ROAS de 2.19x refleja estabilidad pero requiere optimización en creativos y pruebas de segmentación para evitar fatiga publicitaria.","- Cuenta: CLI-66e41f6f | Periodo: enero de 2025
+- Inversión: $2,873.62
+- Ingresos atribuidos: $6,293.23
+- Beneficio neto: $3,419.61
+- ROAS: 2.19
+- CPA: $68.42
+- Conversiones: 42
+- CTR: 2.03 % | Tasa de conversión: 0.62 %
+- Estado clasificado por el modelo: Alerta (confianza 90.5 %)
+- Factores determinantes (SHAP): ROAS, beneficio neto, CPA
+- Recomendación prioritaria: optimizar la página de destino y el formulario para mejorar la tasa de conversión","En enero de 2025, la cuenta CLI-66e41f6f invirtió $2,873.62 y generó $6,293.23 en ingresos atribuidos, con un ROAS de 2.19 y un CPA de $68.42. El ROAS mejoró +1.19 % frente al mes anterior y el modelo clasifica el desempeño como Alerta (confianza 90.5 %), explicado sobre todo por el ROAS y el beneficio neto.","En enero de 2025, la cuenta CLI-66e41f6f invirtió $2,873.62 y generó $6,293.23 en ingresos atribuidos, con un ROAS de 2.19 y un CPA de $68.42 sobre 42 conversiones. El modelo clasifica el desempeño como Alerta (confianza 90.5 %), explicado principalmente por ROAS, beneficio neto, CPA. Se recomienda optimizar la página de destino y el formulario para mejorar la tasa de conversión."
+14,29,CLI-66e41f6f,abril de 2025,Alerta,Alerta,53.9,llm,True,True,True,,True,6.067,140,23.08,63,0.689655172413793,0.5334723346350981,0.19672131147540986,0.04443119077043701,"En el periodo 2025-04, el rendimiento se mantuvo en niveles moderados de equilibrio. La inversión de $3116.58 USD produjo 97 conversiones con un costo por adquisición de $32.13 USD. El ROAS de 2.61x refleja estabilidad pero requiere optimización en creativos y pruebas de segmentación para evitar fatiga publicitaria.","- Cuenta: CLI-66e41f6f | Periodo: abril de 2025
+- Inversión: $3,116.58
+- Ingresos atribuidos: $8,134.27
+- Beneficio neto: $5,017.69
+- ROAS: 2.61
+- CPA: $32.13
+- Conversiones: 97
+- CTR: 3.04 % | Tasa de conversión: 0.85 %
+- Variación del ROAS vs mes anterior: +3.6 %
+- Variación del CPA vs mes anterior: +74.4 %
+- Estado clasificado por el modelo: Alerta (confianza 53.9 %)
+- Factores determinantes (SHAP): ROAS, beneficio neto, ingresos
+- Recomendación prioritaria: revisar segmentación y creatividades, porque el CPA aumentó frente al periodo anterior","En abril de 2025, la cuenta CLI-66e41f6f invirtió $3,116.58 y generó $8,134.27 en ingresos atribuidos, con un ROAS de 2.61 y un CPA de $32.13. El ROAS mejoró +3.6 % frente al mes anterior y el CPA aumentó +74.4 %, lo que lleva a un estado clasificado como Alerta (confianza 53.9 %). Los factores determinantes son principalmente el ROAS y el beneficio neto.","En abril de 2025, la cuenta CLI-66e41f6f invirtió $3,116.58 y generó $8,134.27 en ingresos atribuidos, con un ROAS de 2.61 y un CPA de $32.13. El ROAS mejoró +3.6 % frente al mes anterior y el CPA aumentó +74.4 %, lo que lleva a un estado clasificado como Alerta (confianza 53.9 %). Los factores determinantes son principalmente el ROAS y el beneficio neto."
+15,2,CLI-e20f235a,marzo de 2025,Alerta,Alerta,81.3,llm,True,True,True,,True,6.058,140,23.11,63,0.689655172413793,0.5334723346350981,0.19672131147540986,0.04443119077043701,"En el periodo 2025-03, el rendimiento se mantuvo en niveles moderados de equilibrio. La inversión de $2968.61 USD produjo 55 conversiones con un costo por adquisición de $53.97 USD. El ROAS de 2.06x refleja estabilidad pero requiere optimización en creativos y pruebas de segmentación para evitar fatiga publicitaria.","- Cuenta: CLI-e20f235a | Periodo: marzo de 2025
+- Inversión: $2,968.61
+- Ingresos atribuidos: $6,115.34
+- Beneficio neto: $3,146.73
+- ROAS: 2.06
+- CPA: $53.97
+- Conversiones: 55
+- CTR: 2.27 % | Tasa de conversión: 0.30 %
+- Variación del ROAS vs mes anterior: +15.7 %
+- Variación del CPA vs mes anterior: +129.3 %
+- Estado clasificado por el modelo: Alerta (confianza 81.3 %)
+- Factores determinantes (SHAP): ROAS, beneficio neto, impresiones
+- Recomendación prioritaria: revisar segmentación y creatividades, porque el CPA aumentó frente al periodo anterior","En marzo de 2025, la cuenta CLI-e20f235a invirtió $2,968.61 y generó $6,115.34 en ingresos atribuidos, con un ROAS de 2.06 y un CPA de $53.97. El ROAS mejoró +15.7 % frente al mes anterior y el CPA aumentó +129.3 %, lo que lleva a un estado clasificado como Alerta (confianza 81.3 %). Los factores determinantes son principalmente el ROAS y el beneficio neto.","En marzo de 2025, la cuenta CLI-e20f235a invirtió $2,968.61 y generó $6,115.34 en ingresos atribuidos, con un ROAS de 2.06 y un CPA de $53.97. El ROAS mejoró +15.7 % frente al mes anterior y el CPA aumentó +129.3 %, lo que lleva a un estado clasificado como Alerta (confianza 81.3 %). Los factores determinantes son principalmente el ROAS y el beneficio neto."
+16,178,CLI-1b0dc833,octubre de 2025,Óptimo,Óptimo,97.0,llm,True,True,True,,True,6.223,140,22.5,59,0.8000000000000002,0.6538342050686432,0.26016260162601623,0.047628479086398945,"La cuenta registró un desempeño sobresaliente durante el periodo 2025-10. Con un gasto consolidado de $1714.3 USD, se generaron 129 conversiones a un CPA eficiente de $13.29 USD. El ROAS alcanzado fue de 3.54x, superando el umbral de rentabilidad esperada. Se aconseja escalar el presupuesto en los conjuntos con mayor tasa de interacción.","- Cuenta: CLI-1b0dc833 | Periodo: octubre de 2025
+- Inversión: $1,714.30
+- Ingresos atribuidos: $6,068.62
+- Beneficio neto: $4,354.32
+- ROAS: 3.54
+- CPA: $13.29
+- Conversiones: 129
+- CTR: 1.14 % | Tasa de conversión: 5.06 %
+- Variación del ROAS vs mes anterior: +9.3 %
+- Variación del CPA vs mes anterior: -64.8 %
+- Estado clasificado por el modelo: Óptimo (confianza 97.0 %)
+- Factores determinantes (SHAP): ROAS, CPA, beneficio neto
+- Recomendación prioritaria: escalar el presupuesto de forma gradual manteniendo el control del CPA","En octubre de 2025, la cuenta CLI-1b0dc833 invirtió $1,714.30 y generó $6,068.62 en ingresos atribuidos, con un ROAS de 3.54 y un CPA de $13.29. El ROAS mejoró +9.3 % frente al mes anterior y el CPA disminuyó -64.8 %. El modelo clasifica el desempeño como Óptimo (confianza 97.0 %), explicado principalmente por el ROAS y el beneficio neto.","En octubre de 2025, la cuenta CLI-1b0dc833 invirtió $1,714.30 y generó $6,068.62 en ingresos atribuidos, con un ROAS de 3.54 y un CPA de $13.29. El ROAS mejoró +9.3 % frente al mes anterior y el CPA disminuyó -64.8 %. El modelo clasifica el desempeño como Óptimo (confianza 97.0 %), explicado principalmente por el ROAS y el beneficio neto."
+17,61,CLI-1ce86570,octubre de 2025,Crítico,Crítico,68.5,llm,True,True,True,,True,6.175,140,22.67,49,0.6212121212121212,0.37880732187028454,0.22222222222222224,0.053751593039758315,Rendimiento por debajo del punto de equilibrio durante 2025-10. Se ejecutó un gasto de $1040.41 USD obteniendo 35 conversiones a un CPA elevado de $29.73 USD. El ROAS descendió a 1.45x. Se recomienda pausar de inmediato los anuncios con baja tasa de clics y reestructurar la oferta comercial.,"- Cuenta: CLI-1ce86570 | Periodo: octubre de 2025
+- Inversión: $1,040.41
+- Ingresos atribuidos: $1,508.59
+- Beneficio neto: $468.18
+- ROAS: 1.45
+- CPA: $29.73
+- Conversiones: 35
+- CTR: 1.23 % | Tasa de conversión: 1.09 %
+- Variación del ROAS vs mes anterior: +7.4 %
+- Variación del CPA vs mes anterior: -66.6 %
+- Estado clasificado por el modelo: Crítico (confianza 68.5 %)
+- Factores determinantes (SHAP): ROAS, beneficio neto, ingresos
+- Recomendación prioritaria: pausar o reestructurar los conjuntos de anuncios con retorno inferior a la inversión","En octubre de 2025, la cuenta CLI-1ce8650 invirtió $1,040.41 y generó $1,508.59 en ingresos atribuidos, con un ROAS de 1.45 y un CPA de $29.73. El ROAS mejoró +7.4 % frente al mes anterior y el CPA disminuyó -66.6 %, lo que confirma una mejora significativa en el rendimiento.","En octubre de 2025, la cuenta CLI-1ce8650 invirtió $1,040.41 y generó $1,508.59 en ingresos atribuidos, con un ROAS de 1.45 y un CPA de $29.73. El ROAS mejoró +7.4 % frente al mes anterior y el CPA disminuyó -66.6 %, lo que confirma una mejora significativa en el rendimiento."
+18,153,CLI-854e4c3f,noviembre de 2025,Alerta,Alerta,88.5,llm,True,True,True,,True,6.041,140,23.17,58,0.7887323943661972,0.6139213957922991,0.18803418803418803,0.04891701240484667,"En el periodo 2025-11, el rendimiento se mantuvo en niveles moderados de equilibrio. La inversión de $2981.1 USD produjo 62 conversiones con un costo por adquisición de $48.08 USD. El ROAS de 2.48x refleja estabilidad pero requiere optimización en creativos y pruebas de segmentación para evitar fatiga publicitaria.","- Cuenta: CLI-854e4c3f | Periodo: noviembre de 2025
+- Inversión: $2,981.10
+- Ingresos atribuidos: $7,393.13
+- Beneficio neto: $4,412.03
+- ROAS: 2.48
+- CPA: $48.08
+- Conversiones: 62
+- CTR: 2.66 % | Tasa de conversión: 0.35 %
+- Variación del ROAS vs mes anterior: -16.5 %
+- Variación del CPA vs mes anterior: +8.0 %
+- Estado clasificado por el modelo: Alerta (confianza 88.5 %)
+- Factores determinantes (SHAP): ROAS, beneficio neto, CPA
+- Recomendación prioritaria: optimizar la página de destino y el formulario para mejorar la tasa de conversión","En noviembre de 2025, la cuenta CLI-854e4c3f invirtió $2,981.10 y generó $7,393.13 en ingresos atribuidos, con un ROAS de 2.48 y un CPA de $48.08. El ROAS disminuyó -16.5 % frente al mes anterior y el CPA aumentó +8.0 %. El modelo clasifica el desempeño como Alerta (confianza 88.5 %), explicado principalmente por el ROAS y el CPA.","En noviembre de 2025, la cuenta CLI-854e4c3f invirtió $2,981.10 y generó $7,393.13 en ingresos atribuidos, con un ROAS de 2.48 y un CPA de $48.08. El ROAS disminuyó -16.5 % frente al mes anterior y el CPA aumentó +8.0 %. El modelo clasifica el desempeño como Alerta (confianza 88.5 %), explicado principalmente por el ROAS y el CPA."
+19,118,CLI-8182ea7d,febrero de 2025,Óptimo,Óptimo,93.5,llm,True,True,True,,True,6.143,140,22.79,55,0.8029197080291971,0.5594978136994352,0.2352941176470588,0.050778516198498845,"La cuenta registró un desempeño sobresaliente durante el periodo 2025-02. Con un gasto consolidado de $1906.59 USD, se generaron 63 conversiones a un CPA eficiente de $30.26 USD. El ROAS alcanzado fue de 4.3x, superando el umbral de rentabilidad esperada. Se aconseja escalar el presupuesto en los conjuntos con mayor tasa de interacción.","- Cuenta: CLI-8182ea7d | Periodo: febrero de 2025
+- Inversión: $1,906.59
+- Ingresos atribuidos: $8,198.34
+- Beneficio neto: $6,291.75
+- ROAS: 4.30
+- CPA: $30.26
+- Conversiones: 63
+- CTR: 1.20 % | Tasa de conversión: 1.86 %
+- Variación del ROAS vs mes anterior: -19.9 %
+- Variación del CPA vs mes anterior: +22.7 %
+- Estado clasificado por el modelo: Óptimo (confianza 93.5 %)
+- Factores determinantes (SHAP): ROAS, beneficio neto, ingresos
+- Recomendación prioritaria: revisar segmentación y creatividades, porque el CPA aumentó frente al periodo anterior","En febrero de 2025, la cuenta CLI-8182ea7d invirtió $1,906.59 y generó $8,198.34 en ingresos atribuidos, con un ROAS de 4.30 y un CPA de $30.26. El ROAS mejoró +19.9 % frente al mes anterior y el modelo clasifica el desempeño como Óptimo (confianza 93.5 %), explicado sobre todo por el ROAS y el beneficio neto.","En febrero de 2025, la cuenta CLI-8182ea7d invirtió $1,906.59 y generó $8,198.34 en ingresos atribuidos, con un ROAS de 4.30 y un CPA de $30.26. El ROAS mejoró +19.9 % frente al mes anterior y el modelo clasifica el desempeño como Óptimo (confianza 93.5 %), explicado sobre todo por el ROAS y el beneficio neto."
+20,17,CLI-c6c3b9ce,mayo de 2025,Alerta,Alerta,71.7,llm,True,True,True,,True,6.136,140,22.82,40,0.7000000000000001,0.3855113819815481,0.24242424242424243,0.058521162653974806,"En el periodo 2025-05, el rendimiento se mantuvo en niveles moderados de equilibrio. La inversión de $1361.57 USD produjo 57 conversiones con un costo por adquisición de $23.89 USD. El ROAS de 2.22x refleja estabilidad pero requiere optimización en creativos y pruebas de segmentación para evitar fatiga publicitaria.","- Cuenta: CLI-c6c3b9ce | Periodo: mayo de 2025
+- Inversión: $1,361.57
+- Ingresos atribuidos: $3,022.69
+- Beneficio neto: $1,661.12
+- ROAS: 2.22
+- CPA: $23.89
+- Conversiones: 57
+- CTR: 1.08 % | Tasa de conversión: 3.09 %
+- Variación del ROAS vs mes anterior: -11.9 %
+- Variación del CPA vs mes anterior: -54.6 %
+- Estado clasificado por el modelo: Alerta (confianza 71.7 %)
+- Factores determinantes (SHAP): ROAS, beneficio neto, CPA
+- Recomendación prioritaria: mantener la estrategia actual y monitorear la tendencia del ROAS","En mayo de 2025, la cuenta CLI-c6c3b9ce invirtió $1,361.57 y generó $3,022.69 en ingresos atribuidos, con un ROAS de 2.22 y un CPA de $23.89. El ROAS disminuyó -11.9 % frente al mes anterior y el CPA disminuyó -54.6 %.","En mayo de 2025, la cuenta CLI-c6c3b9ce invirtió $1,361.57 y generó $3,022.69 en ingresos atribuidos, con un ROAS de 2.22 y un CPA de $23.89. El ROAS disminuyó -11.9 % frente al mes anterior y el CPA disminuyó -54.6 %."
+21,155,CLI-854e4c3f,enero de 2026,Óptimo,Óptimo,58.5,llm,True,True,True,,True,6.221,140,22.5,58,0.7714285714285714,0.6170849127717033,0.24793388429752067,0.05159984987020321,"La cuenta registró un desempeño sobresaliente durante el periodo 2026-01. Con un gasto consolidado de $616.57 USD, se generaron 27 conversiones a un CPA eficiente de $22.84 USD. El ROAS alcanzado fue de 2.82x, superando el umbral de rentabilidad esperada. Se aconseja escalar el presupuesto en los conjuntos con mayor tasa de interacción.","- Cuenta: CLI-854e4c3f | Periodo: enero de 2026
+- Inversión: $616.57
+- Ingresos atribuidos: $1,738.73
+- Beneficio neto: $1,122.16
+- ROAS: 2.82
+- CPA: $22.84
+- Conversiones: 27
+- CTR: 1.29 % | Tasa de conversión: 1.35 %
+- Variación del ROAS vs mes anterior: +4.4 %
+- Variación del CPA vs mes anterior: -56.9 %
+- Estado clasificado por el modelo: Óptimo (confianza 58.5 %)
+- Factores determinantes (SHAP): ROAS, beneficio neto, ingresos
+- Recomendación prioritaria: optimizar la página de destino y el formulario para mejorar la tasa de conversión","En enero de 2026, la cuenta CLI-854e4c3f invirtió $616.57 y generó $1,738.73 en ingresos atribuidos, con un ROAS de 2.82 y un CPA de $22.84. El ROAS mejoró +4.4 % frente al mes anterior y el CPA disminuyó -56.9 %. El modelo clasifica el desempeño como Óptimo (confianza 58.5 %), explicado principalmente por el ROAS y los ingresos.","En enero de 2026, la cuenta CLI-854e4c3f invirtió $616.57 y generó $1,738.73 en ingresos atribuidos, con un ROAS de 2.82 y un CPA de $22.84. El ROAS mejoró +4.4 % frente al mes anterior y el CPA disminuyó -56.9 %. El modelo clasifica el desempeño como Óptimo (confianza 58.5 %), explicado principalmente por el ROAS y los ingresos."
+22,125,CLI-8182ea7d,septiembre de 2025,Óptimo,Óptimo,84.7,llm,True,True,True,,True,6.137,140,22.81,52,0.6870229007633589,0.4919015681015511,0.22608695652173913,0.05700276956340688,"La cuenta registró un desempeño sobresaliente durante el periodo 2025-09. Con un gasto consolidado de $857.82 USD, se generaron 29 conversiones a un CPA eficiente de $29.58 USD. El ROAS alcanzado fue de 4.25x, superando el umbral de rentabilidad esperada. Se aconseja escalar el presupuesto en los conjuntos con mayor tasa de interacción.","- Cuenta: CLI-8182ea7d | Periodo: septiembre de 2025
+- Inversión: $857.82
+- Ingresos atribuidos: $3,645.74
+- Beneficio neto: $2,787.92
+- ROAS: 4.25
+- CPA: $29.58
+- Conversiones: 29
+- CTR: 3.03 % | Tasa de conversión: 0.91 %
+- Variación del ROAS vs mes anterior: -24.9 %
+- Variación del CPA vs mes anterior: +28.3 %
+- Estado clasificado por el modelo: Óptimo (confianza 84.7 %)
+- Factores determinantes (SHAP): ROAS, CPA, inversión
+- Recomendación prioritaria: revisar segmentación y creatividades, porque el CPA aumentó frente al periodo anterior","En septiembre de 2025, la cuenta CLI-8182ea7d invirtió $857.82 y generó $3,645.74 en ingresos atribuidos, con un ROAS de 4.25 y un CPA de $29.58. El ROAS mejoró +24.9 % frente al mes anterior y el CPA aumentó +28.3 %, lo que lleva a un estado clasificado como Óptimo (confianza 84.7 %).","En septiembre de 2025, la cuenta CLI-8182ea7d invirtió $857.82 y generó $3,645.74 en ingresos atribuidos, con un ROAS de 4.25 y un CPA de $29.58. El ROAS mejoró +24.9 % frente al mes anterior y el CPA aumentó +28.3 %, lo que lleva a un estado clasificado como Óptimo (confianza 84.7 %)."
+23,76,CLI-baa03de6,diciembre de 2025,Óptimo,Óptimo,92.7,llm,True,True,True,,True,6.036,140,23.19,59,0.7832167832167832,0.6236252407889231,0.2276422764227642,0.047628479086398945,"La cuenta registró un desempeño sobresaliente durante el periodo 2025-12. Con un gasto consolidado de $2588.38 USD, se generaron 200 conversiones a un CPA eficiente de $12.94 USD. El ROAS alcanzado fue de 3.71x, superando el umbral de rentabilidad esperada. Se aconseja escalar el presupuesto en los conjuntos con mayor tasa de interacción.","- Cuenta: CLI-baa03de6 | Periodo: diciembre de 2025
+- Inversión: $2,588.38
+- Ingresos atribuidos: $9,602.89
+- Beneficio neto: $7,014.51
+- ROAS: 3.71
+- CPA: $12.94
+- Conversiones: 200
+- CTR: 3.13 % | Tasa de conversión: 0.94 %
+- Variación del ROAS vs mes anterior: +1.4 %
+- Variación del CPA vs mes anterior: -38.1 %
+- Estado clasificado por el modelo: Óptimo (confianza 92.7 %)
+- Factores determinantes (SHAP): ROAS, beneficio neto, CPA
+- Recomendación prioritaria: optimizar la página de destino y el formulario para mejorar la tasa de conversión","En diciembre de 2025, la cuenta CLI-baa03de6 invirtió $2,588.38 y generó $9,602.89 en ingresos atribuidos, con un ROAS de 3.71 y un CPA de $12.94. El ROAS mejoró +1.4 % frente al mes anterior y el CPA disminuyó -38.1 %. El modelo clasifica el desempeño como Óptimo (confianza 92.7 %), explicado principalmente por el ROAS y el beneficio neto.","En diciembre de 2025, la cuenta CLI-baa03de6 invirtió $2,588.38 y generó $9,602.89 en ingresos atribuidos, con un ROAS de 3.71 y un CPA de $12.94. El ROAS mejoró +1.4 % frente al mes anterior y el CPA disminuyó -38.1 %. El modelo clasifica el desempeño como Óptimo (confianza 92.7 %), explicado principalmente por el ROAS y el beneficio neto."
+24,47,CLI-6548fb16,septiembre de 2025,Óptimo,Óptimo,99.1,llm,True,True,True,,True,6.006,140,23.31,59,0.8000000000000002,0.6475628462780465,0.24390243902439024,0.047628479086398945,"La cuenta registró un desempeño sobresaliente durante el periodo 2025-09. Con un gasto consolidado de $1650.69 USD, se generaron 134 conversiones a un CPA eficiente de $12.32 USD. El ROAS alcanzado fue de 5.23x, superando el umbral de rentabilidad esperada. Se aconseja escalar el presupuesto en los conjuntos con mayor tasa de interacción.","- Cuenta: CLI-6548fb16 | Periodo: septiembre de 2025
+- Inversión: $1,650.69
+- Ingresos atribuidos: $8,633.11
+- Beneficio neto: $6,982.42
+- ROAS: 5.23
+- CPA: $12.32
+- Conversiones: 134
+- CTR: 1.36 % | Tasa de conversión: 3.41 %
+- Variación del ROAS vs mes anterior: +40.2 %
+- Variación del CPA vs mes anterior: -69.5 %
+- Estado clasificado por el modelo: Óptimo (confianza 99.1 %)
+- Factores determinantes (SHAP): ROAS, beneficio neto, CPA
+- Recomendación prioritaria: escalar el presupuesto de forma gradual manteniendo el control del CPA","En septiembre de 2025, la cuenta CLI-6548fb16 invirtió $1,650.69 y generó $8,633.11 en ingresos atribuidos, con un ROAS de 5.23 y un CPA de $12.32. El ROAS mejoró +40.2 % frente al mes anterior y el CPA disminuyó -69.5 %. El modelo clasifica el desempeño como Óptimo (confianza 99.1 %), explicado principalmente por el ROAS y el beneficio neto.","En septiembre de 2025, la cuenta CLI-6548fb16 invirtió $1,650.69 y generó $8,633.11 en ingresos atribuidos, con un ROAS de 5.23 y un CPA de $12.32. El ROAS mejoró +40.2 % frente al mes anterior y el CPA disminuyó -69.5 %. El modelo clasifica el desempeño como Óptimo (confianza 99.1 %), explicado principalmente por el ROAS y el beneficio neto."
+25,117,CLI-8182ea7d,enero de 2025,Óptimo,Óptimo,96.7,llm,True,True,True,,True,6.007,140,23.3,51,0.7301587301587301,0.5724260804108997,0.2782608695652174,0.054392817680480154,"La cuenta registró un desempeño sobresaliente durante el periodo 2025-01. Con un gasto consolidado de $1578.15 USD, se generaron 64 conversiones a un CPA eficiente de $24.66 USD. El ROAS alcanzado fue de 5.37x, superando el umbral de rentabilidad esperada. Se aconseja escalar el presupuesto en los conjuntos con mayor tasa de interacción.","- Cuenta: CLI-8182ea7d | Periodo: enero de 2025
+- Inversión: $1,578.15
+- Ingresos atribuidos: $8,474.67
+- Beneficio neto: $6,896.52
+- ROAS: 5.37
+- CPA: $24.66
+- Conversiones: 64
+- CTR: 3.18 % | Tasa de conversión: 0.50 %
+- Estado clasificado por el modelo: Óptimo (confianza 96.7 %)
+- Factores determinantes (SHAP): ROAS, beneficio neto, CPA
+- Recomendación prioritaria: optimizar la página de destino y el formulario para mejorar la tasa de conversión","En enero de 2025, la cuenta CLI-8182ea7d invirtió $1,578.15 y generó $8,474.67 en ingresos atribuidos, con un ROAS de 5.37 y un CPA de $24.66. El ROAS superó los expectativas, y el modelo clasifica el desempeño como Óptimo (confianza 96.7 %), debido principalmente a los factores de ROAS y beneficio neto.","En enero de 2025, la cuenta CLI-8182ea7d invirtió $1,578.15 y generó $8,474.67 en ingresos atribuidos, con un ROAS de 5.37 y un CPA de $24.66. El ROAS superó los expectativas, y el modelo clasifica el desempeño como Óptimo (confianza 96.7 %), debido principalmente a los factores de ROAS y beneficio neto."
+26,132,CLI-99252f8c,marzo de 2025,Óptimo,Óptimo,89.7,llm,True,True,True,,True,6.059,140,23.11,47,0.6564885496183205,0.40104800486691244,0.2522522522522523,0.051844826811562446,"La cuenta registró un desempeño sobresaliente durante el periodo 2025-03. Con un gasto consolidado de $3191.08 USD, se generaron 122 conversiones a un CPA eficiente de $26.16 USD. El ROAS alcanzado fue de 3.76x, superando el umbral de rentabilidad esperada. Se aconseja escalar el presupuesto en los conjuntos con mayor tasa de interacción.","- Cuenta: CLI-99252f8c | Periodo: marzo de 2025
+- Inversión: $3,191.08
+- Ingresos atribuidos: $11,998.46
+- Beneficio neto: $8,807.38
+- ROAS: 3.76
+- CPA: $26.16
+- Conversiones: 122
+- CTR: 2.35 % | Tasa de conversión: 1.28 %
+- Variación del ROAS vs mes anterior: -7.4 %
+- Variación del CPA vs mes anterior: +10.6 %
+- Estado clasificado por el modelo: Óptimo (confianza 89.7 %)
+- Factores determinantes (SHAP): ROAS, beneficio neto, ingresos
+- Recomendación prioritaria: optimizar la página de destino y el formulario para mejorar la tasa de conversión","En marzo de 2025, la cuenta CLI-99252f8c invirtió $3,191.08 y generó $11,998.46 en ingresos atribuidos, con un ROAS de 3.76 y un CPA de $26.16. El ROAS mejoró -7.4 % frente al mes anterior y el CPA aumentó +10.6 %, lo que ha afectado negativamente el ROAS.","En marzo de 2025, la cuenta CLI-99252f8c invirtió $3,191.08 y generó $11,998.46 en ingresos atribuidos, con un ROAS de 3.76 y un CPA de $26.16. El ROAS mejoró -7.4 % frente al mes anterior y el CPA aumentó +10.6 %, lo que ha afectado negativamente el ROAS."
+27,163,CLI-b31c3e3d,agosto de 2025,Alerta,Alerta,93.3,llm,True,True,True,,True,6.039,140,23.18,57,0.7482014388489209,0.5957474117579463,0.20689655172413793,0.04904007504361565,"En el periodo 2025-08, el rendimiento se mantuvo en niveles moderados de equilibrio. La inversión de $2449.59 USD produjo 44 conversiones con un costo por adquisición de $55.67 USD. El ROAS de 2.11x refleja estabilidad pero requiere optimización en creativos y pruebas de segmentación para evitar fatiga publicitaria.","- Cuenta: CLI-b31c3e3d | Periodo: agosto de 2025
+- Inversión: $2,449.59
+- Ingresos atribuidos: $5,168.63
+- Beneficio neto: $2,719.04
+- ROAS: 2.11
+- CPA: $55.67
+- Conversiones: 44
+- CTR: 2.30 % | Tasa de conversión: 0.65 %
+- Variación del ROAS vs mes anterior: -24.1 %
+- Variación del CPA vs mes anterior: +72.8 %
+- Estado clasificado por el modelo: Alerta (confianza 93.3 %)
+- Factores determinantes (SHAP): ROAS, beneficio neto, CPA
+- Recomendación prioritaria: revisar segmentación y creatividades, porque el CPA aumentó frente al periodo anterior","En agosto de 2025, la cuenta CLI-b31c3e3d invirtió $2,449.59 y generó $5,168.63 en ingresos atribuidos, con un ROAS de 2.11 y un CPA de $55.67. El ROAS disminuyó -24.1 % frente al mes anterior y el CPA aumentó +72.8 %. El modelo clasifica el desempeño como Alerta (confianza 93.3 %), debido principalmente a la variación del CPA.","En agosto de 2025, la cuenta CLI-b31c3e3d invirtió $2,449.59 y generó $5,168.63 en ingresos atribuidos, con un ROAS de 2.11 y un CPA de $55.67. El ROAS disminuyó -24.1 % frente al mes anterior y el CPA aumentó +72.8 %. El modelo clasifica el desempeño como Alerta (confianza 93.3 %), debido principalmente a la variación del CPA."
+28,114,CLI-8eb413e3,noviembre de 2025,Alerta,Alerta,92.0,llm,True,True,True,,True,6.096,140,22.97,55,0.6762589928057554,0.4802429378277072,0.21052631578947367,0.05146592946265209,"En el periodo 2025-11, el rendimiento se mantuvo en niveles moderados de equilibrio. La inversión de $2286.97 USD produjo 44 conversiones con un costo por adquisición de $51.98 USD. El ROAS de 1.96x refleja estabilidad pero requiere optimización en creativos y pruebas de segmentación para evitar fatiga publicitaria.","- Cuenta: CLI-8eb413e3 | Periodo: noviembre de 2025
+- Inversión: $2,286.97
+- Ingresos atribuidos: $4,482.46
+- Beneficio neto: $2,195.49
+- ROAS: 1.96
+- CPA: $51.98
+- Conversiones: 44
+- CTR: 2.61 % | Tasa de conversión: 0.47 %
+- Variación del ROAS vs mes anterior: -11.3 %
+- Variación del CPA vs mes anterior: -24.0 %
+- Estado clasificado por el modelo: Alerta (confianza 92.0 %)
+- Factores determinantes (SHAP): ROAS, beneficio neto, CPA
+- Recomendación prioritaria: optimizar la página de destino y el formulario para mejorar la tasa de conversión","En noviembre de 2025, la cuenta CLI-8eb413e3 invirtió $2,286.97 y generó $4,482.46 en ingresos atribuidos, con un ROAS de 1.96 y un CPA de $51.98. El ROAS disminuyó -11.3 % y el CPA disminuyó -24.0 % respecto al mes anterior, lo que ha llevado al modelo a clasificar el desempeño como Alerta (confianza 92.0 %).","En noviembre de 2025, la cuenta CLI-8eb413e3 invirtió $2,286.97 y generó $4,482.46 en ingresos atribuidos, con un ROAS de 1.96 y un CPA de $51.98. El ROAS disminuyó -11.3 % y el CPA disminuyó -24.0 % respecto al mes anterior, lo que ha llevado al modelo a clasificar el desempeño como Alerta (confianza 92.0 %)."

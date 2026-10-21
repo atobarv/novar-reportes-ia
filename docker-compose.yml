@@ -1,0 +1,12 @@
+services:
+  novar-reportes:
+    build: .
+    image: novar/reportes-inteligentes:1.0
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./data:/app/data
+      - ./models:/app/models
+    environment:
+      - NOVAR_LLM=Qwen/Qwen2.5-1.5B-Instruct
+    restart: unless-stopped
