@@ -3,7 +3,7 @@
 Prototipo del proyecto de titulación de la **Maestría en Inteligencia Artificial Aplicada (UDLA – FICA)**.
 Autor: Julio Alejandro Tobar Valencia · Tutor: MSc. Paulo Guerra Terán · Sponsor: Novar Agencia (Quito, Ecuador).
 
-
+**Notebook (Colab):** https://drive.google.com/file/d/1AlZ0KEUty1ZW0mb5Elhwya2I4XUGSPC2/view?usp=sharing
 **Video demo:** https://drive.google.com/file/d/1DMhVk4nvT4OnvS_TD2CkKdzhl3Ulc-r3/view?usp=sharing
 
 ## 1. Problema
@@ -68,8 +68,8 @@ Toda evaluación de ML usa **cuentas no vistas**, **meses posteriores** al corte
 **Redacción (test ciego N=28)**: fidelidad final 100% · LLM sin corrección
 68% · latencia media 9.70 s.
 
-**Impacto:** 18 h → 0.50 h por cliente (estimado (revisión supuesta de 30 min)),
-reducción de 97.2%.
+**Impacto:** 18 h → 0.05 h por cliente (medido en la prueba operativa),
+reducción de 99.7%.
 
 **Pruebas automatizadas:** 9 passed
 

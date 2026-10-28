@@ -11,4 +11,4 @@ tests/test_pipeline.py::test_detector_supera_regla PASSED                [ 77%]
 tests/test_pipeline.py::test_proyeccion_3_6_12_con_rango PASSED          [ 88%]
 tests/test_pipeline.py::test_guardrail_existencia_atribucion_direccion PASSED [100%]
 
-============================== 9 passed in 5.78s ===============================
+============================== 9 passed in 5.73s ===============================

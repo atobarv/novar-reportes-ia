@@ -2155,11 +2155,11 @@
   },
   "impacto": {
     "minutos_antes": 1080,
-    "minutos_despues": 30.22,
-    "fuente_tiempo_despues": "estimado (revisión supuesta de 30 min)",
-    "reduccion_pct": 0.972,
-    "horas_ahorradas_mes": 70.0,
-    "ahorro_mensual_usd": 1749.64
+    "minutos_despues": 2.91,
+    "fuente_tiempo_despues": "medido en la prueba operativa",
+    "reduccion_pct": 0.9973,
+    "horas_ahorradas_mes": 71.8,
+    "ahorro_mensual_usd": 1795.15
   },
   "etica": {
     "error_relativo_3m_por_vertical": {
@@ -2250,10 +2250,23 @@
       "openpyxl": "3.1.5",
       "pytest": "8.4.2"
     },
-    "fecha_ejecucion": "2026-10-28T04:55:04",
+    "fecha_ejecucion": "2026-10-28T05:21:50",
     "pytest": "9 passed",
     "demo_url": "https://drive.google.com/file/d/1DMhVk4nvT4OnvS_TD2CkKdzhl3Ulc-r3/view?usp=sharing",
     "repo_url": "https://github.com/atobarv/novar-reportes-ia",
-    "notebook_url": ""
+    "notebook_url": "https://drive.google.com/file/d/1AlZ0KEUty1ZW0mb5Elhwya2I4XUGSPC2/view?usp=sharing"
+  },
+  "prueba_operativa": {
+    "reportes": 3,
+    "directores": 1,
+    "min_total_media": 2.91,
+    "min_revision_media": 1.17,
+    "min_exportacion_media": 1.67,
+    "seg_generacion_media": 0.0,
+    "palabras_cambiadas_media": 2.0,
+    "cifras_cambiadas_total": 0,
+    "pct_sin_correcciones": 0.6667,
+    "pct_recomendaciones_utiles": 1.0,
+    "utilidad_media_1a5": 4.0
   }
 }
