@@ -1,7 +1,7 @@
 services:
   novar-reportes:
     build: .
-    image: novar/reportes-inteligentes:1.0
+    image: novar/reportes-inteligentes:2.0
     ports:
       - "8501:8501"
     volumes:

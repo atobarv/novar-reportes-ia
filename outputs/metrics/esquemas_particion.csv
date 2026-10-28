@@ -1,0 +1,4 @@
+Esquema,Entrenamiento,Evaluación
+Por fecha,14 cuentas · objetivos hasta Sep-2025,14 cuentas · pronósticos emitidos desde Sep-2025 (12 meses posteriores)
+Por cliente,12 cuentas · todos los meses,2 cuentas no vistas (7 particiones)
+Cliente + fecha,12 cuentas · hasta Sep-2025,2 cuentas no vistas · después de Sep-2025 (7 particiones)

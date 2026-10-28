@@ -1,0 +1,5 @@
+modelo,aleatorio (5-Fold estratificado),por cliente (cuentas no vistas),por fecha (meses posteriores)
+Random Forest + RobustScaler (ajustado),0.9617117117117118,0.9395604395604396,0.9642857142857143
+Regla de negocio (sin entrenamiento),1.0,1.0,1.0
+Regresión Logística (baseline),0.9181681681681682,0.8736263736263737,0.9107142857142857
+Árbol de Decisión d=3 (baseline),1.0,1.0,1.0

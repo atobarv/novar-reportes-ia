@@ -1,12 +1,14 @@
 ============================= test session starts ==============================
-collecting ... collected 7 items
+collecting ... collected 9 items
 
-tests/test_pipeline.py::test_kpis_deterministas PASSED                   [ 14%]
-tests/test_pipeline.py::test_kpis_sin_conversiones_no_divide_por_cero PASSED [ 28%]
-tests/test_pipeline.py::test_limpieza_formatos_y_fuga PASSED             [ 42%]
-tests/test_pipeline.py::test_seudonimizacion_consistente_y_no_reversible PASSED [ 57%]
-tests/test_pipeline.py::test_modelo_supera_umbral PASSED                 [ 71%]
-tests/test_pipeline.py::test_guardrail_detecta_cifras_inventadas_y_mal_atribuidas PASSED [ 85%]
-tests/test_pipeline.py::test_reporte_contiene_estado_y_recomendacion PASSED [100%]
+tests/test_pipeline.py::test_kpis_deterministas PASSED                   [ 11%]
+tests/test_pipeline.py::test_regla_de_estado_y_deterioro PASSED          [ 22%]
+tests/test_pipeline.py::test_limpieza_formatos_y_fuga PASSED             [ 33%]
+tests/test_pipeline.py::test_seudonimizacion PASSED                      [ 44%]
+tests/test_pipeline.py::test_variables_sin_fuga_temporal PASSED          [ 55%]
+tests/test_pipeline.py::test_particiones_por_cliente_y_fecha PASSED      [ 66%]
+tests/test_pipeline.py::test_detector_supera_regla PASSED                [ 77%]
+tests/test_pipeline.py::test_proyeccion_3_6_12_con_rango PASSED          [ 88%]
+tests/test_pipeline.py::test_guardrail_existencia_atribucion_direccion PASSED [100%]
 
-============================== 7 passed in 3.16s ===============================
+============================== 9 passed in 5.78s ===============================

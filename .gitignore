@@ -4,3 +4,4 @@ __pycache__/
 .env
 privado_no_compartir/
 data/private/
+data/cargas/

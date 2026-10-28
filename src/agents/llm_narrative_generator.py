@@ -1,13 +1,13 @@
 """
-Módulo generativo multi-agente con guardrails deterministas.
+Módulo generativo multi-agente con guardrails deterministas (v2.0).
 
-  Agente Extractor  -> consolida KPIs del cliente/periodo (aritmética en Python, inmutable)
-  Agente Analista   -> clasifica el rendimiento (Random Forest) + factores SHAP + reglas de acción
-  Agente Redactor   -> redacta el resumen ejecutivo con Qwen2.5-1.5B-Instruct (one-shot)
-  Guardrail         -> (1) toda cifra del texto debe existir en los datos verificados y
-                       (2) cada cifra debe estar atribuida a la métrica correcta y con su unidad.
-                       Si falla, reintenta con instrucción estricta y, en último caso, usa una
-                       plantilla determinista.
+  Agente Extractor   -> KPI del mes y comparativo con el pasado (aritmética en Python, inmutable)
+  Agente Pronóstico  -> proyección del ROAS a 3, 6 y 12 meses con rango del 80 % y probabilidad de deterioro (ML)
+  Agente Analista    -> estado por regla de negocio, detección de anomalías (ML) y recomendaciones por reglas
+  Agente Redactor    -> redacta el resumen ejecutivo con Qwen2.5-1.5B-Instruct (ejemplo guía de una sola muestra)
+  Guardrail          -> verifica en el texto: (1) que cada cifra exista en los datos verificados, (2) que esté junto a
+                        la métrica correcta y con su unidad y (3) que la dirección de cada variación (subió/bajó,
+                        mejoró/empeoró, signo) coincida con el dato. Si falla, reintenta y luego usa una plantilla.
 El sistema es un copiloto: todo reporte requiere validación humana (HITL) antes del envío.
 """
 from __future__ import annotations
@@ -18,13 +18,9 @@ import time
 import numpy as np
 import pandas as pd
 
-from src.features.feature_engineering import FEATURES, calcular_kpis
+from src.features.feature_engineering import calcular_kpis, comparativo_historico
+from src.rules.reglas_negocio import RANGO, estado_por_regla, recomendaciones
 
-NOMBRES_FEATURE = {
-    "roas": "ROAS", "profit_usd": "beneficio neto", "cpa_usd": "CPA", "cvr": "tasa de conversión",
-    "ctr": "CTR", "cpm_usd": "CPM", "gasto_usd": "inversión", "ingresos_usd": "ingresos",
-    "conversiones": "conversiones", "clics": "clics", "impresiones": "impresiones",
-}
 MESES = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre",
          "octubre", "noviembre", "diciembre"]
 
@@ -37,94 +33,86 @@ def pct(x: float, signo: bool = False) -> str:
     return f"{x:+.1f} %" if signo else f"{x:.2f} %"
 
 
-# ---------------------------------------------------------------------------
+def nombre_mes(f) -> str:
+    f = pd.to_datetime(f)
+    return f"{MESES[f.month - 1]} de {f.year}"
+
+
+# ---------------------------------------------------------------------------------------------- agentes
 class AgenteExtractor:
+    """Hechos del mes y comparativo histórico. Solo cálculos deterministas."""
+
     def __init__(self, df: pd.DataFrame):
-        # Se conserva el índice original para poder ubicar cualquier registro del dataset
         self.df = calcular_kpis(df).sort_values(["cliente", "fecha"], kind="stable")
-        fechas = pd.to_datetime(self.df["fecha"], errors="coerce")
-        self.mensual = bool(fechas.notna().all() and (fechas.dt.day == 1).all())
 
-    def _periodo(self, fecha) -> str:
-        if pd.isna(fecha):
-            return "el periodo actual"
-        f = pd.to_datetime(fecha)
-        return f"{MESES[f.month - 1]} de {f.year}" if self.mensual else f"la semana del {f:%d/%m/%Y}"
-
-    def consolidar(self, cliente: str, indice: int | None = None) -> tuple[dict, pd.DataFrame]:
-        sub = self.df[self.df["cliente"] == cliente].reset_index()
+    def consolidar(self, cliente: str, fecha=None) -> dict:
+        sub = self.df[self.df["cliente"] == cliente].reset_index(drop=True)
         if sub.empty:
-            raise ValueError(f"Cliente no encontrado: {cliente}")
-        pos = len(sub) - 1 if indice is None else int(np.where(sub["index"] == indice)[0][0])
-        act = sub.iloc[pos]
-        prev = sub.iloc[pos - 1] if pos > 0 else None
-
-        def var(campo):
-            if prev is None or prev[campo] == 0:
-                return None
-            return 100 * (act[campo] - prev[campo]) / abs(prev[campo])
-
-        hechos = {
-            "cliente": act["cliente"], "periodo": self._periodo(act["fecha"]),
-            "unidad_periodo": "mes" if self.mensual else "periodo",
-            "plataforma": str(act.get("plataforma", "No especificada")),
-            "vertical": str(act["vertical"]) if "vertical" in act.index else None,
-            "inversion": float(act["gasto_usd"]), "ingresos": float(act["ingresos_usd"]),
-            "conversiones": int(act["conversiones"]), "clics": int(act["clics"]),
-            "impresiones": int(act["impresiones"]), "roas": float(act["roas"]),
-            "cpa": float(act["cpa_usd"]), "ctr": float(act["ctr"]), "cvr": float(act["cvr"]),
-            "beneficio": float(act["profit_usd"]), "cpm": float(act["cpm_usd"]),
-            "var_roas": var("roas"), "var_cpa": var("cpa_usd"), "var_conversiones": var("conversiones"),
-            "var_inversion": var("gasto_usd"),
-            "referencia_experta": (str(act["referencia_experta"]) if "referencia_experta" in act.index
-                                   and pd.notna(act["referencia_experta"]) else None),
+            raise ValueError(f"Cuenta no encontrada: {cliente}")
+        if fecha is None:
+            pos = len(sub) - 1
+        else:
+            pos = int(np.where(pd.to_datetime(sub["fecha"]) == pd.to_datetime(fecha))[0][0])
+        a = sub.iloc[pos]
+        h = {
+            "cliente": a["cliente"], "fecha": pd.to_datetime(a["fecha"]), "periodo": nombre_mes(a["fecha"]),
+            "vertical": str(a.get("vertical", "")), "inversion": float(a["gasto_usd"]),
+            "ingresos": float(a["ingresos_usd"]), "beneficio": float(a["profit_usd"]),
+            "roas": float(a["roas"]), "cpa": float(a["cpa_usd"]), "conversiones": int(a["conversiones"]),
+            "clics": int(a["clics"]), "ctr": float(a["ctr"]), "cvr": float(a["cvr"]), "cpm": float(a["cpm_usd"]),
         }
-        fila = pd.DataFrame([act[FEATURES].astype(float).values], columns=FEATURES)
-        return hechos, fila
+        h.update(comparativo_historico(sub, pos))
+        return h
+
+    def historia(self, cliente: str, hasta=None, meses: int = 24) -> pd.DataFrame:
+        sub = self.df[self.df["cliente"] == cliente]
+        if hasta is not None:
+            sub = sub[pd.to_datetime(sub["fecha"]) <= pd.to_datetime(hasta)]
+        return sub.tail(meses)
 
 
-# ---------------------------------------------------------------------------
+class AgentePronostico:
+    """Proyección con el modelo de ML entrenado (Pronosticador)."""
+
+    def __init__(self, pronosticador, df_modelo: pd.DataFrame):
+        self.pr = pronosticador
+        self.df = df_modelo            # serie con meses anómalos imputados
+
+    def proyectar(self, cliente: str, fecha=None, horizontes=(3, 6, 12)) -> dict:
+        P = self.pr.proyectar_cuenta(self.df, cliente, horizontes=horizontes, hasta=fecha)
+        if P.empty:
+            return {}
+        out = {}
+        for _, r in P.iterrows():
+            out[int(r["h"])] = {"fecha": r["fecha_objetivo"], "periodo": nombre_mes(r["fecha_objetivo"]),
+                                "roas": float(r["proyeccion"]), "inf": float(r["limite_inferior"]),
+                                "sup": float(r["limite_superior"]), "estado": str(r["estado_proyectado"]),
+                                "prob_deterioro": float(r["prob_deterioro"]),
+                                "efecto_estacional": float(r["efecto_estacional_%"]),
+                                "tendencia_anual": float(r["tendencia_anual_%"])}
+        return out
+
+
 class AgenteAnalista:
-    def __init__(self, pipeline, features: list[str] = FEATURES):
-        self.pipeline = pipeline
-        self.features = features
+    """Estado por regla de negocio + anomalía (ML) + recomendaciones por reglas."""
 
-    def diagnosticar(self, hechos: dict, fila: pd.DataFrame, con_shap: bool = True) -> dict:
-        proba = self.pipeline.predict_proba(fila[self.features])[0]
-        clases = list(self.pipeline.classes_)
-        estado = clases[int(np.argmax(proba))]
-        drivers = []
-        if con_shap:
-            try:
-                from src.explain.interpretabilidad import contribuciones_locales
-                _, contrib = contribuciones_locales(self.pipeline, fila[self.features], clases)
-                drivers = [NOMBRES_FEATURE.get(f, f) for f in contrib["feature"].head(3)]
-            except Exception:
-                drivers = []
-        return {"estado": estado, "confianza": float(np.max(proba)) * 100,
-                "probabilidades": dict(zip(clases, map(float, proba))),
-                "drivers": drivers, "recomendaciones": self._recomendaciones(hechos, estado)}
+    def __init__(self, anomalias: pd.DataFrame | None = None):
+        self.anom = anomalias          # salida de DetectorAnomalias.puntuar
 
-    @staticmethod
-    def _recomendaciones(h: dict, estado: str) -> list[str]:
-        r = []
-        if h["conversiones"] == 0 or h["roas"] < 1.2 or estado == "Crítico":
-            r.append("pausar o reestructurar los conjuntos de anuncios con retorno inferior a la inversión")
-        if h["var_cpa"] is not None and h["var_cpa"] > 15:
-            r.append("revisar segmentación y creatividades, porque el CPA aumentó frente al periodo anterior")
-        if h["ctr"] < 1.0:
-            r.append("renovar creatividades y mensajes para recuperar el CTR")
-        if h["cvr"] < 2.0 and h["clics"] > 0:
-            r.append("optimizar la página de destino y el formulario para mejorar la tasa de conversión")
-        if estado == "Óptimo":
-            r.append("escalar el presupuesto de forma gradual manteniendo el control del CPA")
-        if not r:
-            r.append("mantener la estrategia actual y monitorear la tendencia del ROAS")
-        return r[:3]
+    def diagnosticar(self, h: dict, proy: dict) -> dict:
+        estado = str(estado_por_regla(h["roas"]))
+        an = {"es_anomalia": False}
+        if self.anom is not None:
+            q = self.anom[(self.anom["cliente"] == h["cliente"]) &
+                          (pd.to_datetime(self.anom["fecha"]) == h["fecha"])]
+            if len(q):
+                an = {"es_anomalia": bool(q["es_anomalia"].iloc[0]),
+                      "metrica_principal": q["metrica_principal"].iloc[0],
+                      "puntaje": float(q["puntaje_anomalia"].iloc[0]) if pd.notna(q["puntaje_anomalia"].iloc[0]) else None}
+        return {"estado": estado, "anomalia": an, "recomendaciones": recomendaciones(h, estado, proy, an)}
 
 
-# ---------------------------------------------------------------------------
-# Guardrail numérico
+# ---------------------------------------------------------------------------------------------- guardrail
 _NUM = re.compile(r"(?<![\w.\-])[-+]?\d[\d.,]*(?![\w])")
 _LISTA = re.compile(r"(?m)^\s*\d+[.)]\s+")
 
@@ -174,81 +162,140 @@ def _coincide(cands: set[float], valores) -> bool:
             if a is None:
                 continue
             a = abs(a)
-            if (abs(v - a) <= 0.0051 or abs(v - round(a, 1)) < 1e-6
-                    or (a >= 10 and abs(v - round(a)) < 1e-6)):
+            if abs(v - a) <= 0.0051 or abs(v - round(a, 1)) < 1e-6 or (a >= 10 and abs(v - round(a)) < 1e-6):
                 return True
     return False
 
 
-# Palabras clave de cada métrica (orden: las expresiones largas primero)
+_NEUTRO = [r"\b(?:19|20)\d{2}\b", r"\b\d{1,2}\s+mes(?:es)?\b", r"\b80\s?%", r"\b\d{1,2}/\d{1,2}/\d{2,4}\b"]
+
+
+def _neutralizar(texto: str) -> str:
+    """Quita del análisis de atribución las cifras que no son métricas (años, horizontes, nivel del rango)."""
+    for p in _NEUTRO:
+        texto = re.sub(p, " ", texto, flags=re.I)
+    return texto
+
+
 _CLAVES = [
+    ("prob", r"probabilidad"),
     ("roas", r"retorno (?:de|sobre) (?:la )?inversi[oó]n(?: publicitaria)?|\broas\b"),
     ("cpa", r"cost[oe] por adquisici[oó]n|\bcpa\b"),
     ("cvr", r"tasa de conversi[oó]n"),
     ("ctr", r"tasa de clics|\bctr\b"),
     ("beneficio", r"beneficio(?: neto)?"),
     ("ingresos", r"ingresos?(?: atribuidos?)?"),
-    ("inversion", r"inversi[oó]n|\bgasto\b"),
-    ("confianza", r"confianza"),
+    ("inversion", r"inversi[oó]n|\bgasto\b|invirti[oó]"),
+    ("conversiones", r"conversiones"),
 ]
-_PATRON_CLAVES = re.compile("|".join(f"(?P<{k}>{p})" for k, p in _CLAVES), re.IGNORECASE)
+_PATRON = re.compile("|".join(f"(?P<{k}>{p})" for k, p in _CLAVES), re.IGNORECASE)
 
 
-def _esperados(metrica: str, h: dict, d: dict, unidad: str):
-    """Valores admisibles para la primera cifra que sigue a la métrica, según su unidad."""
-    tabla = {
-        "roas": {"num": [h["roas"]], "%": [h["var_roas"]], "$": []},
-        "cpa": {"num": [h["cpa"]], "$": [h["cpa"]], "%": [h["var_cpa"]]},
+def _familias(h: dict, proy: dict) -> dict:
+    """Valores admisibles por métrica y unidad."""
+    roas_num = [h["roas"], h.get("roas_mes_anterior"), h.get("roas_hace_12m"), h.get("roas_promedio_12m")]
+    for p in proy.values():
+        roas_num += [p["roas"], p["inf"], p["sup"]]
+    return {
+        "roas": {"num": roas_num, "%": [h.get("var_roas"), h.get("var_roas_anual")], "$": []},
+        "cpa": {"num": [h["cpa"], h.get("cpa_mes_anterior")], "$": [h["cpa"], h.get("cpa_mes_anterior")],
+                "%": [h.get("var_cpa")]},
         "cvr": {"num": [h["cvr"]], "%": [h["cvr"]], "$": []},
         "ctr": {"num": [h["ctr"]], "%": [h["ctr"]], "$": []},
         "beneficio": {"num": [h["beneficio"]], "$": [h["beneficio"]], "%": []},
-        "ingresos": {"num": [h["ingresos"]], "$": [h["ingresos"]], "%": []},
-        "inversion": {"num": [h["inversion"]], "$": [h["inversion"]], "%": [h["var_inversion"]]},
-        "confianza": {"num": [d["confianza"]], "%": [d["confianza"]], "$": []},
+        "ingresos": {"num": [h["ingresos"], h.get("ingresos_12m")], "$": [h["ingresos"], h.get("ingresos_12m")], "%": []},
+        "inversion": {"num": [h["inversion"], h.get("inversion_12m")], "$": [h["inversion"], h.get("inversion_12m")],
+                      "%": [h.get("var_inversion")]},
+        "conversiones": {"num": [h["conversiones"]], "$": [], "%": []},
+        "prob": {"num": [round(100 * p["prob_deterioro"]) for p in proy.values()],
+                 "%": [round(100 * p["prob_deterioro"]) for p in proy.values()], "$": []},
     }
-    return [v for v in tabla[metrica][unidad] if v is not None]
 
 
-def verificar_atribucion(texto: str, h: dict, d: dict) -> list[str]:
-    """Comprueba que la cifra que sigue a cada métrica corresponda a esa métrica y unidad."""
+def verificar_atribucion(texto: str, h: dict, proy: dict) -> list[str]:
+    fam = _familias(h, proy)
+    t = _neutralizar(texto)
     fallas = []
-    marcas = list(_PATRON_CLAVES.finditer(texto))
+    marcas = list(_PATRON.finditer(t))
     for i, m in enumerate(marcas):
         metrica = m.lastgroup
-        fin = marcas[i + 1].start() if i + 1 < len(marcas) else len(texto)
-        alcance = texto[m.end():fin]
+        fin = marcas[i + 1].start() if i + 1 < len(marcas) else len(t)
+        alcance = t[m.end():fin]
         corte = re.search(r"\.(?:\s|$)|;", alcance)
         if corte:
             alcance = alcance[:corte.start()]
-        alcance = alcance[:120]
-        numeros = list(_NUM.finditer(alcance))
-        for j, n in enumerate(numeros):
+        alcance = alcance[:160]
+        for j, n in enumerate(_NUM.finditer(alcance)):
             antes = alcance[max(0, n.start() - 2):n.start()]
             despues = alcance[n.end():n.end() + 2]
             unidad = "$" if "$" in antes else "%" if "%" in despues else "num"
             if metrica == "roas" and unidad == "$":
                 fallas.append(f"ROAS expresado en dólares: {n.group()}")
                 continue
-            if j > 0 and metrica != "roas":   # ROAS: se verifican todas sus cifras; resto: la primera
+            if j > 0 and metrica not in ("roas", "prob"):
                 continue
-            cands = _candidatos(n.group())
-            if cands and not _coincide(cands, _esperados(metrica, h, d, unidad)):
+            c = _candidatos(n.group())
+            if c and not _coincide(c, fam[metrica][unidad]):
                 fallas.append(f"{metrica}≠{n.group()}{'%' if unidad == '%' else ''}")
     return fallas
 
 
-class GuardrailNumerico:
-    """(1) Existencia: toda cifra del texto coincide con una cifra verificada.
-       (2) Atribución: la cifra que sigue a cada métrica es la de esa métrica y con su unidad."""
+_SUBE = r"mejor[óo]|aument[óo]|subi[óo]|creci[óo]|increment[óo]|se elev[óo]|repunt[óo]|avanz[óo]"
+_BAJA = r"empeor[óo]|cay[óo]|disminuy[óo]|baj[óo]|descendi[óo]|se redujo|redujo|retroce?di[óo]|se contrajo|perdi[óo]"
+_VERBO = re.compile(f"(?P<sube>{_SUBE})|(?P<baja>{_BAJA})", re.I)
 
-    def __init__(self, bloque: str, hechos: dict | None = None, diagnostico: dict | None = None):
+
+def verificar_direccion(texto: str, h: dict) -> list[str]:
+    """Comprueba el signo y el verbo de cada variación porcentual frente al dato verificado."""
+    variaciones = {"roas": [h.get("var_roas"), h.get("var_roas_anual")], "cpa": [h.get("var_cpa")],
+                   "inversion": [h.get("var_inversion")]}
+    todas = [v for vs in variaciones.values() for v in vs if v is not None]
+    fallas = []
+    for oracion in re.split(r"(?<=[.;])\s+", texto):
+        # 1) signo explícito
+        for m in re.finditer(r"([+-])\s?(\d[\d.,]*)\s?%", oracion):
+            c = _candidatos(m.group(2))
+            iguales = [v for v in todas if _coincide(c, [v])]
+            if iguales and all((v >= 0) != (m.group(1) == "+") for v in iguales):
+                fallas.append(f"signo invertido: {m.group(0)}")
+        # 2) verbo de dirección seguido de una cifra porcentual
+        for vb in _VERBO.finditer(oracion):
+            resto = oracion[vb.end():vb.end() + 70]
+            num = re.search(r"[+-]?\s?(\d[\d.,]*)\s?%", resto)
+            if not num:
+                continue
+            previo = oracion[:vb.start()].lower()
+            metrica = "cpa" if (previo.rfind("cpa") > previo.rfind("roas") or "costo por adquisición" in previo[-60:]) else "roas"
+            if "inversión" in previo[-40:] or "gasto" in previo[-40:]:
+                metrica = "inversion"
+            c = _candidatos(num.group(1))
+            iguales = [v for v in variaciones[metrica] if v is not None and _coincide(c, [v])]
+            if not iguales:
+                continue
+            v = iguales[0]
+            palabra = vb.group(0).lower()
+            sube = vb.group("sube") is not None
+            evaluativo = palabra.startswith("mejor") or palabra.startswith("empeor")
+            if metrica == "cpa" and evaluativo:
+                esperado_positivo = not palabra.startswith("mejor")
+            else:
+                esperado_positivo = sube
+            if (v >= 0) != esperado_positivo:
+                fallas.append(f"dirección incorrecta: «{palabra} … {num.group(0).strip()}» (dato {v:+.1f} %)")
+    return fallas
+
+
+class GuardrailNumerico:
+    """(1) Existencia, (2) atribución métrica/unidad y (3) dirección de variaciones."""
+
+    def __init__(self, bloque: str, hechos: dict | None = None, proy: dict | None = None):
         base = set()
         for _, c in extraer_numeros(bloque):
             base |= c
         self.permitidos = set()
         for v in base:
             self.permitidos |= {v, round(v, 1), round(v, 2)} | ({round(v)} if v >= 10 else set())
-        self.hechos, self.diagnostico = hechos, diagnostico
+        self.hechos, self.proy = hechos, proy or {}
 
     def verificar_existencia(self, texto: str) -> list[str]:
         return [tok for tok, c in extraer_numeros(texto) if c and not _coincide(c, self.permitidos)]
@@ -256,78 +303,100 @@ class GuardrailNumerico:
     def verificar(self, texto: str) -> tuple[bool, list[str]]:
         fallas = self.verificar_existencia(texto)
         if self.hechos is not None:
-            fallas += verificar_atribucion(texto, self.hechos, self.diagnostico)
+            fallas += verificar_atribucion(texto, self.hechos, self.proy)
+            fallas += verificar_direccion(texto, self.hechos)
         return (len(fallas) == 0), fallas
 
 
-# ---------------------------------------------------------------------------
+# ---------------------------------------------------------------------------------------------- redacción
 SISTEMA = (
-    "Eres el Agente Redactor Ejecutivo de Novar Agencia (Quito, Ecuador). Redactas resúmenes "
-    "ejecutivos de desempeño publicitario para gerentes de clientes. Reglas obligatorias: "
-    "1) usa ÚNICAMENTE las cifras del bloque DATOS VERIFICADOS, copiadas exactamente y junto a la "
-    "métrica a la que pertenecen; 2) no calcules, no redondees ni inventes cifras, porcentajes o fechas; "
-    "3) el ROAS es un número sin símbolo $ ni %; 4) compara solo con el periodo anterior indicado en los "
-    "datos; 5) escribe exactamente tres oraciones en un solo párrafo, sin títulos, etiquetas ni viñetas, "
-    "con un máximo de 70 palabras: situación general, factor principal y la recomendación prioritaria."
+    "Eres el Agente Redactor Ejecutivo de Novar Agencia (Quito, Ecuador). Redactas resúmenes ejecutivos de "
+    "desempeño publicitario para gerentes de clientes. Reglas obligatorias: 1) usa ÚNICAMENTE las cifras del bloque "
+    "DATOS VERIFICADOS, copiadas exactamente y junto a la métrica a la que pertenecen; 2) no calcules, no redondees "
+    "ni inventes cifras, porcentajes o fechas; 3) el ROAS es un número sin símbolo $ ni %; 4) si una variación es "
+    "negativa usa verbos como «cayó» o «disminuyó» y si es positiva «subió» o «mejoró»; 5) las proyecciones son "
+    "estimaciones: preséntalas con su rango; 6) escribe exactamente cuatro oraciones en un solo párrafo, sin "
+    "títulos ni viñetas, con un máximo de 110 palabras: situación del mes, comparación con el pasado, proyección "
+    "a 3, 6 y 12 meses y la recomendación prioritaria."
 )
 
-EJEMPLO_DATOS = """- Cuenta: CLI-ejemplo | Periodo: marzo de 2025
-- Inversión: $1,200.00
-- Ingresos atribuidos: $3,000.00
-- Beneficio neto: $1,800.00
-- ROAS: 2.50
-- CPA: $40.00
-- Conversiones: 30
-- Variación del ROAS vs mes anterior: +8.0 %
-- Estado clasificado por el modelo: Alerta (confianza 85.0 %)
-- Factores determinantes (SHAP): ROAS, beneficio neto, CPA
+EJEMPLO_DATOS = """- Cuenta: CLI-ejemplo | Vertical: Ecommerce | Mes analizado: marzo de 2026
+- Inversión: $1,200.00 | Ingresos atribuidos: $3,000.00 | Beneficio neto: $1,800.00
+- ROAS: 2.50 | CPA: $40.00 | Conversiones: 30
+- Estado actual (regla de negocio): Alerta
+- ROAS del mes anterior: 2.31 (variación +8.2 %)
+- ROAS del mismo mes del año anterior: 2.80 (variación -10.7 %)
+- ROAS promedio de los últimos 12 meses: 2.62
+- Proyección del ROAS a 3 meses (junio de 2026): 2.44 (rango 80 %: 2.05 a 2.90); estado proyectado: Alerta
+- Proyección del ROAS a 6 meses (septiembre de 2026): 2.58 (rango 80 %: 2.10 a 3.15); estado proyectado: Alerta
+- Proyección del ROAS a 12 meses (marzo de 2027): 2.66 (rango 80 %: 2.05 a 3.40); estado proyectado: Alerta
+- Probabilidad de deterioro a 3 meses: 18 %
+- Patrón anómalo en el mes: no detectado
 - Recomendación prioritaria: optimizar la página de destino para mejorar la tasa de conversión"""
 
 EJEMPLO_RESPUESTA = (
-    "En marzo de 2025, la cuenta CLI-ejemplo invirtió $1,200.00 y generó $3,000.00 en ingresos "
-    "atribuidos, con un ROAS de 2.50 y un CPA de $40.00. El ROAS mejoró +8.0 % frente al mes anterior y "
-    "el modelo clasifica el desempeño como Alerta (confianza 85.0 %), explicado sobre todo por el ROAS "
-    "y el beneficio neto. Se recomienda optimizar la página de destino para mejorar la tasa de conversión.")
+    "En marzo de 2026, la cuenta CLI-ejemplo invirtió $1,200.00 y generó $3,000.00 en ingresos atribuidos, con un "
+    "ROAS de 2.50 que la mantiene en estado Alerta. El ROAS subió +8.2 % frente al mes anterior, pero cayó -10.7 % "
+    "frente al mismo mes del año anterior y está por debajo de su promedio de 12 meses de 2.62. El modelo proyecta "
+    "un ROAS de 2.44 a 3 meses (rango 2.05 a 2.90), 2.58 a 6 meses y 2.66 a 12 meses, sin cambio de estado "
+    "previsto. Se recomienda optimizar la página de destino para mejorar la tasa de conversión.")
 
 
-def bloque_datos(h: dict, d: dict) -> str:
-    lineas = [
-        f"- Cuenta: {h['cliente']} | Periodo: {h['periodo']}",
-        f"- Inversión: {usd(h['inversion'])}",
-        f"- Ingresos atribuidos: {usd(h['ingresos'])}",
-        f"- Beneficio neto: {usd(h['beneficio'])}",
-        f"- ROAS: {h['roas']:.2f}",
-        f"- CPA: {usd(h['cpa'])}",
-        f"- Conversiones: {h['conversiones']}",
-        f"- CTR: {pct(h['ctr'])} | Tasa de conversión: {pct(h['cvr'])}",
-    ]
-    u = h.get("unidad_periodo", "periodo")
-    if h["var_roas"] is not None:
-        lineas.append(f"- Variación del ROAS vs {u} anterior: {pct(h['var_roas'], True)}")
-    if h["var_cpa"] is not None:
-        lineas.append(f"- Variación del CPA vs {u} anterior: {pct(h['var_cpa'], True)}")
-    lineas.append(f"- Estado clasificado por el modelo: {d['estado']} (confianza {d['confianza']:.1f} %)")
-    if d["drivers"]:
-        lineas.append(f"- Factores determinantes (SHAP): {', '.join(d['drivers'])}")
-    lineas.append(f"- Recomendación prioritaria: {d['recomendaciones'][0]}")
-    return "\n".join(lineas)
+def bloque_datos(h: dict, d: dict, proy: dict) -> str:
+    L = [f"- Cuenta: {h['cliente']} | Vertical: {h['vertical']} | Mes analizado: {h['periodo']}",
+         f"- Inversión: {usd(h['inversion'])} | Ingresos atribuidos: {usd(h['ingresos'])} | "
+         f"Beneficio neto: {usd(h['beneficio'])}",
+         f"- ROAS: {h['roas']:.2f} | CPA: {usd(h['cpa'])} | Conversiones: {h['conversiones']}",
+         f"- Estado actual (regla de negocio): {d['estado']}"]
+    if h.get("var_roas") is not None:
+        L.append(f"- ROAS del mes anterior: {h['roas_mes_anterior']:.2f} (variación {pct(h['var_roas'], True)})")
+    if h.get("var_roas_anual") is not None:
+        L.append(f"- ROAS del mismo mes del año anterior: {h['roas_hace_12m']:.2f} "
+                 f"(variación {pct(h['var_roas_anual'], True)})")
+    L.append(f"- ROAS promedio de los últimos 12 meses: {h['roas_promedio_12m']:.2f}")
+    if h.get("var_cpa") is not None:
+        L.append(f"- Variación del CPA frente al mes anterior: {pct(h['var_cpa'], True)}")
+    for k in sorted(proy):
+        p = proy[k]
+        L.append(f"- Proyección del ROAS a {k} meses ({p['periodo']}): {p['roas']:.2f} "
+                 f"(rango 80 %: {p['inf']:.2f} a {p['sup']:.2f}); estado proyectado: {p['estado']}")
+    if 3 in proy:
+        L.append(f"- Probabilidad de deterioro a 3 meses: {100 * proy[3]['prob_deterioro']:.0f} %")
+    an = d["anomalia"]
+    L.append("- Patrón anómalo en el mes: " + (f"detectado en {an.get('metrica_principal')}" if an.get("es_anomalia")
+                                               else "no detectado"))
+    L.append(f"- Recomendación prioritaria: {d['recomendaciones'][0]}")
+    return "\n".join(L)
 
 
-def plantilla_determinista(h: dict, d: dict) -> str:
-    drivers = ", ".join(d["drivers"]) if d["drivers"] else "el ROAS y el beneficio neto"
-    texto = (f"En {h['periodo']}, la cuenta {h['cliente']} invirtió {usd(h['inversion'])} y generó "
-             f"{usd(h['ingresos'])} en ingresos atribuidos, con un ROAS de {h['roas']:.2f} y un CPA de "
-             f"{usd(h['cpa'])} sobre {h['conversiones']} conversiones. ")
-    if h["var_roas"] is not None:
-        texto += f"El ROAS varió {pct(h['var_roas'], True)} frente al {h.get('unidad_periodo', 'periodo')} anterior. "
-    texto += (f"El modelo clasifica el desempeño como {d['estado']} (confianza {d['confianza']:.1f} %), "
-              f"explicado principalmente por {drivers}. Se recomienda {d['recomendaciones'][0]}.")
-    return texto
+def plantilla_determinista(h: dict, d: dict, proy: dict) -> str:
+    t = (f"En {h['periodo']}, la cuenta {h['cliente']} invirtió {usd(h['inversion'])} y generó "
+         f"{usd(h['ingresos'])} en ingresos atribuidos, con un ROAS de {h['roas']:.2f} y estado {d['estado']}. ")
+    partes = []
+    if h.get("var_roas") is not None:
+        v = h["var_roas"]
+        partes.append(f"el ROAS {'subió' if v >= 0 else 'cayó'} {pct(v, True)} frente al mes anterior")
+    if h.get("var_roas_anual") is not None:
+        v = h["var_roas_anual"]
+        partes.append(f"{'subió' if v >= 0 else 'cayó'} {pct(v, True)} frente al mismo mes del año anterior")
+    if partes:
+        t += partes[0][0].upper() + partes[0][1:] + (" y " + partes[1] if len(partes) > 1 else "") + \
+             f"; su promedio de 12 meses es {h['roas_promedio_12m']:.2f}. "
+    if proy:
+        ps = [f"{proy[k]['roas']:.2f} a {k} meses (rango {proy[k]['inf']:.2f} a {proy[k]['sup']:.2f})" for k in sorted(proy)]
+        t += "El modelo proyecta un ROAS de " + ", ".join(ps[:-1]) + f" y {ps[-1]}"
+        cambios = [k for k in sorted(proy) if proy[k]["estado"] != d["estado"]]
+        t += (f", con estado proyectado {proy[cambios[0]]['estado']} a {cambios[0]} meses. " if cambios
+              else ", sin cambio de estado previsto. ")
+    if d["anomalia"].get("es_anomalia"):
+        t += f"Se detectó un patrón anómalo en {d['anomalia'].get('metrica_principal')}. "
+    t += f"Se recomienda {d['recomendaciones'][0]}."
+    return t
 
 
 def _recortar_oracion(texto: str) -> str:
     texto = re.sub(r"\s+", " ", texto.replace("**", "")).strip()
-    texto = re.sub(r"^(resumen ejecutivo|situaci[oó]n general)\s*:\s*", "", texto, flags=re.I)
+    texto = re.sub(r"^(resumen ejecutivo|situaci[oó]n (general|del mes))\s*:\s*", "", texto, flags=re.I)
     if texto and texto[-1] not in ".!?":
         cortes = [m.end() for m in re.finditer(r"\.(?=\s|$)", texto)]
         if cortes and cortes[-1] > 40:
@@ -337,7 +406,7 @@ def _recortar_oracion(texto: str) -> str:
 
 class AgenteRedactor:
     def __init__(self, model_id: str = "Qwen/Qwen2.5-1.5B-Instruct", usar_llm: bool = True,
-                 max_new_tokens: int = 140, temperature: float = 0.1, seed: int = 42):
+                 max_new_tokens: int = 230, temperature: float = 0.1, seed: int = 42):
         self.model_id, self.usar_llm = model_id, usar_llm
         self.max_new_tokens, self.temperature, self.seed = max_new_tokens, temperature, seed
         self.model = self.tok = None
@@ -356,16 +425,17 @@ class AgenteRedactor:
             device_map="auto" if cuda else None)
         self.model.eval()
 
-    def _llm(self, datos: str, estricto: bool = False) -> tuple[str, int, float]:
+    def _llm(self, datos: str, estricto: bool = False, fallas=None) -> tuple[str, int, float]:
         import torch
         torch.manual_seed(self.seed)
         usuario = f"DATOS VERIFICADOS (calculados por el sistema):\n{datos}\n\nRedacta el resumen ejecutivo."
         if estricto:
-            usuario += (" IMPORTANTE: tu intento anterior contenía cifras no verificadas o asignadas a la "
-                        "métrica equivocada. Copia cada cifra junto a su métrica exactamente como en DATOS.")
+            usuario += (" IMPORTANTE: tu intento anterior tenía errores (" + "; ".join((fallas or [])[:3]) +
+                        "). Copia cada cifra junto a su métrica exactamente como en DATOS y respeta el signo de "
+                        "cada variación.")
         mensajes = [{"role": "system", "content": SISTEMA},
-                    {"role": "user", "content": f"DATOS VERIFICADOS (calculados por el sistema):\n"
-                                                f"{EJEMPLO_DATOS}\n\nRedacta el resumen ejecutivo."},
+                    {"role": "user", "content": f"DATOS VERIFICADOS (calculados por el sistema):\n{EJEMPLO_DATOS}"
+                                                f"\n\nRedacta el resumen ejecutivo."},
                     {"role": "assistant", "content": EJEMPLO_RESPUESTA},
                     {"role": "user", "content": usuario}]
         prompt = self.tok.apply_chat_template(mensajes, tokenize=False, add_generation_prompt=True)
@@ -374,48 +444,45 @@ class AgenteRedactor:
             torch.cuda.synchronize()
         t0 = time.perf_counter()
         with torch.no_grad():
-            salida = self.model.generate(
-                **entradas, max_new_tokens=self.max_new_tokens, do_sample=True,
-                temperature=self.temperature, top_p=0.9, repetition_penalty=1.05,
-                pad_token_id=self.tok.eos_token_id)
+            salida = self.model.generate(**entradas, max_new_tokens=self.max_new_tokens, do_sample=True,
+                                         temperature=self.temperature, top_p=0.9, repetition_penalty=1.05,
+                                         pad_token_id=self.tok.eos_token_id)
         if torch.cuda.is_available():
             torch.cuda.synchronize()
         dt = time.perf_counter() - t0
         nuevos = salida[0, entradas["input_ids"].shape[1]:]
         return self.tok.decode(nuevos, skip_special_tokens=True), int(len(nuevos)), dt
 
-    def generar(self, hechos: dict, diagnostico: dict) -> dict:
-        datos = bloque_datos(hechos, diagnostico)
-        guard = GuardrailNumerico(datos, hechos, diagnostico)
+    def generar(self, h: dict, d: dict, proy: dict) -> dict:
+        datos = bloque_datos(h, d, proy)
+        guard = GuardrailNumerico(datos, h, proy)
         if self.model is None:
-            texto = plantilla_determinista(hechos, diagnostico)
-            return {"texto": texto, "texto_llm_crudo": None, "fuente": "plantilla",
-                    "fiel_crudo": None, "fiel_existencia_crudo": None, "cifras_no_verificadas": [],
-                    "latencia_s": 0.0, "tokens": 0, "tokens_por_s": 0.0, "intentos": 0,
-                    "truncado": False}
+            texto = plantilla_determinista(h, d, proy)
+            ok, fallas = guard.verificar(texto)
+            return {"texto": texto, "texto_llm_crudo": None, "fuente": "plantilla", "fiel_crudo": None,
+                    "fiel_existencia_crudo": None, "fallas": fallas, "latencia_s": 0.0, "tokens": 0,
+                    "tokens_por_s": 0.0, "intentos": 0, "truncado": False, "datos": datos}
         crudo, ntok, dt = self._llm(datos)
         crudo = _recortar_oracion(crudo)
         ok, fallas = guard.verificar(crudo)
         res = {"texto_llm_crudo": crudo, "fiel_crudo": ok,
                "fiel_existencia_crudo": len(guard.verificar_existencia(crudo)) == 0,
-               "cifras_no_verificadas": fallas, "latencia_s": dt, "tokens": ntok,
-               "tokens_por_s": ntok / dt if dt else 0.0, "intentos": 1,
-               "truncado": ntok >= self.max_new_tokens}
+               "fallas": fallas, "latencia_s": dt, "tokens": ntok, "tokens_por_s": ntok / dt if dt else 0.0,
+               "intentos": 1, "truncado": ntok >= self.max_new_tokens, "datos": datos}
         if ok:
             res.update(texto=crudo, fuente="llm")
             return res
-        crudo2, ntok2, dt2 = self._llm(datos, estricto=True)
+        crudo2, _, dt2 = self._llm(datos, estricto=True, fallas=fallas)
         crudo2 = _recortar_oracion(crudo2)
         ok2, _ = guard.verificar(crudo2)
-        res["intentos"] = 2
-        res["latencia_total_s"] = dt + dt2
+        res.update(intentos=2, latencia_total_s=dt + dt2)
         if ok2:
             res.update(texto=crudo2, fuente="llm_reintento")
         else:
-            res.update(texto=plantilla_determinista(hechos, diagnostico), fuente="plantilla_fallback")
+            res.update(texto=plantilla_determinista(h, d, proy), fuente="plantilla_fallback")
         return res
 
 
-def verificar_fidelidad_final(texto: str, hechos: dict, diagnostico: dict) -> bool:
-    ok, _ = GuardrailNumerico(bloque_datos(hechos, diagnostico), hechos, diagnostico).verificar(texto)
+def verificar_fidelidad_final(texto: str, h: dict, d: dict, proy: dict) -> bool:
+    ok, _ = GuardrailNumerico(bloque_datos(h, d, proy), h, proy).verificar(texto)
     return ok

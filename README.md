@@ -1,126 +1,106 @@
-# Sistema de Generación Inteligente de Reportes de Marketing · Novar Agencia
+# Sistema de Generación Inteligente de Reportes de Marketing · Novar Agencia · v2.0
 
-Prototipo final (v1.1) del proyecto de titulación de la **Maestría en Inteligencia Artificial Aplicada
-(UDLA – FICA)**. Autor: Julio Alejandro Tobar Valencia · Tutor: MSc. Paulo Guerra Terán ·
-Sponsor: Novar Agencia (Quito, Ecuador).
+Prototipo del proyecto de titulación de la **Maestría en Inteligencia Artificial Aplicada (UDLA – FICA)**.
+Autor: Julio Alejandro Tobar Valencia · Tutor: MSc. Paulo Guerra Terán · Sponsor: Novar Agencia (Quito, Ecuador).
 
-**Demo (video):** https://drive.google.com/file/d/1DMhVk4nvT4OnvS_TD2CkKdzhl3Ulc-r3/view?usp=sharing
-**Repositorio:** https://github.com/atobarv/novar-reportes-ia
+
+**Video demo:** https://drive.google.com/file/d/1DMhVk4nvT4OnvS_TD2CkKdzhl3Ulc-r3/view?usp=sharing
 
 ## 1. Problema
-En Novar Agencia la consolidación mensual de métricas (Meta Ads, Google Ads, GA4 y CRM) y la redacción
-del informe ejecutivo de cada cliente se hacían a mano: unas **18 horas por cliente al mes**, retrasos de
-hasta 7 días hábiles y un costo indirecto cercano a **USD 1 800 mensuales**, con riesgo de errores al
-calcular ROAS y CPA.
+La consolidación mensual de métricas (Meta Ads, Google Ads, GA4, CRM) y la redacción del informe de cada cliente
+tomaban unas **18 horas por cliente al mes**, con retrasos de hasta 7 días hábiles y riesgo de errores en ROAS y CPA.
 
-## 2. Solución
-Un copiloto de IA que (1) ingiere y normaliza las exportaciones publicitarias, (2) calcula los KPIs de
-forma determinista, (3) clasifica el rendimiento de cada cuenta (Crítico / Alerta / Óptimo) con un modelo
-explicable (Random Forest + SHAP/LIME), (4) redacta el resumen ejecutivo con un LLM local
-(Qwen2.5-1.5B-Instruct) protegido por un **guardrail numérico** que verifica existencia y atribución de
-cada cifra, y (5) exige validación humana (HITL) antes de enviar el PDF al cliente.
+## 2. Solución: reglas donde basta calcular, aprendizaje automático donde hay que inferir
+| Tarea | Enfoque |
+|---|---|
+| Consolidar exportaciones y calcular KPI (ROAS, CPA, CTR, CVR, CPM, beneficio) | Determinista |
+| Clasificar el estado actual de la cuenta | Determinista (regla de negocio) |
+| Comparar con el pasado (mes anterior, mismo mes del año anterior, promedio 12 meses) | Determinista |
+| Recomendaciones de acción | Determinista (reglas de negocio) |
+| Proyectar ROAS e inversión a 3, 6 y 12 meses | Aprendizaje automático |
+| Anticipar deterioros (paso a un estado peor) | Aprendizaje automático + regla |
+| Detectar meses con patrones anómalos (fallas de tracking, gasto duplicado, tráfico inválido) | Aprendizaje automático no supervisado |
+| Redactar el resumen ejecutivo | Modelo de lenguaje con verificación determinista |
+
+El estado actual (Crítico/Alerta/Óptimo) se calcula con la regla de negocio porque el ROAS es un cálculo, no una
+predicción: un experimento con validación aleatoria, por cliente y por fecha mostró que los clasificadores de ML solo
+reproducen esa regla. El ML se usa para **proyectar el ROAS a 3, 6 y 12 meses**, **anticipar deterioros** y
+**detectar anomalías**; un LLM local redacta el comparativo del pasado y la proyección, verificado cifra por cifra.
 
 ## 3. Pipeline
 ```
 Exportaciones CSV/Excel ─► ETL (normalización, exclusión de fugas, seudonimización SHA-256)
-   ─► KPIs deterministas (ROAS, CPA, CTR, CVR, CPM, beneficio)
-   ─► Clasificador RobustScaler + RandomForest (5-Fold CV) ─► SHAP / LIME
-   ─► Agentes: Extractor → Analista → Redactor (Qwen2.5-1.5B, one-shot) → Guardrail (reintento / plantilla)
-   ─► Dashboard Streamlit + PDF (WeasyPrint) ─► Validación y firma del Director de Cuenta (HITL)
+  ─► KPI y estado por regla de negocio (determinista) ─► comparativo con el pasado (determinista)
+  ─► Detector de anomalías (Isolation Forest) ─► imputación de meses anómalos
+  ─► Proyección del ROAS a 3/6/12 meses (Ensamble ML (Ridge + Gradient Boosting)) + rango 80 % + probabilidad de deterioro
+  ─► Agentes Extractor · Pronóstico · Analista · Redactor (Qwen2.5-1.5B) ─► Guardrail (existencia, atribución, dirección)
+  ─► Tablero Streamlit + PDF ─► Revisión, corrección y aprobación del Director de Cuenta (registro de la prueba operativa)
 ```
 
-## 4. Estructura del repositorio
+## 4. Datos
+- `data/raw/dataset_marketing_novar_temporal_v2.csv`: 14 cuentas × 48 meses (oct-2022 a sep-2026), **simulado** y
+  calibrado con el dataset v1 (13 meses por cuenta, sin estructura temporal: autocorrelación -0.11).
+  El generador (`src/etl/simulador_temporal.py`) documenta estacionalidad, tendencia, persistencia, rendimientos
+  decrecientes y anomalías operativas.
+- `data/eval/anomalias_inyectadas.csv`: verdad de referencia de las anomalías (solo para evaluar, nunca como entrada).
+
+## 5. Validación sin fuga de información
+Toda evaluación de ML usa **cuentas no vistas**, **meses posteriores** al corte (Sep-2025) o ambos.
+
+**Proyección del ROAS (cuentas y meses no vistos)**
+
+| Horizonte | MAE del ROAS | Mejora vs pronóstico ingenuo |
+|---|---|---|
+| 1 meses | 0.282 | +15.5 % |
+| 3 meses | 0.305 | +25.7 % |
+| 6 meses | 0.353 | +18.9 % |
+| 12 meses | 0.331 | -4.3 % |
+
+**Detección de anomalías**
+
+| Método | Esquema | Precisión | Recall | F1 |
+|---|---|---|---|---|
+| Isolation Forest (ML) | por cliente | 93.9% | 86.1% | 89.9% |
+| Regla |z ROAS| > 3 | por cliente | 39.5% | 47.2% | 43.0% |
+| Isolation Forest (ML) | temporal | 100.0% | 90.9% | 95.2% |
+| Regla |z ROAS| > 3 | temporal | 85.7% | 54.5% | 66.7% |
+
+**Redacción (test ciego N=28)**: fidelidad final 100% · LLM sin corrección
+68% · latencia media 9.70 s.
+
+**Impacto:** 18 h → 0.50 h por cliente (estimado (revisión supuesta de 30 min)),
+reducción de 97.2%.
+
+**Pruebas automatizadas:** 9 passed
+
+## 6. Estructura
 ```
-data/raw/            Dataset seudonimizado de entrada
-data/processed/      Dataset con KPIs y etiqueta
-notebooks/           Notebook de Colab que reproduce todo el proyecto
-src/etl/             Ingesta, limpieza, seudonimización
-src/features/        KPIs y etiquetado
-src/models/          Baselines, Random Forest, validación cruzada, pruebas de robustez
-src/explain/         TreeSHAP y LIME
-src/agents/          Agentes y guardrail numérico
-src/reports/         Exportación HTML/PDF con bloque HITL
-scripts/             run_pipeline.py (ejecución por línea de comandos)
-tests/               Pruebas automatizadas (pytest)
-models/              Modelo entrenado (.joblib)
-outputs/figures/     Figuras (EDA, modelos, SHAP, LIME, sesgos, robustez, diagramas)
-outputs/metrics/     resultados_finales.json/.xlsx, tablas CSV, reporte de pytest
-outputs/reports/     Reportes PDF de ejemplo por cuenta
-docs/                MODEL_CARD.md
-app.py               Dashboard Streamlit
-Dockerfile, docker-compose.yml, requirements.txt, CHANGELOG.md
+app.py                       Tablero Streamlit (estado, proyección, anomalías, reporte y prueba operativa)
+src/etl/                     Ingesta, limpieza, seudonimización y simulador temporal v2
+src/features/                KPI y comparativo histórico
+src/rules/                   Regla de estado, recomendaciones y tabla determinista vs ML
+src/models/                  Pronóstico (3/6/12 m), anomalías y experimento de verificación del clasificador
+src/agents/                  Agentes y guardrail
+src/reports/                 PDF con gráfico de proyección y bloque HITL
+scripts/run_pipeline.py      Ejecución por consola
+tests/                       Pruebas pytest
+models/                      pronosticador_roas.joblib · detector_anomalias.joblib
+outputs/                     Figuras, métricas, reportes PDF
+notebooks/                   Notebook de Colab que reproduce todo
 ```
 
-## 5. Requisitos
-- Python 3.10 o superior. GPU NVIDIA (p. ej. T4 de Google Colab gratuito) recomendada para el LLM;
-  sin GPU el sistema funciona con la plantilla determinista.
-- Dependencias exactas en `requirements.txt` (scikit-learn, shap, lime, torch, transformers, streamlit,
-  weasyprint, rouge-score, sacrebleu, pytest, entre otras).
-- WeasyPrint requiere las librerías de sistema `libpango-1.0-0` y `libpangoft2-1.0-0` (incluidas en el Dockerfile).
-
-## 6. Ejecución paso a paso
-**Opción A · Google Colab (reproduce todo el proyecto)**
-1. Abrir `notebooks/Proyecto_Final_Capstone_Novar.ipynb` en Colab y activar GPU T4.
-2. Colocar el dataset en la carpeta de trabajo de Drive y ejecutar *Entorno de ejecución › Ejecutar todas*.
-3. La celda 16 abre el dashboard.
-
-**Opción B · Local**
+## 7. Ejecución
+**Colab:** abrir `notebooks/Proyecto_Final_Capstone_Novar.ipynb`, GPU T4, *Ejecutar todas*.
+**Local:**
 ```bash
-python -m venv .venv && source .venv/bin/activate      # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
-python -m pytest tests -v                                # pruebas
-python scripts/run_pipeline.py --datos data/raw/dataset_marketing_novar_agencia.csv          # sin LLM
-python scripts/run_pipeline.py --datos data/raw/dataset_marketing_novar_agencia.csv --llm    # con LLM
-streamlit run app.py                                     # dashboard en http://localhost:8501
+python -m pytest tests -v
+python scripts/run_pipeline.py --datos data/raw/dataset_marketing_novar_temporal_v2.csv          # sin LLM
+python scripts/run_pipeline.py --datos data/raw/dataset_marketing_novar_temporal_v2.csv --llm    # con LLM
+streamlit run app.py
+docker compose up --build
 ```
 
-**Opción C · Docker**
-```bash
-docker compose up --build        # http://localhost:8501
-```
-
-## 7. Resultados (ejecución 21/10/2026, semilla 42)
-Datos: 182 registros mensuales · 14 cuentas ·
-origen: Exportaciones de Novar Agencia (dataset_marketing_novar_agencia.csv) (simulado con la estructura de las exportaciones reales de la agencia).
-
-**Clasificación · 5-Fold Stratified CV**
-
-| Modelo | Accuracy | F1 ponderado | Brecha train–val |
-|---|---|---|---|
-| Regresión Logística (baseline) | 91.82% ± 5.39% | 91.81% | 2.41% |
-| Árbol de Decisión d=3 (baseline) | 100.00% ± 0.00% | 100.00% | 0.00% |
-| Random Forest + RobustScaler (ajustado) | 96.17% ± 3.72% | 95.96% | 3.69% |
-
-**Robustez · accuracy media bajo ruido de etiqueta y de atribución**
-
-| Modelo | Datos limpios | Índice de robustez | Ruido severo |
-|---|---|---|---|
-| Random Forest + RobustScaler (ajustado) | 96.2% | 83.8% | 80.9% |
-| Random Forest d=6 (mejor F1 en datos limpios) | 98.1% | 83.5% | 79.7% |
-| Árbol de Decisión d=3 (baseline) | 100.0% | 81.8% | 77.1% |
-| Regresión Logística (baseline) | 90.6% | 79.1% | 75.8% |
-
-**Módulo generativo · test ciego N=28 (GPU Tesla T4)**
-
-| Métrica | Valor |
-|---|---|
-| Latencia media / p95 | 6.10 s / 6.22 s |
-| Throughput | 22.94 tokens/s |
-| Fidelidad del LLM sin corrección (existencia / existencia + atribución) | 96.4% / 96.4% |
-| Fidelidad final con guardrail | 100.0% |
-| ROUGE-L / BLEU vs diagnóstico de referencia | 0.229 / 0.049 |
-
-**Impacto:** reducción estimada del tiempo de elaboración de **97.2%**
-(18 h → 0.50 h por cliente,
-incluida la revisión humana) y ahorro aproximado de USD 1,750 al mes.
-
-**Pruebas automatizadas:** ============================== 7 passed in 3.16s ===============================
-
-## 8. Ética, privacidad y limitaciones
-Seudonimización SHA-256 con sal (LOPDP Ecuador), LLM local sin envío de datos a terceros, explicabilidad
-SHAP/LIME, auditoría de sesgos por escala presupuestaria y vertical, y validación humana obligatoria
-(ver `docs/MODEL_CARD.md`). Los datos son simulados y la etiqueta sigue umbrales de ROAS definidos por la
-agencia; la validación con datos reales de clientes es trabajo futuro.
-
-## 9. Control de versiones
-Historial en `CHANGELOG.md`. Código versionado con Git (etiqueta `v1.1`) y datos con DVC y huella SHA-256.
+## 8. Ética y limitaciones
+Seudonimización (LOPDP), LLM local, aprobación humana obligatoria, auditoría de error por vertical y escala
+(`docs/MODEL_CARD.md`). Datos simulados: validar con exportaciones reales antes del uso con clientes.

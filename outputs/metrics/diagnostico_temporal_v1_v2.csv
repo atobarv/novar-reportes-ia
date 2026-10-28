@@ -1,0 +1,6 @@
+,Dataset v1 (original),Dataset v2 (temporal)
+Meses por cuenta,13,48
+Persistencia: autocorrelación del ROAS a 1 mes,-0.115,0.302
+Estacionalidad: autocorrelación del ROAS a 12 meses,no estimable (< 24 meses),0.257
+Tendencia anual |log| media,0.117,0.083
+¿Permite entrenar y validar una proyección a 12 meses?,No,Sí

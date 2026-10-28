@@ -1,4 +1,8 @@
 """
+Experimento de verificación (v1.1 → v2.0): ¿aporta el aprendizaje automático a la clasificación del estado ACTUAL?
+Como el estado se define con umbrales fijos de ROAS, se compara la regla de negocio con clasificadores de ML bajo
+tres esquemas de validación (aleatorio, por cliente y por fecha). Si el ML solo reproduce la regla, se usa la regla.
+
 Clasificador tabular de rendimiento publicitario (Crítico / Alerta / Óptimo).
 Baselines: Regresión Logística y Árbol de Decisión (profundidad 3) sobre variables base.
 Modelo ajustado: RobustScaler + RandomForest (50 árboles, profundidad 4, semilla 42); la profundidad 4
@@ -76,3 +80,39 @@ def busqueda_hiperparametros(X: pd.DataFrame, y: pd.Series, seed: int = 42) -> d
 
 def entrenar_final(pipeline, X: pd.DataFrame, y: pd.Series):
     return pipeline.fit(X, y)
+
+
+def verificar_estado_actual(df: pd.DataFrame, corte, seed: int = 42) -> pd.DataFrame:
+    """Accuracy de la regla y de los clasificadores frente a la etiqueta, con tres esquemas de validación.
+    La etiqueta usada es `estado_etiqueta_original` si existe (dataset v1) o `estado_rendimiento`."""
+    from sklearn.base import clone
+    from sklearn.metrics import accuracy_score
+    from sklearn.model_selection import GroupKFold
+
+    from src.rules.reglas_negocio import estado_por_regla
+    y = (df["estado_etiqueta_original"] if "estado_etiqueta_original" in df else df["estado_rendimiento"]).values
+    regla = estado_por_regla(df["roas"].values)
+    fechas = pd.to_datetime(df["fecha"])
+    filas = []
+    for nombre, (pipe, feats) in construir_modelos(seed).items():
+        X = df[feats]
+        # aleatorio (estratificado)
+        r, _ = evaluar_cv(pipe, X, pd.Series(y), 5, seed)
+        filas.append({"modelo": nombre, "esquema": "aleatorio (5-Fold estratificado)", "accuracy": r["val_accuracy"]})
+        # por cliente
+        accs = []
+        for tr, te in GroupKFold(n_splits=min(7, df["cliente"].nunique())).split(X, y, groups=df["cliente"]):
+            m = clone(pipe).fit(X.iloc[tr], y[tr]); accs.append(accuracy_score(y[te], m.predict(X.iloc[te])))
+        filas.append({"modelo": nombre, "esquema": "por cliente (cuentas no vistas)", "accuracy": float(np.mean(accs))})
+        # por fecha
+        tr, te = fechas <= corte, fechas > corte
+        if tr.any() and te.any() and len(set(y[tr.values])) > 1:
+            m = clone(pipe).fit(X[tr], y[tr.values])
+            filas.append({"modelo": nombre, "esquema": "por fecha (meses posteriores)",
+                          "accuracy": accuracy_score(y[te.values], m.predict(X[te]))})
+    for esquema, mask in [("aleatorio (5-Fold estratificado)", np.ones(len(y), bool)),
+                          ("por cliente (cuentas no vistas)", np.ones(len(y), bool)),
+                          ("por fecha (meses posteriores)", (fechas > corte).values)]:
+        filas.append({"modelo": "Regla de negocio (sin entrenamiento)", "esquema": esquema,
+                      "accuracy": float((regla[mask] == y[mask]).mean())})
+    return pd.DataFrame(filas).pivot(index="modelo", columns="esquema", values="accuracy")
