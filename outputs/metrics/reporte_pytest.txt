@@ -1,14 +1,23 @@
 ============================= test session starts ==============================
-collecting ... collected 9 items
+collecting ... collected 18 items
 
-tests/test_pipeline.py::test_kpis_deterministas PASSED                   [ 11%]
-tests/test_pipeline.py::test_regla_de_estado_y_deterioro PASSED          [ 22%]
-tests/test_pipeline.py::test_limpieza_formatos_y_fuga PASSED             [ 33%]
-tests/test_pipeline.py::test_seudonimizacion PASSED                      [ 44%]
-tests/test_pipeline.py::test_variables_sin_fuga_temporal PASSED          [ 55%]
-tests/test_pipeline.py::test_particiones_por_cliente_y_fecha PASSED      [ 66%]
-tests/test_pipeline.py::test_detector_supera_regla PASSED                [ 77%]
-tests/test_pipeline.py::test_proyeccion_3_6_12_con_rango PASSED          [ 88%]
-tests/test_pipeline.py::test_guardrail_existencia_atribucion_direccion PASSED [100%]
+tests/test_pipeline.py::test_kpis_deterministas PASSED                   [  5%]
+tests/test_pipeline.py::test_regla_de_estado_y_deterioro PASSED          [ 11%]
+tests/test_pipeline.py::test_limpieza_formatos_y_fuga PASSED             [ 16%]
+tests/test_pipeline.py::test_seudonimizacion PASSED                      [ 22%]
+tests/test_pipeline.py::test_variables_sin_fuga_temporal PASSED          [ 27%]
+tests/test_pipeline.py::test_particiones_por_cliente_y_fecha PASSED      [ 33%]
+tests/test_pipeline.py::test_detector_supera_regla PASSED                [ 38%]
+tests/test_pipeline.py::test_proyeccion_3_6_12_con_rango PASSED          [ 44%]
+tests/test_pipeline.py::test_guardrail_existencia_atribucion_direccion PASSED [ 50%]
+tests/test_pipeline.py::test_faltantes_se_imputan_y_marcan PASSED        [ 55%]
+tests/test_pipeline.py::test_varias_plataformas_se_consolidan_por_mes PASSED [ 61%]
+tests/test_pipeline.py::test_errores_controlados_con_mensaje[entrada0-no contiene filas] PASSED [ 66%]
+tests/test_pipeline.py::test_errores_controlados_con_mensaje[entrada1-Columnas obligatorias ausentes] PASSED [ 72%]
+tests/test_pipeline.py::test_errores_controlados_con_mensaje[entrada2-No se reconocieron] PASSED [ 77%]
+tests/test_pipeline.py::test_errores_controlados_con_mensaje[entrada3-Ninguna fila] PASSED [ 83%]
+tests/test_pipeline.py::test_historia_corta_sin_proyeccion_ni_cifras_inventadas PASSED [ 88%]
+tests/test_pipeline.py::test_sanitizacion_y_variantes_de_prompt PASSED   [ 94%]
+tests/test_pipeline.py::test_endpoint_reporte PASSED                     [100%]
 
-============================== 9 passed in 5.73s ===============================
+============================== 18 passed in 6.63s ==============================

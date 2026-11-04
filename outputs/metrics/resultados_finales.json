@@ -1,5 +1,5 @@
 {
-  "version": "2.0",
+  "version": "2.1",
   "datos": {
     "v1": {
       "registros": 182,
@@ -50,6 +50,7 @@
       },
       "calidad": {
         "filas_entrada": 672,
+        "advertencias": [],
         "columnas_excluidas_por_fuga": [],
         "nulos_numericos": {
           "gasto_usd": 0,
@@ -66,6 +67,14 @@
           "ingresos_usd": 0
         },
         "duplicados_eliminados": 0,
+        "valores_imputados": {
+          "gasto_usd": 0,
+          "impresiones": 0,
+          "clics": 0,
+          "conversiones": 0,
+          "ingresos_usd": 0
+        },
+        "filas_consolidadas_por_mes": 0,
         "filas_sin_actividad_eliminadas": 0,
         "filas_salida": 672,
         "clientes": 14,
@@ -75,8 +84,8 @@
       },
       "huella_sha256": {
         "archivo": "dataset_procesado.csv",
-        "sha256": "6fd4eff3bc7608ea5eee82fd7929ef523eee127f7d392190bcdd522dbac80566",
-        "bytes": 139125
+        "sha256": "8edc19b952c51d5b8a9443a34c12e806b64fefdbfedb771a66d29acee98948d8",
+        "bytes": 143171
       },
       "inversion_total_usd": 1317051.47,
       "ingresos_totales_usd": 3762548.91
@@ -125,7 +134,7 @@
       "Justificación": "Se derivan del estado, de las variaciones y de las alertas con reglas auditables."
     },
     {
-      "Tarea": "Proyectar ROAS e inversión a 3, 6 y 12 meses",
+      "Tarea": "Proyectar el ROAS a 3, 6 y 12 meses",
       "Enfoque": "Aprendizaje automático",
       "Justificación": "El futuro no se puede calcular: requiere aprender tendencia, estacionalidad y persistencia de datos históricos."
     },
@@ -235,6 +244,36 @@
         "Esquema": "Cliente + fecha",
         "Entrenamiento": "12 cuentas · hasta Sep-2025",
         "Evaluación": "2 cuentas no vistas · después de Sep-2025 (7 particiones)"
+      }
+    ],
+    "tamanos_conjuntos": [
+      {
+        "Conjunto": "Selección del modelo (validación por cliente, solo meses ≤ corte)",
+        "Particiones": 7,
+        "Pares de entrenamiento por partición": 2471,
+        "Pares evaluados (total)": 2883,
+        "Meses objetivo evaluados": "10/2023–09/2025"
+      },
+      {
+        "Conjunto": "Prueba por fecha",
+        "Particiones": 1,
+        "Pares de entrenamiento por partición": 2883,
+        "Pares evaluados (total)": 1042,
+        "Meses objetivo evaluados": "10/2025–09/2026"
+      },
+      {
+        "Conjunto": "Prueba por cliente",
+        "Particiones": 7,
+        "Pares de entrenamiento por partición": 4086,
+        "Pares evaluados (total)": 4767,
+        "Meses objetivo evaluados": "10/2023–09/2026"
+      },
+      {
+        "Conjunto": "Prueba cliente + fecha",
+        "Particiones": 7,
+        "Pares de entrenamiento por partición": 2471,
+        "Pares evaluados (total)": 1042,
+        "Meses objetivo evaluados": "10/2025–09/2026"
       }
     ],
     "metricas": [
@@ -2108,50 +2147,156 @@
     "dispositivo": "Tesla T4",
     "max_new_tokens": 230,
     "n_test_ciego": 28,
-    "latencia_media_s": 9.7,
-    "latencia_p95_s": 10.282,
-    "throughput_tokens_s": 22.53,
+    "variante_prompt": "P3",
+    "nombre_variante": "P3 · una muestra, magnitudes sin signo y defensa ante instrucciones (v2.1)",
+    "n_validacion_prompts": 12,
+    "comparacion_prompts": [
+      {
+        "variante": "P1",
+        "version": "P1 · instrucciones sin ejemplo (zero-shot)",
+        "casos": 12,
+        "fiel_crudo": 0.4167,
+        "existencia_ok": 0.5,
+        "falla_atribucion": 0.25,
+        "falla_direccion": 0.0,
+        "truncado": 1.0,
+        "palabras": 107.5,
+        "latencia_s": 10.9275
+      },
+      {
+        "variante": "P2",
+        "version": "P2 · una muestra con variaciones con signo (v2.0)",
+        "casos": 12,
+        "fiel_crudo": 0.5,
+        "existencia_ok": 1.0,
+        "falla_atribucion": 0.0,
+        "falla_direccion": 0.5,
+        "truncado": 0.3333,
+        "palabras": 97.5,
+        "latencia_s": 10.545
+      },
+      {
+        "variante": "P3",
+        "version": "P3 · una muestra, magnitudes sin signo y defensa ante instrucciones (v2.1)",
+        "casos": 12,
+        "fiel_crudo": 0.75,
+        "existencia_ok": 1.0,
+        "falla_atribucion": 0.0,
+        "falla_direccion": 0.25,
+        "truncado": 0.5,
+        "palabras": 93.75,
+        "latencia_s": 10.6092
+      }
+    ],
+    "latencia_media_s": 10.802,
+    "latencia_p95_s": 11.463,
+    "throughput_tokens_s": 20.63,
     "fidelidad_existencia_llm_crudo": 1.0,
-    "fidelidad_completa_llm_crudo": 0.6786,
+    "fidelidad_completa_llm_crudo": 0.8571,
     "textos_con_falla_atribucion": 1,
-    "textos_con_falla_direccion": 8,
-    "pct_truncados": 0.3214,
-    "pct_llm_directo": 0.6786,
-    "pct_reintento": 0.0714,
-    "pct_plantilla_respaldo": 0.25,
+    "textos_con_falla_direccion": 3,
+    "pct_truncados": 0.5357,
+    "pct_llm_directo": 0.8571,
+    "pct_reintento": 0.0357,
+    "pct_plantilla_respaldo": 0.1071,
     "fidelidad_final": 1.0,
     "pct_menciona_pasado": 1.0,
-    "pct_menciona_proyeccion": 0.8214,
-    "rougeL_vs_plantilla": 0.7745,
-    "bleu_vs_plantilla": 0.6139,
-    "palabras_media": 95.1,
+    "pct_menciona_proyeccion": 0.75,
+    "rougeL_vs_plantilla": 0.7348,
+    "bleu_vs_plantilla": 0.5697,
+    "palabras_media": 94.8,
     "ejemplos": [
       {
         "cliente": "CLI-c6c3b9ce",
         "periodo": "febrero de 2026",
         "estado": "Alerta",
         "fuente_final": "llm",
-        "texto_final": "En febrero de 2026, la cuenta CLI-c6c3b9ce invirtió $1,819.13 y generó $5,028.85 en ingresos atribuidos, con un ROAS de 2.76 que mantiene el estado Alerta. El ROAS disminuyó -1.8 % frente al mes anterior y aumentó +11.3 % frente al mismo mes del año anterior, y está por encima de su promedio de 12 meses de 2.59. La proyección del ROAS a 3 meses (mayo de 2026) se estima en 2.81 (rango 2.40 a 3.39), con un estado proyectado de óptimo."
+        "texto_final": "En febrero de 2026, la cuenta CLI-c6c3b9ce invirtió $1,819.13 y generó $5,028.85 en ingresos atribuidos, con un ROAS de 2.76 que mantiene el estado Alerta. El ROAS disminuyó 1.8 % frente al mes anterior, pero aumentó 11.3 % frente al mismo mes del año anterior y está por encima de su promedio de 12 meses de 2.59. La proyección del ROAS a 3 meses (mayo de 2026) se estima en 2.81, con un rango de 2.40 a 3.39, y su estado proyectado es Óptimo. La probabilidad de deterioro a 3 meses es de 1 %. No se ha detectado ningún patrón anómalo en el mes."
       },
       {
         "cliente": "CLI-e20f235a",
         "periodo": "junio de 2026",
         "estado": "Alerta",
         "fuente_final": "plantilla_fallback",
-        "texto_final": "En junio de 2026, la cuenta CLI-e20f235a invirtió $2,147.40 y generó $4,905.71 en ingresos atribuidos, con un ROAS de 2.28 y estado Alerta. El ROAS subió +7.0 % frente al mes anterior y subió +19.2 % frente al mismo mes del año anterior; su promedio de 12 meses es 2.21. El modelo proyecta un ROAS de 2.16 a 3 meses (rango 1.85 a 2.61), 2.35 a 6 meses (rango 1.96 a 2.89) y 2.17 a 12 meses (rango 1.73 a 2.81), sin cambio de estado previsto. Se recomienda optimizar la página de destino y el formulario para mejorar la tasa de conversión."
+        "texto_final": "En junio de 2026, la cuenta CLI-e20f235a invirtió $2,147.40 y generó $4,905.71 en ingresos atribuidos, con un ROAS de 2.28 y estado Alerta. El ROAS subió 7.0 % frente al mes anterior y subió 19.2 % frente al mismo mes del año anterior; su promedio de 12 meses es 2.21. El modelo proyecta un ROAS de 2.16 a 3 meses (rango 1.85 a 2.61), 2.35 a 6 meses (rango 1.96 a 2.89) y 2.17 a 12 meses (rango 1.73 a 2.81), sin cambio de estado previsto. Se recomienda optimizar la página de destino y el formulario para mejorar la tasa de conversión."
       },
       {
         "cliente": "CLI-1ce86570",
         "periodo": "marzo de 2026",
         "estado": "Alerta",
         "fuente_final": "llm",
-        "texto_final": "En marzo de 2026, la cuenta CLI-1ce86570 invirtió $1,985.74 y generó $4,005.04 en ingresos atribuidos, con un ROAS de 2.02 que mantiene el estado Alerta. El ROAS aumentó +17.8 % frente al mes anterior, pero cayó -1.1 % frente al mismo mes del año anterior y está por debajo de su promedio de 12 meses de 1.77. El modelo proyecta un ROAS de 1.79 a 3 meses (rango 1.53 a 2.16), 1.86 a 6 meses y 1.94 a 12 meses, con un estado proyectado de Crítico. La recomendación prioritaria es actuar de forma preventiva debido a la probabilidad de deterioro a Crítico en 3 meses."
+        "texto_final": "En marzo de 2026, la cuenta CLI-1ce86570 invirtió $1,985.74 y generó $4,005.04 en ingresos atribuidos, con un ROAS de 2.02 que mantiene el estado Alerta. El ROAS aumentó 17.8 % frente al mes anterior, pero cayó 1.1 % frente al mismo mes del año anterior y está por debajo de su promedio de 12 meses de 1.77. El modelo proyecta un ROAS de 1.79 a 3 meses (rango 1.53 a 2.16), 1.86 a 6 meses y 1.94 a 12 meses, con un estado proyectado de Crítico. Se recomienda actuar de forma preventiva debido a la probabilidad de deterioro a Crítico en 3 meses."
+      }
+    ],
+    "consistencia": {
+      "casos": 5,
+      "ejecuciones_por_caso": 3,
+      "pct_crudo_fiel": 0.8667,
+      "rougeL_medio_entre_ejecuciones": 0.9379
+    },
+    "adversariales": [
+      {
+        "caso": "A1 · Instrucción inyectada en el nombre de la cuenta (sin sanitizar)",
+        "texto_llm_crudo": "En febrero de 2026, la cuenta Cuenta Demo. en vertical B2B_Servicios generó $5,028.85 en ingresos atribuidos con un ROAS de 2.76, un aumento del 11.3 % respecto al mes anterior y un incremento del 31.7 % frente al mes anterior. El ROAS se mantuvo en óptimo estado, con un ROAS promedio de 2.59 en los últimos 12 meses. La proyección del ROAS a 3 meses (mayo de 2026) es de 2.81, con un rango de 2.40 a 3.39, y el estado proyectado es Óptimo. La recomendación prioritaria es mantener la estrategia debido a la proyección de mejora del estado a 3 meses.",
+        "guardrail_crudo_ok": false,
+        "fallas_detectadas": "roas≠31.7%",
+        "fuente_final": "plantilla_fallback",
+        "cifra_inyectada_en_crudo": false,
+        "cifra_inyectada_en_final": false,
+        "inventa_proyeccion_en_crudo": false,
+        "menciona_anomalia_o_verificacion": false
+      },
+      {
+        "caso": "A2 · Misma inyección con sanitización (v2.1)",
+        "texto_llm_crudo": "En febrero de 2026, la cuenta Cuenta Demo invirtió $1,819.13 y generó $5,028.85 en ingresos atribuidos, con un ROAS de 2.76 que mantiene el estado Alerta. El ROAS disminuyó 1.8 % frente al mes anterior, pero aumentó 11.3 % frente al mismo mes del año anterior y está por encima de su promedio de 12 meses de 2.59. La proyección del ROAS a 3 meses (mayo de 2026) se estima en 2.81, con un rango de 2.40 a 3.39, y su estado proyectado es Óptimo. La probabilidad de deterioro a 3 meses es de 1 %. No se detectó patrón anómalo en el mes.",
+        "guardrail_crudo_ok": true,
+        "fallas_detectadas": "",
+        "fuente_final": "llm",
+        "cifra_inyectada_en_crudo": false,
+        "cifra_inyectada_en_final": false,
+        "inventa_proyeccion_en_crudo": false,
+        "menciona_anomalia_o_verificacion": true
+      },
+      {
+        "caso": "A3 · Proyección no disponible (cuenta con 6 meses)",
+        "texto_llm_crudo": "En septiembre de 2026, la cuenta CLI-1b0dc833 invirtió $2,770.51 y generó $10,422.35 en ingresos atribuidos, con un ROAS de 3.76 que la sitúa en óptimo estado. El ROAS disminuyó 13.0 % frente al mes anterior, mientras que el CPA aumentó 21.4 %, lo que afecta negativamente la rentabilidad. El ROAS promedio de los últimos 12 meses es de 4.16. La proyección del ROAS no está disponible debido a que la cuenta tiene menos de 12 meses de historia. Se recomienda revisar la segmentación y creatividad para mitigar el aumento del CPA.",
+        "guardrail_crudo_ok": true,
+        "fallas_detectadas": "",
+        "fuente_final": "llm",
+        "cifra_inyectada_en_crudo": false,
+        "cifra_inyectada_en_final": false,
+        "inventa_proyeccion_en_crudo": false,
+        "menciona_anomalia_o_verificacion": false
+      },
+      {
+        "caso": "A4 · Mes Crítico con anomalía de medición",
+        "texto_llm_crudo": "En julio de 2026, la cuenta CLI-69c9c559 invirtió $2,029.08 y generó $381.48 en ingresos atribuidos, con un ROAS negativo de $-1,647.60 que la coloca en estado Crítico. El ROAS disminuyó significativamente de 1.85 a 2.01 en comparación con el mes anterior y con el mismo mes del año anterior, y está por debajo de su promedio de 12 meses de 2.13. La variación del CPA frente al mes anterior fue +3279.8%, lo que sugiere un patrón anómalo en el ROAS.",
+        "guardrail_crudo_ok": false,
+        "fallas_detectadas": "ROAS expresado en dólares: -1,647.60",
+        "fuente_final": "llm_reintento",
+        "cifra_inyectada_en_crudo": false,
+        "cifra_inyectada_en_final": false,
+        "inventa_proyeccion_en_crudo": false,
+        "menciona_anomalia_o_verificacion": true
       }
     ]
   },
   "automatizacion": {
-    "segundos_por_reporte": 13.03,
+    "segundos_por_reporte": 13.69,
     "reportes_generados": 14
+  },
+  "prueba_operativa": {
+    "reportes": 3,
+    "directores": 1,
+    "min_total_media": 2.91,
+    "min_revision_media": 1.17,
+    "min_exportacion_media": 1.67,
+    "seg_generacion_media": 0.0,
+    "palabras_cambiadas_media": 2.0,
+    "cifras_cambiadas_total": 0,
+    "pct_sin_correcciones": 0.6667,
+    "pct_recomendaciones_utiles": 1.0,
+    "utilidad_media_1a5": 4.0
   },
   "impacto": {
     "minutos_antes": 1080,
@@ -2160,6 +2305,504 @@
     "reduccion_pct": 0.9973,
     "horas_ahorradas_mes": 71.8,
     "ahorro_mensual_usd": 1795.15
+  },
+  "impacto_conservador": {
+    "minutos_antes": 1080,
+    "minutos_despues": 30.23,
+    "fuente_tiempo_despues": "escenario conservador (revisión de 30 min)",
+    "reduccion_pct": 0.972,
+    "horas_ahorradas_mes": 70.0,
+    "ahorro_mensual_usd": 1749.62
+  },
+  "robustez": {
+    "cuenta_ejemplo": "CLI-8eb413e3",
+    "mes_ejemplo": "2026-09-01",
+    "sensibilidad": [
+      {
+        "caso": "S0 · Exportación original",
+        "perturbacion": "—",
+        "ok": true,
+        "mensaje": "sin advertencias",
+        "mes": "septiembre de 2026",
+        "roas": 2.355,
+        "estado": "Alerta",
+        "proy_3m": 1.838,
+        "proy_12m": 2.159,
+        "prob_deterioro_3m": 0.447,
+        "anomalia": false,
+        "dato_imputado": false,
+        "recomendacion": "optimizar la página de destino y el formulario para mejorar la tasa de conversión",
+        "fuente_texto": "plantilla",
+        "guardrail_ok": true,
+        "segundos": 0.68,
+        "cambio_estado": false,
+        "delta_roas": 0.0,
+        "delta_proy_3m_%": 0.0
+      },
+      {
+        "caso": "S1 · Ingresos faltantes en el mes (NaN)",
+        "perturbacion": "ingresos_usd = NaN",
+        "ok": true,
+        "mensaje": "1 valores faltantes imputados con la mediana de los 6 meses previos de la cuenta (filas marcadas como imputadas).",
+        "mes": "septiembre de 2026",
+        "roas": 1.538,
+        "estado": "Crítico",
+        "proy_3m": 1.653,
+        "proy_12m": 1.747,
+        "prob_deterioro_3m": 0.0,
+        "anomalia": false,
+        "dato_imputado": true,
+        "recomendacion": "completar o verificar los datos del mes antes de enviar, porque contienen valores imputados",
+        "fuente_texto": "plantilla",
+        "guardrail_ok": true,
+        "segundos": 0.67,
+        "cambio_estado": true,
+        "delta_roas": -0.817,
+        "delta_proy_3m_%": -10.0653
+      },
+      {
+        "caso": "S1b · Mismo caso tratado como 0 (comportamiento v2.0)",
+        "perturbacion": "ingresos_usd = 0",
+        "ok": true,
+        "mensaje": "sin advertencias",
+        "mes": "septiembre de 2026",
+        "roas": 0.0,
+        "estado": "Crítico",
+        "proy_3m": 1.759,
+        "proy_12m": 1.987,
+        "prob_deterioro_3m": 0.582,
+        "anomalia": true,
+        "dato_imputado": false,
+        "recomendacion": "verificar la medición del periodo antes de decidir, porque se detectó un patrón anómalo en ROAS",
+        "fuente_texto": "plantilla",
+        "guardrail_ok": true,
+        "segundos": 0.72,
+        "cambio_estado": true,
+        "delta_roas": -2.355,
+        "delta_proy_3m_%": -4.2982
+      },
+      {
+        "caso": "S2 · Conversiones faltantes en el mes (NaN)",
+        "perturbacion": "conversiones = NaN",
+        "ok": true,
+        "mensaje": "1 valores faltantes imputados con la mediana de los 6 meses previos de la cuenta (filas marcadas como imputadas).",
+        "mes": "septiembre de 2026",
+        "roas": 2.355,
+        "estado": "Alerta",
+        "proy_3m": 1.838,
+        "proy_12m": 2.159,
+        "prob_deterioro_3m": 0.447,
+        "anomalia": false,
+        "dato_imputado": true,
+        "recomendacion": "completar o verificar los datos del mes antes de enviar, porque contienen valores imputados",
+        "fuente_texto": "plantilla",
+        "guardrail_ok": true,
+        "segundos": 0.71,
+        "cambio_estado": false,
+        "delta_roas": 0.0,
+        "delta_proy_3m_%": 0.0
+      },
+      {
+        "caso": "S3 · Formato Meta Ads (nombres en inglés y «$1.234,56»)",
+        "perturbacion": "columnas y separadores distintos",
+        "ok": true,
+        "mensaje": "sin advertencias",
+        "mes": "septiembre de 2026",
+        "roas": 2.355,
+        "estado": "Alerta",
+        "proy_3m": 1.838,
+        "proy_12m": 2.159,
+        "prob_deterioro_3m": 0.447,
+        "anomalia": false,
+        "dato_imputado": false,
+        "recomendacion": "optimizar la página de destino y el formulario para mejorar la tasa de conversión",
+        "fuente_texto": "plantilla",
+        "guardrail_ok": true,
+        "segundos": 0.59,
+        "cambio_estado": false,
+        "delta_roas": 0.0,
+        "delta_proy_3m_%": 0.0
+      },
+      {
+        "caso": "S4 · Mes dividido en dos plataformas (60/40)",
+        "perturbacion": "2 filas por mes",
+        "ok": true,
+        "mensaje": "1 filas adicionales de una misma cuenta y mes se sumaron (varias plataformas o campañas).",
+        "mes": "septiembre de 2026",
+        "roas": 2.355,
+        "estado": "Alerta",
+        "proy_3m": 1.838,
+        "proy_12m": 2.159,
+        "prob_deterioro_3m": 0.447,
+        "anomalia": false,
+        "dato_imputado": false,
+        "recomendacion": "optimizar la página de destino y el formulario para mejorar la tasa de conversión",
+        "fuente_texto": "plantilla",
+        "guardrail_ok": true,
+        "segundos": 0.56,
+        "cambio_estado": false,
+        "delta_roas": 0.0,
+        "delta_proy_3m_%": 0.0
+      },
+      {
+        "caso": "S5 · Fila duplicada",
+        "perturbacion": "fila repetida",
+        "ok": true,
+        "mensaje": "sin advertencias",
+        "mes": "septiembre de 2026",
+        "roas": 2.355,
+        "estado": "Alerta",
+        "proy_3m": 1.838,
+        "proy_12m": 2.159,
+        "prob_deterioro_3m": 0.447,
+        "anomalia": false,
+        "dato_imputado": false,
+        "recomendacion": "optimizar la página de destino y el formulario para mejorar la tasa de conversión",
+        "fuente_texto": "plantilla",
+        "guardrail_ok": true,
+        "segundos": 0.49,
+        "cambio_estado": false,
+        "delta_roas": 0.0,
+        "delta_proy_3m_%": 0.0
+      },
+      {
+        "caso": "S6 · Ruido de atribución ±5 % en ingresos (todos los meses)",
+        "perturbacion": "ingresos × N(1; 0.05)",
+        "ok": true,
+        "mensaje": "sin advertencias",
+        "mes": "septiembre de 2026",
+        "roas": 2.208,
+        "estado": "Alerta",
+        "proy_3m": 1.826,
+        "proy_12m": 2.073,
+        "prob_deterioro_3m": 0.462,
+        "anomalia": false,
+        "dato_imputado": false,
+        "recomendacion": "optimizar la página de destino y el formulario para mejorar la tasa de conversión",
+        "fuente_texto": "plantilla",
+        "guardrail_ok": true,
+        "segundos": 0.49,
+        "cambio_estado": false,
+        "delta_roas": -0.147,
+        "delta_proy_3m_%": -0.6529
+      },
+      {
+        "caso": "S7 · Ruido de atribución ±10 % en ingresos (todos los meses)",
+        "perturbacion": "ingresos × N(1; 0.10)",
+        "ok": true,
+        "mensaje": "sin advertencias",
+        "mes": "septiembre de 2026",
+        "roas": 2.702,
+        "estado": "Alerta",
+        "proy_3m": 2.03,
+        "proy_12m": 2.497,
+        "prob_deterioro_3m": 0.191,
+        "anomalia": false,
+        "dato_imputado": false,
+        "recomendacion": "optimizar la página de destino y el formulario para mejorar la tasa de conversión",
+        "fuente_texto": "plantilla",
+        "guardrail_ok": true,
+        "segundos": 0.49,
+        "cambio_estado": false,
+        "delta_roas": 0.347,
+        "delta_proy_3m_%": 10.4461
+      },
+      {
+        "caso": "S8 · Ingresos ×10 en el mes (conversión duplicada)",
+        "perturbacion": "ingresos × 10",
+        "ok": true,
+        "mensaje": "sin advertencias",
+        "mes": "septiembre de 2026",
+        "roas": 23.55,
+        "estado": "Óptimo",
+        "proy_3m": 1.759,
+        "proy_12m": 1.987,
+        "prob_deterioro_3m": 0.582,
+        "anomalia": true,
+        "dato_imputado": false,
+        "recomendacion": "verificar la medición del periodo antes de decidir, porque se detectó un patrón anómalo en ROAS",
+        "fuente_texto": "plantilla",
+        "guardrail_ok": true,
+        "segundos": 0.48,
+        "cambio_estado": true,
+        "delta_roas": 21.195,
+        "delta_proy_3m_%": -4.2982
+      }
+    ],
+    "sensibilidad_global": [
+      {
+        "ruido": "±10 %",
+        "cuentas_con_cambio_de_estado": 1.3333,
+        "cambio_medio_proy_3m": 4.7871,
+        "cambio_medio_proy_12m": 5.63
+      },
+      {
+        "ruido": "±5 %",
+        "cuentas_con_cambio_de_estado": 1.0,
+        "cambio_medio_proy_3m": 2.8818,
+        "cambio_medio_proy_12m": 3.3411
+      }
+    ],
+    "estres": [
+      {
+        "caso": "E1 · Inversión = 0 en el mes",
+        "ok": true,
+        "mensaje": "1 filas sin inversión o sin impresiones se excluyeron (el ROAS no está definido).",
+        "mes": "agosto de 2026",
+        "roas": 1.747,
+        "estado": "Crítico",
+        "proy_3m": 1.882,
+        "proy_12m": 1.85,
+        "prob_deterioro_3m": 0.0,
+        "anomalia": false,
+        "dato_imputado": false,
+        "recomendacion": "pausar o reestructurar los conjuntos de anuncios con retorno inferior a la inversión",
+        "fuente_texto": "plantilla",
+        "guardrail_ok": true,
+        "segundos": 0.48
+      },
+      {
+        "caso": "E2 · Conversiones = 0 en el mes",
+        "ok": true,
+        "mensaje": "sin advertencias",
+        "mes": "septiembre de 2026",
+        "roas": 2.355,
+        "estado": "Alerta",
+        "proy_3m": 1.759,
+        "proy_12m": 1.987,
+        "prob_deterioro_3m": 0.582,
+        "anomalia": true,
+        "dato_imputado": false,
+        "recomendacion": "verificar la medición del periodo antes de decidir, porque se detectó un patrón anómalo en tasa de conversión",
+        "fuente_texto": "plantilla",
+        "guardrail_ok": true,
+        "segundos": 0.52
+      },
+      {
+        "caso": "E3 · Ingresos = 0 en el mes (falla de tracking)",
+        "ok": true,
+        "mensaje": "sin advertencias",
+        "mes": "septiembre de 2026",
+        "roas": 0.0,
+        "estado": "Crítico",
+        "proy_3m": 1.759,
+        "proy_12m": 1.987,
+        "prob_deterioro_3m": 0.582,
+        "anomalia": true,
+        "dato_imputado": false,
+        "recomendacion": "verificar la medición del periodo antes de decidir, porque se detectó un patrón anómalo en ROAS",
+        "fuente_texto": "plantilla",
+        "guardrail_ok": true,
+        "segundos": 0.48
+      },
+      {
+        "caso": "E4 · Inversión ×1000 (USD millones)",
+        "ok": true,
+        "mensaje": "sin advertencias",
+        "mes": "septiembre de 2026",
+        "roas": 0.002,
+        "estado": "Crítico",
+        "proy_3m": 1.759,
+        "proy_12m": 1.987,
+        "prob_deterioro_3m": 0.582,
+        "anomalia": true,
+        "dato_imputado": false,
+        "recomendacion": "verificar la medición del periodo antes de decidir, porque se detectó un patrón anómalo en CPM",
+        "fuente_texto": "plantilla",
+        "guardrail_ok": true,
+        "segundos": 0.5
+      },
+      {
+        "caso": "E5 · Cuenta nueva con 6 meses de historia",
+        "ok": true,
+        "mensaje": "sin advertencias",
+        "mes": "septiembre de 2026",
+        "roas": 2.355,
+        "estado": "Alerta",
+        "proy_3m": NaN,
+        "proy_12m": NaN,
+        "prob_deterioro_3m": NaN,
+        "anomalia": false,
+        "dato_imputado": false,
+        "recomendacion": "optimizar la página de destino y el formulario para mejorar la tasa de conversión",
+        "fuente_texto": "plantilla",
+        "guardrail_ok": true,
+        "segundos": 0.41
+      },
+      {
+        "caso": "E6 · Texto en una columna numérica («N/D»)",
+        "ok": true,
+        "mensaje": "1 valores faltantes imputados con la mediana de los 6 meses previos de la cuenta (filas marcadas como imputadas).",
+        "mes": "septiembre de 2026",
+        "roas": 2.355,
+        "estado": "Alerta",
+        "proy_3m": 1.838,
+        "proy_12m": 2.159,
+        "prob_deterioro_3m": 0.447,
+        "anomalia": false,
+        "dato_imputado": true,
+        "recomendacion": "completar o verificar los datos del mes antes de enviar, porque contienen valores imputados",
+        "fuente_texto": "plantilla",
+        "guardrail_ok": true,
+        "segundos": 0.5
+      },
+      {
+        "caso": "E7 · Archivo vacío",
+        "ok": false,
+        "mensaje": "ValueError: El archivo no contiene filas de datos.",
+        "mes": NaN,
+        "roas": NaN,
+        "estado": NaN,
+        "proy_3m": NaN,
+        "proy_12m": NaN,
+        "prob_deterioro_3m": NaN,
+        "anomalia": NaN,
+        "dato_imputado": NaN,
+        "recomendacion": NaN,
+        "fuente_texto": NaN,
+        "guardrail_ok": NaN,
+        "segundos": 0.0
+      },
+      {
+        "caso": "E8 · Falta la columna de ingresos",
+        "ok": false,
+        "mensaje": "ValueError: Columnas obligatorias ausentes tras normalizar: ['ingresos_usd']. Columnas recibidas: ['fecha', 'cliente', 'vertical', 'gasto_usd', 'impresiones', 'clics', 'conversiones']. Nombres aceptados: ingresos_usd: ingresos_usd, ingresos, revenue, conversion_value",
+        "mes": NaN,
+        "roas": NaN,
+        "estado": NaN,
+        "proy_3m": NaN,
+        "proy_12m": NaN,
+        "prob_deterioro_3m": NaN,
+        "anomalia": NaN,
+        "dato_imputado": NaN,
+        "recomendacion": NaN,
+        "fuente_texto": NaN,
+        "guardrail_ok": NaN,
+        "segundos": 0.0
+      },
+      {
+        "caso": "E9 · Fechas no reconocibles",
+        "ok": false,
+        "mensaje": "ValueError: No se reconocieron 672 de 672 fechas. Use el formato AAAA-MM-DD o AAAA-MM.",
+        "mes": NaN,
+        "roas": NaN,
+        "estado": NaN,
+        "proy_3m": NaN,
+        "proy_12m": NaN,
+        "prob_deterioro_3m": NaN,
+        "anomalia": NaN,
+        "dato_imputado": NaN,
+        "recomendacion": NaN,
+        "fuente_texto": NaN,
+        "guardrail_ok": NaN,
+        "segundos": 0.01
+      },
+      {
+        "caso": "E10 · Cartera de 70 cuentas (×5)",
+        "ok": true,
+        "mensaje": "3360 registros procesados (ETL, anomalías y proyección de todas las cuentas)",
+        "mes": NaN,
+        "roas": NaN,
+        "estado": NaN,
+        "proy_3m": NaN,
+        "proy_12m": NaN,
+        "prob_deterioro_3m": NaN,
+        "anomalia": NaN,
+        "dato_imputado": NaN,
+        "recomendacion": NaN,
+        "fuente_texto": NaN,
+        "guardrail_ok": NaN,
+        "segundos": 3.25
+      }
+    ],
+    "drift": [
+      {
+        "metrica": "ROAS",
+        "media_entrenamiento": 2.8439,
+        "media_posterior": 2.7177,
+        "cambio_media_%": -4.4377,
+        "ks": 0.1369,
+        "p_valor": 0.0169,
+        "psi": 0.3374,
+        "nivel": "alto"
+      },
+      {
+        "metrica": "CPM (USD)",
+        "media_entrenamiento": 8.4461,
+        "media_posterior": 9.3293,
+        "cambio_media_%": 10.4575,
+        "ks": 0.2698,
+        "p_valor": 0.0,
+        "psi": 0.6221,
+        "nivel": "alto"
+      },
+      {
+        "metrica": "CPA (USD)",
+        "media_entrenamiento": 48.9178,
+        "media_posterior": 63.2438,
+        "cambio_media_%": 29.2858,
+        "ks": 0.0774,
+        "p_valor": 0.4273,
+        "psi": 0.0429,
+        "nivel": "bajo"
+      },
+      {
+        "metrica": "CTR (%)",
+        "media_entrenamiento": 2.3203,
+        "media_posterior": 2.355,
+        "cambio_media_%": 1.4966,
+        "ks": 0.0635,
+        "p_valor": 0.6786,
+        "psi": 0.0831,
+        "nivel": "bajo"
+      },
+      {
+        "metrica": "Tasa de conversión (%)",
+        "media_entrenamiento": 1.1182,
+        "media_posterior": 1.2014,
+        "cambio_media_%": 7.4463,
+        "ks": 0.1111,
+        "p_valor": 0.0858,
+        "psi": 0.0579,
+        "nivel": "bajo"
+      },
+      {
+        "metrica": "Inversión (USD)",
+        "media_entrenamiento": 1934.2132,
+        "media_posterior": 2036.9525,
+        "cambio_media_%": 5.3117,
+        "ks": 0.123,
+        "p_valor": 0.0422,
+        "psi": 0.1938,
+        "nivel": "moderado"
+      }
+    ],
+    "drift_desempeno": [
+      {
+        "trimestre": "2025Q4",
+        "casos": 50,
+        "mae_modelo": 0.336,
+        "mae_ingenuo": 0.4047
+      },
+      {
+        "trimestre": "2026Q1",
+        "casos": 80,
+        "mae_modelo": 0.2877,
+        "mae_ingenuo": 0.4745
+      },
+      {
+        "trimestre": "2026Q2",
+        "casos": 78,
+        "mae_modelo": 0.271,
+        "mae_ingenuo": 0.2708
+      },
+      {
+        "trimestre": "2026Q3",
+        "casos": 82,
+        "mae_modelo": 0.2657,
+        "mae_ingenuo": 0.3379
+      }
+    ]
   },
   "etica": {
     "error_relativo_3m_por_vertical": {
@@ -2227,7 +2870,12 @@
       {
         "principio": "Trazabilidad y reproducibilidad",
         "estado": "Cumple",
-        "evidencia": "Semilla 42, huella SHA-256, Git (v2.0) y DVC"
+        "evidencia": "Semilla 42, huella SHA-256, Git (v2.1), DVC y versión de prompt registrada"
+      },
+      {
+        "principio": "Robustez",
+        "estado": "Cumple con monitoreo",
+        "evidencia": "Pruebas de sensibilidad, estrés, error controlado, deriva y adversariales del LLM (celdas 13b y 15b)"
       }
     ]
   },
@@ -2236,10 +2884,11 @@
     "gpu": "Tesla T4, 15360 MiB",
     "versiones": {
       "pandas": "2.2.3",
-      "numpy": "2.1.3",
+      "numpy": "2.4.6",
+      "scipy": "1.16.3",
       "scikit-learn": "1.6.1",
       "torch": "2.11.0+cu130",
-      "transformers": "5.20.2",
+      "transformers": "5.22.0",
       "accelerate": "1.15.0",
       "streamlit": "1.66.1",
       "weasyprint": "70.0",
@@ -2248,25 +2897,16 @@
       "joblib": "1.6.0",
       "matplotlib": "3.10.0",
       "openpyxl": "3.1.5",
-      "pytest": "8.4.2"
+      "pytest": "8.4.2",
+      "fastapi": "0.141.1",
+      "uvicorn": "0.54.0",
+      "httpx": "0.28.1",
+      "pydantic": "2.14.1"
     },
-    "fecha_ejecucion": "2026-10-28T05:21:50",
-    "pytest": "9 passed",
+    "fecha_ejecucion": "2026-11-04T02:46:19",
+    "pytest": "18 passed",
     "demo_url": "https://drive.google.com/file/d/1DMhVk4nvT4OnvS_TD2CkKdzhl3Ulc-r3/view?usp=sharing",
     "repo_url": "https://github.com/atobarv/novar-reportes-ia",
-    "notebook_url": "https://drive.google.com/file/d/1AlZ0KEUty1ZW0mb5Elhwya2I4XUGSPC2/view?usp=sharing"
-  },
-  "prueba_operativa": {
-    "reportes": 3,
-    "directores": 1,
-    "min_total_media": 2.91,
-    "min_revision_media": 1.17,
-    "min_exportacion_media": 1.67,
-    "seg_generacion_media": 0.0,
-    "palabras_cambiadas_media": 2.0,
-    "cifras_cambiadas_total": 0,
-    "pct_sin_correcciones": 0.6667,
-    "pct_recomendaciones_utiles": 1.0,
-    "utilidad_media_1a5": 4.0
+    "notebook_url": "https://drive.google.com/file/d/1_-TPoD2bP1HBRXdfbJO5j9kZRhqMtru3/view?usp=sharing"
   }
 }

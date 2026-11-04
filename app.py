@@ -1,5 +1,5 @@
 """
-Dashboard Streamlit — Sistema de Generación Inteligente de Reportes de Marketing (Novar Agencia) · v2.0
+Dashboard Streamlit — Sistema de Generación Inteligente de Reportes de Marketing (Novar Agencia) · v2.1
 Ejecutar:  streamlit run app.py
 
 Pestañas: estado y comparativo (determinista) · proyección 3/6/12 meses (ML) · anomalías (ML) ·
@@ -42,7 +42,7 @@ div[data-testid="stMetricValue"] {font-size: 1.35rem;}
 .badge {color:#fff;padding:3px 10px;border-radius:4px;font-weight:bold;}
 </style>""", unsafe_allow_html=True)
 st.markdown("<div class='barra'><b>NOVAR AGENCIA</b> · Sistema de Generación Inteligente de Reportes de Marketing "
-            "· v2.0 (UDLA MIA)</div>", unsafe_allow_html=True)
+            "· v2.1 (UDLA MIA)</div>", unsafe_allow_html=True)
 
 
 # --------------------------------------------------------------------------------------------- carga
@@ -85,7 +85,13 @@ with st.sidebar:
         tmp = RAIZ / "data" / "cargas" / archivo.name
         tmp.parent.mkdir(parents=True, exist_ok=True)
         tmp.write_bytes(archivo.getvalue())
-        crudo, calidad = limpiar(cargar_archivo(tmp))
+        try:
+            crudo, calidad = limpiar(cargar_archivo(tmp))
+        except Exception as e:  # error controlado: mensaje claro en lugar de un fallo de la aplicación
+            st.error(f"No se pudo procesar el archivo: {e}")
+            st.stop()
+        for aviso in calidad.get("advertencias", []):
+            st.warning(aviso)
         if st.checkbox("Seudonimizar cuentas (LOPDP)", value=True):
             crudo = anonimizar(crudo, os.environ.get("NOVAR_SAL", "novar"))
         df, _ = preparar_dataset(crudo)
@@ -111,7 +117,9 @@ tab1, tab2, tab3, tab4, tab5 = st.tabs(["Estado y comparativo", "Proyección 3 �
 # --------------------------------------------------------------------------------------------- 1
 with tab1:
     st.markdown(f"#### {cuenta} · {h['periodo']} &nbsp; <span class='badge' style='background:{COLOR[diag['estado']]}'>"
-                f"{diag['estado']}</span>", unsafe_allow_html=True)
+                f"{diag['estado']}{' (provisional)' if diag.get('provisional') else ''}</span>", unsafe_allow_html=True)
+    if h.get("dato_imputado"):
+        st.warning("El mes contiene valores faltantes imputados: el estado es provisional hasta completar los datos.")
     st.caption(f"Estado calculado con la regla de negocio (sin ML): ROAS < {UMBRAL_CRITICO} Crítico · "
                f"ROAS ≥ {UMBRAL_OPTIMO} Óptimo.")
     c = st.columns(5)
@@ -124,7 +132,7 @@ with tab1:
     comp = pd.DataFrame([
         ["Mes anterior", h["roas_mes_anterior"], h["var_roas"]],
         ["Mismo mes del año anterior", h["roas_hace_12m"], h["var_roas_anual"]],
-        ["Promedio de los últimos 12 meses", h["roas_promedio_12m"], None]],
+        ["Promedio de los últimos 12 meses", h["roas_promedio_12m"], float("nan")]],
         columns=["Referencia", "ROAS", "Variación del mes actual (%)"])
     st.dataframe(comp.style.format({"ROAS": "{:.2f}", "Variación del mes actual (%)": "{:+.1f}"}, na_rep="—"),
                  hide_index=True, width="stretch")

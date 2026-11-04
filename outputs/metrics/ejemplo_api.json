@@ -1,0 +1,63 @@
+{
+  "respuesta": {
+    "version": "2.1",
+    "cuenta": "CLI-1b0dc833",
+    "mes": "septiembre de 2026",
+    "estado": "Óptimo",
+    "kpi": {
+      "inversion": 2770.51,
+      "ingresos": 10422.35,
+      "beneficio": 7651.84,
+      "roas": 3.7619,
+      "cpa": 23.4789,
+      "ctr": 2.5287,
+      "cvr": 1.1997
+    },
+    "proyecciones": {
+      "3_meses": {
+        "mes": "diciembre de 2026",
+        "roas": 4.369,
+        "rango_80": [
+          3.728,
+          5.276
+        ],
+        "estado": "Óptimo",
+        "prob_deterioro": 0.008
+      },
+      "6_meses": {
+        "mes": "marzo de 2027",
+        "roas": 4.12,
+        "rango_80": [
+          3.436,
+          5.058
+        ],
+        "estado": "Óptimo",
+        "prob_deterioro": 0.009
+      },
+      "12_meses": {
+        "mes": "septiembre de 2027",
+        "roas": 3.986,
+        "rango_80": [
+          3.175,
+          5.168
+        ],
+        "estado": "Óptimo",
+        "prob_deterioro": 0.031
+      }
+    },
+    "recomendaciones": [
+      "revisar segmentación y creatividades, porque el CPA aumentó frente al mes anterior",
+      "optimizar la página de destino y el formulario para mejorar la tasa de conversión",
+      "escalar el presupuesto de forma gradual vigilando el ROAS marginal"
+    ],
+    "guardrail": {
+      "aprobado": true,
+      "fallas": []
+    },
+    "requiere_aprobacion_humana": true
+  },
+  "error": {
+    "codigo": 422,
+    "detail": "La columna «ingresos_usd» no contiene valores numéricos reconocibles."
+  }
+}

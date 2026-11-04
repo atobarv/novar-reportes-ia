@@ -3,7 +3,7 @@ Tarea,Enfoque,Justificación
 Clasificar el estado actual de la cuenta,Determinista (regla de negocio),"La agencia define el estado con umbrales fijos de ROAS (< 1,8 Crítico; ≥ 2,8 Óptimo)."
 "Comparar con el pasado (mes anterior, mismo mes del año anterior, promedio 12 meses)",Determinista,Son diferencias y promedios sobre datos observados.
 Recomendaciones de acción,Determinista (reglas de negocio),"Se derivan del estado, de las variaciones y de las alertas con reglas auditables."
-"Proyectar ROAS e inversión a 3, 6 y 12 meses",Aprendizaje automático,"El futuro no se puede calcular: requiere aprender tendencia, estacionalidad y persistencia de datos históricos."
+"Proyectar el ROAS a 3, 6 y 12 meses",Aprendizaje automático,"El futuro no se puede calcular: requiere aprender tendencia, estacionalidad y persistencia de datos históricos."
 Anticipar deterioros (paso a un estado peor),Aprendizaje automático + regla,Se aplica la regla de negocio sobre el ROAS proyectado por el modelo.
 "Detectar meses con patrones anómalos (fallas de tracking, gasto duplicado, tráfico inválido)",Aprendizaje automático no supervisado,Las anomalías combinan varias métricas y no tienen un umbral único conocido.
 Redactar el resumen ejecutivo,Modelo de lenguaje con verificación determinista,La redacción requiere lenguaje natural; las cifras se verifican contra los datos calculados.

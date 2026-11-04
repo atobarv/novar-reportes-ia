@@ -82,15 +82,20 @@ def generar_html(h: dict, d: dict, proy: dict, narrativa: str, fuente: str, hist
     recs = "".join(f"<li>{html.escape(r[0].upper() + r[1:])}.</li>" for r in d["recomendaciones"])
     img = ""
     if hist is not None and len(hist):
-        img = f"<img src='data:image/png;base64,{_png_base64(grafico_proyeccion(hist, proy))}' style='width:100%'>"
+        img = f"<img src='data:image/png;base64,{_png_base64(grafico_proyeccion(hist, proy, alto=2.1))}' style='width:100%'>"
     an = d["anomalia"]
-    nota_an = (f"<p class='alerta'>⚠ Patrón anómalo detectado en {html.escape(str(an.get('metrica_principal')))}: "
+    nota_an = (f"<p class='alerta'>Atención: patrón anómalo detectado en {html.escape(str(an.get('metrica_principal')))}: "
                "verifique la medición antes de enviar.</p>") if an.get("es_anomalia") else ""
+    if h.get("dato_imputado"):
+        nota_an += ("<p class='alerta'>Atención: el mes contiene valores faltantes imputados por el sistema; "
+                    "verifique los datos de origen.</p>")
+    sin_proy = "" if proy else ("<p class='nota'>Proyección no disponible: se requieren al menos 12 meses de "
+                                "historia de la cuenta.</p>")
     estado_val = ("APROBADO por " + html.escape(validador) + (f" · {correcciones} palabras corregidas"
                   if correcciones is not None else "")) if aprobado and validador else "PENDIENTE DE VALIDACIÓN HUMANA"
     return f"""<!doctype html><html lang="es"><head><meta charset="utf-8">
 <style>
- @page {{ size: A4; margin: 11mm 13mm; }}
+ @page {{ size: A4; margin: 9mm 12mm; }}
  body {{ font-family: Arial, Helvetica, sans-serif; color:#111; font-size:9.2pt; }}
  .top {{ background:#000; color:#fff; padding:12px 16px; border-bottom:5px solid #CC1417; }}
  .top h1 {{ margin:0; font-size:15.5pt; }} .top p {{ margin:4px 0 0; font-size:8.5pt; color:#ddd; }}
@@ -101,17 +106,18 @@ def generar_html(h: dict, d: dict, proy: dict, narrativa: str, fuente: str, hist
  h2 {{ font-size:10.5pt; border-left:4px solid #CC1417; padding-left:8px; margin:9px 0 4px; }}
  .dos {{ display:flex; gap:14px; }} .dos > div {{ flex:1; }}
  .nota {{ font-size:7.8pt; color:#555; }} .alerta {{ color:#CC1417; font-weight:bold; }}
- .hitl {{ margin-top:9px; border:1px dashed #999; padding:9px; font-size:8.8pt; }}
+ .hitl {{ margin-top:6px; border:1px dashed #999; padding:7px; font-size:8.5pt; }}
 </style></head><body>
 <div class="top"><h1>Reporte ejecutivo de desempeño publicitario</h1>
 <p>Novar Agencia · Cuenta {html.escape(h['cliente'])} · {html.escape(h['vertical'])} · {html.escape(h['periodo'])}</p></div>
 <h2>Estado del mes</h2>
-<p><span class="badge">{d['estado']}</span> &nbsp; Regla de negocio: ROAS &lt; {UMBRAL_CRITICO} Crítico · ROAS ≥ {UMBRAL_OPTIMO} Óptimo</p>
+<p><span class="badge">{d['estado']}{' (provisional)' if d.get('provisional') else ''}</span> &nbsp; Regla de negocio: ROAS &lt; {UMBRAL_CRITICO} Crítico · ROAS ≥ {UMBRAL_OPTIMO} Óptimo</p>
 {nota_an}
 <div class="dos"><div><h2>Indicadores del mes</h2><table>{t_kpi}</table></div>
 <div><h2>Comparativo con el pasado (ROAS)</h2><table><tr><th>Referencia</th><th>ROAS</th><th>Variación actual</th></tr>{t_comp}</table></div></div>
 <h2>Proyección del ROAS (modelo de aprendizaje automático)</h2>
 {img}
+{sin_proy}
 <table><tr><th>Horizonte</th><th>ROAS proyectado</th><th>Rango 80 %</th><th>Estado proyectado</th><th>Prob. de deterioro</th></tr>{t_proy}</table>
 <p class="nota">Las proyecciones son estimaciones con incertidumbre; el rango indica dónde se espera el ROAS en 8 de cada 10 casos.</p>
 <h2>Resumen ejecutivo</h2><p>{html.escape(narrativa)}</p>

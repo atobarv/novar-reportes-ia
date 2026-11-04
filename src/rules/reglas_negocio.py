@@ -26,7 +26,7 @@ TAREAS = [
      "Son diferencias y promedios sobre datos observados."),
     ("Recomendaciones de acción", "Determinista (reglas de negocio)",
      "Se derivan del estado, de las variaciones y de las alertas con reglas auditables."),
-    ("Proyectar ROAS e inversión a 3, 6 y 12 meses", "Aprendizaje automático",
+    ("Proyectar el ROAS a 3, 6 y 12 meses", "Aprendizaje automático",
      "El futuro no se puede calcular: requiere aprender tendencia, estacionalidad y persistencia de datos históricos."),
     ("Anticipar deterioros (paso a un estado peor)", "Aprendizaje automático + regla",
      "Se aplica la regla de negocio sobre el ROAS proyectado por el modelo."),
@@ -52,6 +52,8 @@ def es_deterioro(estado_actual, estado_futuro) -> np.ndarray:
 def recomendaciones(h: dict, estado: str, proyecciones: dict | None = None, anomalia: dict | None = None) -> list[str]:
     """Reglas de acción auditables. h = hechos del periodo; proyecciones = {meses: dict}; anomalia = dict."""
     r = []
+    if h.get("dato_imputado"):
+        r.append("completar o verificar los datos del mes antes de enviar, porque contienen valores imputados")
     if anomalia and anomalia.get("es_anomalia"):
         r.append(f"verificar la medición del periodo antes de decidir, porque se detectó un patrón anómalo en "
                  f"{anomalia.get('metrica_principal', 'las métricas')}")
@@ -62,7 +64,10 @@ def recomendaciones(h: dict, estado: str, proyecciones: dict | None = None, anom
         if h3 and RANGO[h3["estado"]] < RANGO[estado]:
             r.append(f"actuar de forma preventiva, porque se proyecta un deterioro a {h3['estado']} en 3 meses")
         elif h3 and RANGO[h3["estado"]] > RANGO[estado]:
-            r.append("mantener la estrategia, porque la proyección a 3 meses indica una mejora del estado")
+            if estado == "Crítico" or (anomalia and anomalia.get("es_anomalia")):
+                r.append("confirmar la recuperación proyectada a 3 meses antes de cambiar el presupuesto")
+            else:
+                r.append("mantener la estrategia, porque la proyección a 3 meses indica una mejora del estado")
     if h.get("var_cpa") is not None and h["var_cpa"] > 15:
         r.append("revisar segmentación y creatividades, porque el CPA aumentó frente al mes anterior")
     if h.get("cvr", 99) < 2.0 and h.get("clics", 0) > 0:

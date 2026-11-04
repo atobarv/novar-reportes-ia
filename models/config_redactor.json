@@ -1,0 +1,7 @@
+{
+  "variante": "P3",
+  "modelo": "Qwen/Qwen2.5-1.5B-Instruct",
+  "max_new_tokens": 230,
+  "temperatura": 0.1,
+  "criterio": "mayor fidelidad cruda en validación; desempate: menos truncamientos"
+}

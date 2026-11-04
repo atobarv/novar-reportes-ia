@@ -10,6 +10,7 @@ import hashlib
 import json
 import re
 import unicodedata
+import warnings
 from pathlib import Path
 
 import numpy as np
@@ -73,8 +74,8 @@ def _a_numero(serie: pd.Series) -> pd.Series:
         return serie.astype(float)
     s = serie.astype(str).str.replace(r"[^\d,.\-]", "", regex=True)
     # "1.234,56" -> 1234.56 ; "1,234.56" -> 1234.56 ; "12,5" -> 12.5
-    def conv(x: str):
-        if not x or x in {"-", ".", ","}:
+    def conv(x):
+        if not isinstance(x, str) or not x or x in {"-", ".", ","}:
             return np.nan
         if "," in x and "." in x:
             x = x.replace(".", "").replace(",", ".") if x.rfind(",") > x.rfind(".") else x.replace(",", "")
@@ -88,35 +89,112 @@ def _a_numero(serie: pd.Series) -> pd.Series:
     return s.map(conv)
 
 
+def _imputar_faltantes(df: pd.DataFrame, columnas: list[str]) -> tuple[pd.DataFrame, dict]:
+    """Imputa valores faltantes con la mediana de los 6 meses previos de la misma cuenta (o la mediana de la
+    cuenta si no hay historia) y marca la fila. Evita que un dato ausente se convierta en 0 y produzca un
+    estado Crítico falso."""
+    df = df.sort_values(["cliente", "fecha"], kind="stable").reset_index(drop=True)
+    df["dato_imputado"] = False
+    conteo = {}
+    for c in columnas:
+        faltan = df[c].isna()
+        conteo[c] = int(faltan.sum())
+        if not faltan.any():
+            continue
+        previo = df.groupby("cliente")[c].transform(lambda v: v.shift(1).rolling(6, min_periods=1).median())
+        mediana = df.groupby("cliente")[c].transform("median")
+        df.loc[faltan, c] = previo[faltan].fillna(mediana[faltan]).fillna(0)
+        df.loc[faltan, "dato_imputado"] = True
+    return df, conteo
+
+
+def agregar_mensual(df: pd.DataFrame) -> tuple[pd.DataFrame, int]:
+    """Consolida varias filas de una misma cuenta y mes (por ejemplo, una por plataforma o campaña)."""
+    if df["fecha"].isna().all():
+        return df, 0
+    df = df.copy()
+    df["fecha"] = df["fecha"].dt.to_period("M").dt.to_timestamp()
+    claves = ["cliente", "fecha"]
+    repetidas = int(df.duplicated(claves).sum())
+    if repetidas == 0:
+        return df, 0
+    reglas = {c: "sum" for c in NUMERICAS}
+    reglas["plataforma"] = lambda v: " + ".join(sorted(set(map(str, v))))
+    reglas["dato_imputado"] = "max"
+    for c in df.columns:
+        if c not in reglas and c not in claves:
+            reglas[c] = "first"
+    return df.groupby(claves, as_index=False, sort=False).agg(reglas), repetidas
+
+
 def limpiar(df: pd.DataFrame) -> tuple[pd.DataFrame, dict]:
-    """Normaliza tipos, elimina duplicados y registra un reporte de calidad."""
+    """Normaliza, valida, imputa faltantes, consolida por cuenta y mes, y registra un reporte de calidad.
+    Lanza ValueError con un mensaje informativo si el archivo no puede procesarse."""
+    if df is None or len(df) == 0:
+        raise ValueError("El archivo no contiene filas de datos.")
     df = normalizar_columnas(df.copy())
     faltantes = [c for c in OBLIGATORIAS if c not in df.columns]
     if faltantes:
         raise ValueError(f"Columnas obligatorias ausentes tras normalizar: {faltantes}. "
-                         f"Columnas recibidas: {list(df.columns)}")
-    calidad = {"filas_entrada": int(len(df))}
+                         f"Columnas recibidas: {list(df.columns)}. Nombres aceptados: "
+                         + "; ".join(f"{c}: {', '.join(ALIAS[c][:4])}" for c in faltantes if c in ALIAS))
+    calidad = {"filas_entrada": int(len(df)), "advertencias": []}
     fugas = [c for c in df.columns if _norm(c) in FUGA]
     calidad["columnas_excluidas_por_fuga"] = fugas
     df = df.drop(columns=fugas)
     for c in NUMERICAS:
         df[c] = _a_numero(df[c])
+        if df[c].isna().all():
+            raise ValueError(f"La columna «{c}» no contiene valores numéricos reconocibles.")
     calidad["nulos_numericos"] = {c: int(df[c].isna().sum()) for c in NUMERICAS}
     calidad["valores_negativos"] = {c: int((df[c] < 0).sum()) for c in NUMERICAS}
-    df[NUMERICAS] = df[NUMERICAS].clip(lower=0).fillna(0)
+    if sum(calidad["valores_negativos"].values()):
+        calidad["advertencias"].append("Se encontraron valores negativos (p. ej., reembolsos); se ajustaron a 0.")
+    df[NUMERICAS] = df[NUMERICAS].clip(lower=0)
     if "fecha" in df.columns:
-        df["fecha"] = pd.to_datetime(df["fecha"], errors="coerce", dayfirst=False)
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", UserWarning)
+            fechas = pd.to_datetime(df["fecha"], errors="coerce", dayfirst=False)
+        invalidas = int(fechas.isna().sum() - df["fecha"].isna().sum())
+        if fechas.isna().mean() > 0.2:
+            raise ValueError(f"No se reconocieron {int(fechas.isna().sum())} de {len(df)} fechas. "
+                             "Use el formato AAAA-MM-DD o AAAA-MM.")
+        if invalidas:
+            calidad["advertencias"].append(f"{invalidas} fechas no reconocidas; esas filas se descartaron.")
+        df["fecha"] = fechas
+        df = df[df["fecha"].notna()]
     else:
         df["fecha"] = pd.NaT
+        calidad["advertencias"].append("Sin columna de fecha: no se puede comparar con el pasado ni proyectar.")
     if "plataforma" not in df.columns:
         df["plataforma"] = "No especificada"
     df["cliente"] = df["cliente"].astype(str).str.strip()
     antes = len(df)
     df = df.drop_duplicates()
     calidad["duplicados_eliminados"] = int(antes - len(df))
+    if df["fecha"].notna().any():
+        df, imputados = _imputar_faltantes(df, NUMERICAS)
+    else:
+        imputados = {c: int(df[c].isna().sum()) for c in NUMERICAS}
+        df["dato_imputado"] = df[NUMERICAS].isna().any(axis=1)
+        df[NUMERICAS] = df[NUMERICAS].fillna(0)
+    calidad["valores_imputados"] = imputados
+    if sum(imputados.values()):
+        calidad["advertencias"].append(f"{sum(imputados.values())} valores faltantes imputados con la mediana "
+                                       "de los 6 meses previos de la cuenta (filas marcadas como imputadas).")
+    df, agregadas = agregar_mensual(df)
+    calidad["filas_consolidadas_por_mes"] = agregadas
+    if agregadas:
+        calidad["advertencias"].append(f"{agregadas} filas adicionales de una misma cuenta y mes se sumaron "
+                                       "(varias plataformas o campañas).")
     sin_actividad = (df["gasto_usd"] <= 0) | (df["impresiones"] <= 0)
     calidad["filas_sin_actividad_eliminadas"] = int(sin_actividad.sum())
+    if sin_actividad.any():
+        calidad["advertencias"].append(f"{int(sin_actividad.sum())} filas sin inversión o sin impresiones se "
+                                       "excluyeron (el ROAS no está definido).")
     df = df.loc[~sin_actividad].reset_index(drop=True)
+    if len(df) == 0:
+        raise ValueError("Ninguna fila tiene inversión e impresiones mayores que cero.")
     calidad["filas_salida"] = int(len(df))
     calidad["clientes"] = int(df["cliente"].nunique())
     calidad["plataformas"] = sorted(df["plataforma"].astype(str).unique().tolist())

@@ -1,7 +1,7 @@
 services:
   novar-reportes:
     build: .
-    image: novar/reportes-inteligentes:2.0
+    image: novar/reportes-inteligentes:2.1
     ports:
       - "8501:8501"
     volumes:
@@ -10,3 +10,12 @@ services:
     environment:
       - NOVAR_LLM=Qwen/Qwen2.5-1.5B-Instruct
     restart: unless-stopped
+  novar-api:
+    image: novar/reportes-inteligentes:2.1
+    command: uvicorn api:app --host 0.0.0.0 --port 8000
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./models:/app/models
+    depends_on:
+      - novar-reportes

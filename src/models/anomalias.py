@@ -39,8 +39,12 @@ def caracteristicas(df: pd.DataFrame, ventana: int = 12, min_hist: int = 12) -> 
 
 
 class DetectorAnomalias:
-    def __init__(self, tasa: float = 0.06, seed: int = 42):
-        self.tasa, self.seed = tasa, seed
+    """Isolation Forest sobre desviaciones robustas + salvaguarda determinista para desviaciones extremas en una
+    sola métrica (|z| ≥ z_extremo), que el bosque puede pasar por alto si quedan fuera del rango de entrenamiento
+    (hallazgo de las pruebas de sensibilidad v2.1: ingresos ×10 en un mes)."""
+
+    def __init__(self, tasa: float = 0.06, seed: int = 42, z_extremo: float | None = 10.0):
+        self.tasa, self.seed, self.z_extremo = tasa, seed, z_extremo
 
     def ajustar(self, F: pd.DataFrame):
         X = F.loc[F["evaluable"], Z_COLS].clip(-15, 15)
@@ -55,6 +59,9 @@ class DetectorAnomalias:
         ok = F["evaluable"]
         F.loc[ok, "puntaje_anomalia"] = -self.modelo.score_samples(F.loc[ok, Z_COLS].clip(-15, 15))
         F["es_anomalia"] = F["puntaje_anomalia"] > self.umbral
+        z_ext = getattr(self, "z_extremo", None)
+        if z_ext:
+            F["es_anomalia"] = F["es_anomalia"] | (ok & (F[Z_COLS].abs().max(axis=1) >= z_ext))
         F["metrica_principal"] = F[Z_COLS].abs().fillna(0).idxmax(axis=1).str[2:].map(NOMBRES).where(ok)
         return F
 
@@ -64,7 +71,8 @@ def regla_umbral(F: pd.DataFrame, z: float = 3.0) -> pd.Series:
     return F["evaluable"] & (F["z_roas"].abs() > z)
 
 
-def evaluar(F: pd.DataFrame, verdad: pd.Series, tasa: float = 0.06, seed: int = 42, corte=None) -> pd.DataFrame:
+def evaluar(F: pd.DataFrame, verdad: pd.Series, tasa: float = 0.06, seed: int = 42, corte=None,
+            z_extremo: float | None = 10.0) -> pd.DataFrame:
     """Precisión, recall, F1 y AP del detector frente a la verdad de referencia.
     Esquemas: por cliente (GroupKFold) y temporal (ajuste con meses ≤ corte, evaluación posterior)."""
     F = F.copy()
@@ -84,7 +92,7 @@ def evaluar(F: pd.DataFrame, verdad: pd.Series, tasa: float = 0.06, seed: int = 
     # por cliente
     pred_if = pd.Series(False, index=E.index); punt = pd.Series(np.nan, index=E.index)
     for tr, te in GroupKFold(n_splits=7).split(E, groups=E["cliente"]):
-        d = DetectorAnomalias(tasa, seed).ajustar(E.iloc[tr])
+        d = DetectorAnomalias(tasa, seed, z_extremo).ajustar(E.iloc[tr])
         s = d.puntuar(E.iloc[te])
         pred_if.iloc[te] = s["es_anomalia"].values; punt.iloc[te] = s["puntaje_anomalia"].values
     registrar("Isolation Forest (ML)", "por cliente", E["verdad"].values, pred_if.values, punt.values)
@@ -93,7 +101,7 @@ def evaluar(F: pd.DataFrame, verdad: pd.Series, tasa: float = 0.06, seed: int = 
     if corte is not None:
         fe = pd.to_datetime(E["fecha"])
         tr, te = E[fe <= corte], E[fe > corte]
-        s = DetectorAnomalias(tasa, seed).ajustar(tr).puntuar(te)
+        s = DetectorAnomalias(tasa, seed, z_extremo).ajustar(tr).puntuar(te)
         registrar("Isolation Forest (ML)", "temporal", te["verdad"].values, s["es_anomalia"].values,
                   s["puntaje_anomalia"].values)
         registrar("Regla |z ROAS| > 3", "temporal", te["verdad"].values, regla_umbral(te).values,
