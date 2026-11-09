@@ -1,5 +1,5 @@
 """
-Dashboard Streamlit — Sistema de Generación Inteligente de Reportes de Marketing (Novar Agencia) · v2.1
+Dashboard Streamlit — Sistema de Generación Inteligente de Reportes de Marketing (Novar Agencia) · v2.2
 Ejecutar:  streamlit run app.py
 
 Pestañas: estado y comparativo (determinista) · proyección 3/6/12 meses (ML) · anomalías (ML) ·
@@ -24,7 +24,7 @@ sys.path.insert(0, str(RAIZ))
 
 from src.agents.llm_narrative_generator import (AgenteAnalista, AgenteExtractor, AgentePronostico,  # noqa: E402
                                                 AgenteRedactor, nombre_mes, pct, usd)
-from src.etl.ingesta_marketing import anonimizar, cargar_archivo, limpiar  # noqa: E402
+from src.etl.ingesta_marketing import anonimizar, cargar_archivo, limpiar, sal_configurada  # noqa: E402
 from src.features.feature_engineering import preparar_dataset  # noqa: E402
 from src.models.anomalias import caracteristicas, imputar_anomalias  # noqa: E402
 from src.models.pronostico import MIN_HIST  # noqa: E402
@@ -42,7 +42,7 @@ div[data-testid="stMetricValue"] {font-size: 1.35rem;}
 .badge {color:#fff;padding:3px 10px;border-radius:4px;font-weight:bold;}
 </style>""", unsafe_allow_html=True)
 st.markdown("<div class='barra'><b>NOVAR AGENCIA</b> · Sistema de Generación Inteligente de Reportes de Marketing "
-            "· v2.1 (UDLA MIA)</div>", unsafe_allow_html=True)
+            "· v2.2 (UDLA MIA)</div>", unsafe_allow_html=True)
 
 
 # --------------------------------------------------------------------------------------------- carga
@@ -93,7 +93,11 @@ with st.sidebar:
         for aviso in calidad.get("advertencias", []):
             st.warning(aviso)
         if st.checkbox("Seudonimizar cuentas (LOPDP)", value=True):
-            crudo = anonimizar(crudo, os.environ.get("NOVAR_SAL", "novar"))
+            try:
+                crudo = anonimizar(crudo, sal_configurada())
+            except ValueError as e:      # sin sal secreta no se seudonimiza con una sal pública
+                st.error(str(e))
+                st.stop()
         df, _ = preparar_dataset(crudo)
         st.success(f"{len(df)} registros · {df['cliente'].nunique()} cuentas")
     else:

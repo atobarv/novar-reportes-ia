@@ -10,6 +10,11 @@ Validación (retroalimentación del tutor):
   * temporal          → entrenar con objetivos hasta el corte y evaluar pronósticos emitidos después;
   * por cliente       → GroupKFold: entrenar con unas cuentas y evaluar con otras distintas;
   * cliente + temporal → la combinación más estricta: cuentas y meses nunca vistos.
+
+Preprocesamiento sin fuga (v2.2, observación NC1 de la semana 11): la limpieza aprendida —el detector de
+anomalías que decide qué meses se imputan antes de proyectar— se ajusta DENTRO de cada partición, solo con las
+filas de entrenamiento; la partición de prueba se transforma con ese detector sin participar en su ajuste
+(clase `PreprocesoPorParticion`).
 """
 from __future__ import annotations
 
@@ -72,9 +77,12 @@ def _perfil_hasta(arr: dict, filtro: np.ndarray, mes: int, hasta) -> float:
 
 def construir_pares(df: pd.DataFrame, objetivo: str = "roas", h_max: int = H_MAX,
                     min_hist: int = MIN_HIST, incluir_futuro: bool = False, cuentas=None,
-                    solo_ultimo_origen: bool = False) -> pd.DataFrame:
+                    solo_ultimo_origen: bool = False, clientes_perfil=None) -> pd.DataFrame:
     """Pares (origen t, horizonte h). Con incluir_futuro=True agrega los pares cuyo objetivo aún no existe.
-    Los perfiles estacionales usan solo observaciones con fecha ≤ origen (sin fuga temporal)."""
+    Los perfiles estacionales usan solo observaciones con fecha ≤ origen (sin fuga temporal). Con
+    `clientes_perfil`, el perfil de la vertical de cada cuenta se calcula solo con esas cuentas (las de
+    entrenamiento) más la propia cuenta, cuya historia previa sí se conoce al proyectarla: así ninguna variable
+    de entrenamiento usa datos de las cuentas de prueba."""
     perf = _perfiles(df, objetivo)
     arr = {"mes": perf["mes"].to_numpy(), "fecha": perf["fecha"].to_numpy(dtype="datetime64[ns]"),
            "desv": perf["desv"].to_numpy(), "vertical": perf["vertical"].to_numpy(),
@@ -90,6 +98,8 @@ def construir_pares(df: pd.DataFrame, objetivo: str = "roas", h_max: int = H_MAX
         fechas = pd.to_datetime(g["fecha"])
         vertical = str(g["vertical"].iloc[0]) if "vertical" in g else ""
         f_vert = arr["vertical"] == vertical if arr is not None else None
+        if f_vert is not None and clientes_perfil is not None:
+            f_vert = f_vert & (np.isin(arr["cliente"], list(clientes_perfil)) | (arr["cliente"] == cuenta))
         f_cta = arr["cliente"] == cuenta if arr is not None else None
         n = len(g)
         for t in range(max(min_hist - 1, n - 1 if solo_ultimo_origen else 0), n):
@@ -201,25 +211,83 @@ def _particiones(P: pd.DataFrame, esquema: str, corte: int, n_grupos: int = 7):
             yield (tr_idx[P.loc[tr_idx, "t_objetivo"] <= corte], te_idx[P.loc[te_idx, "t"] >= corte])
 
 
-def predecir_esquema(P: pd.DataFrame, esquema: str, corte: int, seed: int = 42) -> pd.DataFrame:
-    """Predicciones fuera de muestra de todos los modelos para un esquema de validación."""
+class PreprocesoPorParticion:
+    """Reconstruye los pares de cada partición con un detector de anomalías ajustado SOLO con las filas de
+    entrenamiento de esa partición (cuentas de entrenamiento y, si corresponde, meses ≤ corte). El perfil
+    estacional de la vertical, única variable que combina varias cuentas, se calcula con las cuentas de
+    entrenamiento más la propia cuenta (su historia previa al origen).
+
+    * `df`: datos mensuales sin imputar; `F`: sus puntajes z (`caracteristicas(df)`, mismo índice), que son
+      causales —cada mes se compara con sus 12 meses previos— y por eso no requieren ajuste.
+    * `fabrica`: función sin argumentos que devuelve un `DetectorAnomalias` sin ajustar.
+    * `excluir`: función opcional P → máscara booleana de pares que no se evalúan (p. ej. objetivos que son
+      anomalías conocidas); se aplica igual que en la evaluación con preprocesamiento global.
+    Los pares conservan el índice de `self.base`, de modo que las particiones son idénticas a las de v2.1."""
+
+    def __init__(self, df: pd.DataFrame, F: pd.DataFrame, fabrica, objetivo: str = "roas", excluir=None):
+        self.df, self.F, self.fabrica, self.objetivo = df, F, fabrica, objetivo
+        P_real = construir_pares(df, objetivo)
+        self.y_obs = P_real["y_real"].values
+        self.conservar = np.ones(len(P_real), bool) if excluir is None else ~np.asarray(excluir(P_real), bool)
+        self.base = P_real[self.conservar].reset_index(drop=True)
+        orden = df.sort_values(["cliente", "fecha"])
+        self.pos = orden.groupby("cliente").cumcount().reindex(df.index)
+        self._cache, self.registro = {}, []
+
+    def pares(self, filas_entreno: pd.Series) -> pd.DataFrame:
+        clave = tuple(np.flatnonzero(filas_entreno.to_numpy()))
+        if clave not in self._cache:
+            from src.models.anomalias import imputar_anomalias
+            det = self.fabrica().ajustar(self.F.loc[filas_entreno.to_numpy()])
+            marcas = det.puntuar(self.F)["es_anomalia"]
+            clientes = set(self.df.loc[filas_entreno.to_numpy(), "cliente"])
+            todos = clientes == set(self.df["cliente"])
+            P = construir_pares(imputar_anomalias(self.df, marcas), self.objetivo,
+                                clientes_perfil=None if todos else clientes)
+            P["y_real"] = self.y_obs                     # se evalúa contra el valor observado, no el imputado
+            self._cache[clave] = P[self.conservar].reset_index(drop=True)
+            self.registro.append({"filas_ajuste_detector": int(filas_entreno.sum()),
+                                  "meses_imputados": int(marcas.sum())})
+        return self._cache[clave]
+
+    def particiones(self, B: pd.DataFrame, esquema: str, corte: int, hasta_corte: bool = False):
+        """(pares de la partición, índices de entrenamiento, índices de prueba) sobre el índice de `B`."""
+        for tr, te in _particiones(B, esquema, corte):
+            m = self.df["cliente"].isin(set(B.loc[tr, "cliente"]))
+            if esquema != "cliente" or hasta_corte:
+                m &= self.pos <= corte
+            yield self.pares(m), tr, te
+
+
+def _iterar(P, esquema, corte, pre=None, hasta_corte=False):
+    if pre is None:
+        for tr, te in _particiones(P, esquema, corte):
+            yield P, tr, te
+    else:
+        yield from pre.particiones(P, esquema, corte, hasta_corte)
+
+
+def predecir_esquema(P: pd.DataFrame, esquema: str, corte: int, seed: int = 42, pre=None,
+                     hasta_corte: bool = False) -> pd.DataFrame:
+    """Predicciones fuera de muestra de todos los modelos para un esquema de validación.
+    Con `pre` (PreprocesoPorParticion) la imputación se rehace dentro de cada partición."""
     salidas = []
-    for tr, te in _particiones(P, esquema, corte):
-        prueba = P.loc[te].copy()
+    for Q, tr, te in _iterar(P, esquema, corte, pre, hasta_corte):
+        prueba = Q.loc[te].copy()
         for nombre, f in REFERENCIAS.items():
             prueba[nombre] = f(prueba)
         for nombre, m in modelos_ml(seed).items():
-            prueba[nombre] = _ajustar_predecir(m, P.loc[tr], prueba)
+            prueba[nombre] = _ajustar_predecir(m, Q.loc[tr], prueba)
         salidas.append(prueba)
     R = pd.concat(salidas)
     R["esquema"] = esquema
     return R
 
 
-def seleccionar_modelo(P: pd.DataFrame, corte: int, seed: int = 42) -> tuple[str, pd.DataFrame]:
+def seleccionar_modelo(P: pd.DataFrame, corte: int, seed: int = 42, pre=None) -> tuple[str, pd.DataFrame]:
     """Elige el modelo de ML usando SOLO el periodo de entrenamiento (validación por cliente)."""
     E = P[P["y_real"].notna() & (P["t_objetivo"] <= corte)]
-    R = predecir_esquema(E, "cliente", corte, seed)
+    R = predecir_esquema(E, "cliente", corte, seed, pre=pre, hasta_corte=True)
     M = metricas(R)
     ml = M[M["modelo"].isin(list(modelos_ml(seed)))]
     tabla = ml.groupby("modelo")["MAE"].mean().sort_values().rename("MAE_medio_validacion").reset_index()
@@ -347,11 +415,13 @@ class Pronosticador:
 
 
 def evaluar_intervalos(P: pd.DataFrame, nombre: str, corte: int, cobertura: float = 0.8,
-                       seed: int = 42) -> pd.DataFrame:
+                       seed: int = 42, pre=None) -> pd.DataFrame:
     """Cobertura de intervalos conformes en el esquema temporal: se calibran con residuos fuera de muestra
     del periodo de entrenamiento y se evalúan en los pronósticos posteriores al corte."""
     from sklearn.base import clone
     base = modelos_ml(seed)[nombre]
+    if pre is not None:                                  # detector ajustado solo con meses ≤ corte
+        P = next(pre.particiones(P, "temporal", corte))[0]
     obs = P["y_real"].notna()
     E = P[obs & (P["t_objetivo"] <= corte)].reset_index(drop=True)
     T = P[obs & (P["t"] >= corte)].reset_index(drop=True)
@@ -391,7 +461,7 @@ def prob_deterioro(pred_log: np.ndarray, roas_actual: np.ndarray, residuos: np.n
 
 
 def evaluar_alertas(P: pd.DataFrame, nombre: str, corte: int, horizontes=(3, 6), umbral_prob: float = 0.35,
-                    esquema: str = "cliente+temporal", seed: int = 42) -> pd.DataFrame:
+                    esquema: str = "cliente+temporal", seed: int = 42, pre=None) -> pd.DataFrame:
     """Alerta temprana de deterioro con probabilidad (modelo + residuos fuera de muestra) frente a referencias
     deterministas (cruce del umbral por el pronóstico puntual)."""
     from sklearn.base import clone
@@ -399,9 +469,9 @@ def evaluar_alertas(P: pd.DataFrame, nombre: str, corte: int, horizontes=(3, 6),
     base = modelos_ml(seed)[nombre]
     obs = P["y_real"].notna()
     filas = []
-    for tr, te in _particiones(P, esquema, corte):
-        E = P.loc[tr].reset_index(drop=True)
-        T = P.loc[te].reset_index(drop=True)
+    for Q, tr, te in _iterar(P, esquema, corte, pre):
+        E = Q.loc[tr].reset_index(drop=True)
+        T = Q.loc[te].reset_index(drop=True)
         oof = np.full(len(E), np.nan)
         for a, b in GroupKFold(n_splits=min(6, E["cliente"].nunique())).split(E, groups=E["cliente"]):
             oof[b] = _ajustar_predecir(base, E.iloc[a], E.iloc[b])

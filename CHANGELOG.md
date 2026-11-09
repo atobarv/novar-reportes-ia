@@ -1,5 +1,13 @@
 # Historial de versiones (versionado semántico)
 
+## v2.2 — 09/11/2026 · Cierre de la evaluación de la semana 11
+- **Validación sin fuga del preprocesamiento (NC1):** el detector de anomalías que decide qué meses se imputan, y el
+  perfil estacional de la vertical, se ajustan dentro de cada partición solo con filas de entrenamiento
+  (`PreprocesoPorParticion` en `src/models/pronostico.py`); métricas recalculadas y comparadas con v2.1.
+- **Sal secreta obligatoria (NC2):** `validar_sal` y `sal_configurada`; la API ya no recibe la sal en la solicitud.
+- **Límite de generación:** 230 → 320 tokens para reducir textos recortados.
+- Pruebas nuevas: invariancia ante cambios en las cuentas de prueba y sal obligatoria.
+
 ## v2.1 — 04/11/2026 · Robustez, prompting responsable y despliegue ligero
 - **Validación de entradas:** faltantes imputados con la mediana de 6 meses previos y marcados (estado provisional);
   consolidación de varias filas por cuenta y mes (plataformas o campañas); mensajes de error explícitos.

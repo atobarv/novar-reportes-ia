@@ -1,5 +1,5 @@
 """
-Ejecución del pipeline completo por línea de comandos (sin notebook) · v2.1
+Ejecución del pipeline completo por línea de comandos (sin notebook) · v2.2
 
 Uso:
     python scripts/run_pipeline.py --datos data/raw/dataset_marketing_novar_temporal_v2.csv
@@ -31,7 +31,7 @@ from src.reports.exportador import exportar, generar_html  # noqa: E402
 
 
 def main():
-    ap = argparse.ArgumentParser(description="Pipeline de reportes inteligentes · Novar Agencia v2.1")
+    ap = argparse.ArgumentParser(description="Pipeline de reportes inteligentes · Novar Agencia v2.2")
     ap.add_argument("--datos", required=True, help="CSV o Excel con métricas mensuales por cuenta")
     ap.add_argument("--sal", default=None, help="Sal para seudonimizar (si se omite, no se seudonimiza)")
     ap.add_argument("--llm", action="store_true", help="Redactar con el LLM (si no, plantilla determinista)")

@@ -467,7 +467,7 @@ def _recortar_oracion(texto: str) -> str:
 
 class AgenteRedactor:
     def __init__(self, model_id: str = "Qwen/Qwen2.5-1.5B-Instruct", usar_llm: bool = True,
-                 max_new_tokens: int = 230, temperature: float = 0.1, seed: int = 42, variante: str | None = None):
+                 max_new_tokens: int = 320, temperature: float = 0.1, seed: int = 42, variante: str | None = None):
         self.model_id, self.usar_llm = model_id, usar_llm
         self.variante = variante or variante_por_defecto()
         self.max_new_tokens, self.temperature, self.seed = max_new_tokens, temperature, seed

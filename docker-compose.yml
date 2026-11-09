@@ -1,21 +1,23 @@
 services:
   novar-reportes:
     build: .
-    image: novar/reportes-inteligentes:2.1
+    image: novar/reportes-inteligentes:2.2
     ports:
       - "8501:8501"
     volumes:
       - ./data:/app/data
       - ./models:/app/models
+    env_file: .env          # NOVAR_SAL=<sal secreta de 32 caracteres>; .env no se versiona
     environment:
       - NOVAR_LLM=Qwen/Qwen2.5-1.5B-Instruct
     restart: unless-stopped
   novar-api:
-    image: novar/reportes-inteligentes:2.1
+    image: novar/reportes-inteligentes:2.2
     command: uvicorn api:app --host 0.0.0.0 --port 8000
     ports:
       - "8000:8000"
     volumes:
       - ./models:/app/models
+    env_file: .env
     depends_on:
       - novar-reportes

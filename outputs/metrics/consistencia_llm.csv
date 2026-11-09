@@ -1,6 +1,6 @@
 caso,cliente,periodo,ejecuciones,crudo_fiel,rougeL_entre_ejecuciones,fuentes_finales
-1,CLI-c6c3b9ce,febrero de 2026,3,3,0.9801051601858646,llm
-2,CLI-e20f235a,junio de 2026,3,1,0.8621053397351957,"llm, plantilla_fallback"
+1,CLI-c6c3b9ce,febrero de 2026,3,3,0.9831264767626727,llm
+2,CLI-e20f235a,junio de 2026,3,1,0.9186950642325895,"llm, plantilla_fallback"
 3,CLI-1ce86570,marzo de 2026,3,3,0.9521800281293952,llm
 4,CLI-b31c3e3d,marzo de 2026,3,3,1.0,llm
-5,CLI-6548fb16,julio de 2026,3,3,0.8949993471732602,llm
+5,CLI-6548fb16,julio de 2026,3,3,0.8260514350667804,llm

@@ -1,5 +1,5 @@
 {
-  "version": "2.1",
+  "version": "2.2",
   "datos": {
     "v1": {
       "registros": 182,
@@ -214,19 +214,19 @@
     "seleccion": [
       {
         "modelo": "Ensamble ML (Ridge + Gradient Boosting)",
-        "MAE_medio_validacion": 0.3685
+        "MAE_medio_validacion": 0.3697
       },
       {
         "modelo": "Gradient Boosting (global)",
-        "MAE_medio_validacion": 0.3714
+        "MAE_medio_validacion": 0.372
       },
       {
         "modelo": "Ridge con interacciones (global)",
-        "MAE_medio_validacion": 0.3759
+        "MAE_medio_validacion": 0.3764
       },
       {
         "modelo": "Random Forest (global)",
-        "MAE_medio_validacion": 0.3847
+        "MAE_medio_validacion": 0.3869
       }
     ],
     "particiones": [
@@ -631,50 +631,50 @@
         "horizonte": 1,
         "modelo": "Perfil estacional de la vertical",
         "n": 468,
-        "MAE": 0.3103,
-        "MAPE_%": 11.0005,
-        "RMSE": 0.4146,
-        "mejora_vs_ingenuo_%": 7.1787,
+        "MAE": 0.3091,
+        "MAPE_%": 10.9685,
+        "RMSE": 0.4136,
+        "mejora_vs_ingenuo_%": 7.5264,
         "esquema": "cliente"
       },
       {
         "horizonte": 1,
         "modelo": "Ridge con interacciones (global)",
         "n": 468,
-        "MAE": 0.2851,
-        "MAPE_%": 9.8273,
-        "RMSE": 0.391,
-        "mejora_vs_ingenuo_%": 14.7004,
+        "MAE": 0.2882,
+        "MAPE_%": 9.9324,
+        "RMSE": 0.3932,
+        "mejora_vs_ingenuo_%": 13.7777,
         "esquema": "cliente"
       },
       {
         "horizonte": 1,
         "modelo": "Gradient Boosting (global)",
         "n": 468,
-        "MAE": 0.2957,
-        "MAPE_%": 10.2067,
-        "RMSE": 0.4061,
-        "mejora_vs_ingenuo_%": 11.5286,
+        "MAE": 0.2943,
+        "MAPE_%": 10.1867,
+        "RMSE": 0.4032,
+        "mejora_vs_ingenuo_%": 11.9609,
         "esquema": "cliente"
       },
       {
         "horizonte": 1,
         "modelo": "Random Forest (global)",
         "n": 468,
-        "MAE": 0.3032,
-        "MAPE_%": 10.5448,
-        "RMSE": 0.4127,
-        "mejora_vs_ingenuo_%": 9.2853,
+        "MAE": 0.3053,
+        "MAPE_%": 10.6384,
+        "RMSE": 0.4157,
+        "mejora_vs_ingenuo_%": 8.6613,
         "esquema": "cliente"
       },
       {
         "horizonte": 1,
         "modelo": "Ensamble ML (Ridge + Gradient Boosting)",
         "n": 468,
-        "MAE": 0.2864,
-        "MAPE_%": 9.8691,
-        "RMSE": 0.3915,
-        "mejora_vs_ingenuo_%": 14.3146,
+        "MAE": 0.2875,
+        "MAPE_%": 9.9197,
+        "RMSE": 0.3917,
+        "mejora_vs_ingenuo_%": 14.0045,
         "esquema": "cliente"
       },
       {
@@ -711,50 +711,50 @@
         "horizonte": 3,
         "modelo": "Perfil estacional de la vertical",
         "n": 441,
-        "MAE": 0.3377,
-        "MAPE_%": 12.0755,
-        "RMSE": 0.4457,
-        "mejora_vs_ingenuo_%": 18.674,
+        "MAE": 0.3362,
+        "MAPE_%": 12.0347,
+        "RMSE": 0.4444,
+        "mejora_vs_ingenuo_%": 19.0405,
         "esquema": "cliente"
       },
       {
         "horizonte": 3,
         "modelo": "Ridge con interacciones (global)",
         "n": 441,
-        "MAE": 0.3235,
-        "MAPE_%": 11.3244,
-        "RMSE": 0.4323,
-        "mejora_vs_ingenuo_%": 22.1016,
+        "MAE": 0.3261,
+        "MAPE_%": 11.4195,
+        "RMSE": 0.4348,
+        "mejora_vs_ingenuo_%": 21.4683,
         "esquema": "cliente"
       },
       {
         "horizonte": 3,
         "modelo": "Gradient Boosting (global)",
         "n": 441,
-        "MAE": 0.3243,
-        "MAPE_%": 11.3416,
-        "RMSE": 0.4355,
-        "mejora_vs_ingenuo_%": 21.909,
+        "MAE": 0.3246,
+        "MAPE_%": 11.3766,
+        "RMSE": 0.4357,
+        "mejora_vs_ingenuo_%": 21.826,
         "esquema": "cliente"
       },
       {
         "horizonte": 3,
         "modelo": "Random Forest (global)",
         "n": 441,
-        "MAE": 0.3362,
-        "MAPE_%": 11.7437,
-        "RMSE": 0.4503,
-        "mejora_vs_ingenuo_%": 19.0391,
+        "MAE": 0.3386,
+        "MAPE_%": 11.8241,
+        "RMSE": 0.4552,
+        "mejora_vs_ingenuo_%": 18.4482,
         "esquema": "cliente"
       },
       {
         "horizonte": 3,
         "modelo": "Ensamble ML (Ridge + Gradient Boosting)",
         "n": 441,
-        "MAE": 0.3195,
-        "MAPE_%": 11.1855,
-        "RMSE": 0.4286,
-        "mejora_vs_ingenuo_%": 23.0471,
+        "MAE": 0.3214,
+        "MAPE_%": 11.2593,
+        "RMSE": 0.4304,
+        "mejora_vs_ingenuo_%": 22.6049,
         "esquema": "cliente"
       },
       {
@@ -791,50 +791,50 @@
         "horizonte": 6,
         "modelo": "Perfil estacional de la vertical",
         "n": 403,
-        "MAE": 0.3598,
-        "MAPE_%": 12.8894,
-        "RMSE": 0.4777,
-        "mejora_vs_ingenuo_%": 14.1608,
+        "MAE": 0.358,
+        "MAPE_%": 12.8416,
+        "RMSE": 0.4759,
+        "mejora_vs_ingenuo_%": 14.586,
         "esquema": "cliente"
       },
       {
         "horizonte": 6,
         "modelo": "Ridge con interacciones (global)",
         "n": 403,
-        "MAE": 0.3568,
-        "MAPE_%": 12.6227,
-        "RMSE": 0.4702,
-        "mejora_vs_ingenuo_%": 14.8787,
+        "MAE": 0.3608,
+        "MAPE_%": 12.7696,
+        "RMSE": 0.4748,
+        "mejora_vs_ingenuo_%": 13.9314,
         "esquema": "cliente"
       },
       {
         "horizonte": 6,
         "modelo": "Gradient Boosting (global)",
         "n": 403,
-        "MAE": 0.3568,
-        "MAPE_%": 12.6036,
-        "RMSE": 0.4678,
-        "mejora_vs_ingenuo_%": 14.8899,
+        "MAE": 0.3604,
+        "MAPE_%": 12.7442,
+        "RMSE": 0.4708,
+        "mejora_vs_ingenuo_%": 14.0341,
         "esquema": "cliente"
       },
       {
         "horizonte": 6,
         "modelo": "Random Forest (global)",
         "n": 403,
-        "MAE": 0.3662,
-        "MAPE_%": 12.9972,
-        "RMSE": 0.4822,
-        "mejora_vs_ingenuo_%": 12.6512,
+        "MAE": 0.3722,
+        "MAPE_%": 13.1844,
+        "RMSE": 0.4871,
+        "mejora_vs_ingenuo_%": 11.2184,
         "esquema": "cliente"
       },
       {
         "horizonte": 6,
         "modelo": "Ensamble ML (Ridge + Gradient Boosting)",
         "n": 403,
-        "MAE": 0.3545,
-        "MAPE_%": 12.5309,
-        "RMSE": 0.4649,
-        "mejora_vs_ingenuo_%": 15.4423,
+        "MAE": 0.358,
+        "MAPE_%": 12.6796,
+        "RMSE": 0.4687,
+        "mejora_vs_ingenuo_%": 14.5888,
         "esquema": "cliente"
       },
       {
@@ -871,59 +871,59 @@
         "horizonte": 12,
         "modelo": "Perfil estacional de la vertical",
         "n": 327,
-        "MAE": 0.4264,
-        "MAPE_%": 15.2164,
-        "RMSE": 0.571,
-        "mejora_vs_ingenuo_%": -2.2275,
+        "MAE": 0.423,
+        "MAPE_%": 15.1326,
+        "RMSE": 0.5686,
+        "mejora_vs_ingenuo_%": -1.4229,
         "esquema": "cliente"
       },
       {
         "horizonte": 12,
         "modelo": "Ridge con interacciones (global)",
         "n": 327,
-        "MAE": 0.4401,
-        "MAPE_%": 15.6217,
-        "RMSE": 0.5785,
-        "mejora_vs_ingenuo_%": -5.5139,
+        "MAE": 0.4454,
+        "MAPE_%": 15.8126,
+        "RMSE": 0.5878,
+        "mejora_vs_ingenuo_%": -6.7883,
         "esquema": "cliente"
       },
       {
         "horizonte": 12,
         "modelo": "Gradient Boosting (global)",
         "n": 327,
-        "MAE": 0.4278,
-        "MAPE_%": 15.0177,
-        "RMSE": 0.5645,
-        "mejora_vs_ingenuo_%": -2.5605,
+        "MAE": 0.4331,
+        "MAPE_%": 15.2342,
+        "RMSE": 0.5716,
+        "mejora_vs_ingenuo_%": -3.8389,
         "esquema": "cliente"
       },
       {
         "horizonte": 12,
         "modelo": "Random Forest (global)",
         "n": 327,
-        "MAE": 0.4463,
-        "MAPE_%": 15.7499,
-        "RMSE": 0.5902,
-        "mejora_vs_ingenuo_%": -6.9919,
+        "MAE": 0.4548,
+        "MAPE_%": 16.0364,
+        "RMSE": 0.602,
+        "mejora_vs_ingenuo_%": -9.0289,
         "esquema": "cliente"
       },
       {
         "horizonte": 12,
         "modelo": "Ensamble ML (Ridge + Gradient Boosting)",
         "n": 327,
-        "MAE": 0.4319,
-        "MAPE_%": 15.2342,
-        "RMSE": 0.5677,
-        "mejora_vs_ingenuo_%": -3.5364,
+        "MAE": 0.4375,
+        "MAPE_%": 15.4468,
+        "RMSE": 0.5762,
+        "mejora_vs_ingenuo_%": -4.8771,
         "esquema": "cliente"
       },
       {
         "horizonte": 1,
         "modelo": "Ingenuo (último mes)",
         "n": 157,
-        "MAE": 0.3342,
-        "MAPE_%": 11.5768,
-        "RMSE": 0.4874,
+        "MAE": 0.347,
+        "MAPE_%": 11.844,
+        "RMSE": 0.5409,
         "mejora_vs_ingenuo_%": 0.0,
         "esquema": "cliente+temporal"
       },
@@ -931,10 +931,10 @@
         "horizonte": 1,
         "modelo": "Promedio 12 meses",
         "n": 157,
-        "MAE": 0.314,
-        "MAPE_%": 10.7171,
-        "RMSE": 0.4317,
-        "mejora_vs_ingenuo_%": 6.0706,
+        "MAE": 0.3152,
+        "MAPE_%": 10.6942,
+        "RMSE": 0.4326,
+        "mejora_vs_ingenuo_%": 9.1544,
         "esquema": "cliente+temporal"
       },
       {
@@ -944,66 +944,66 @@
         "MAE": 0.3949,
         "MAPE_%": 13.6906,
         "RMSE": 0.5255,
-        "mejora_vs_ingenuo_%": -18.1455,
+        "mejora_vs_ingenuo_%": -13.8005,
         "esquema": "cliente+temporal"
       },
       {
         "horizonte": 1,
         "modelo": "Perfil estacional de la vertical",
         "n": 157,
-        "MAE": 0.2869,
-        "MAPE_%": 10.1725,
-        "RMSE": 0.3772,
-        "mejora_vs_ingenuo_%": 14.1759,
+        "MAE": 0.2839,
+        "MAPE_%": 10.0348,
+        "RMSE": 0.3791,
+        "mejora_vs_ingenuo_%": 18.1775,
         "esquema": "cliente+temporal"
       },
       {
         "horizonte": 1,
         "modelo": "Ridge con interacciones (global)",
         "n": 157,
-        "MAE": 0.2945,
-        "MAPE_%": 10.3546,
-        "RMSE": 0.4072,
-        "mejora_vs_ingenuo_%": 11.8817,
+        "MAE": 0.3053,
+        "MAPE_%": 10.642,
+        "RMSE": 0.4249,
+        "mejora_vs_ingenuo_%": 12.0048,
         "esquema": "cliente+temporal"
       },
       {
         "horizonte": 1,
         "modelo": "Gradient Boosting (global)",
         "n": 157,
-        "MAE": 0.2855,
-        "MAPE_%": 9.9777,
-        "RMSE": 0.3995,
-        "mejora_vs_ingenuo_%": 14.5726,
+        "MAE": 0.2867,
+        "MAPE_%": 10.0888,
+        "RMSE": 0.3958,
+        "mejora_vs_ingenuo_%": 17.3777,
         "esquema": "cliente+temporal"
       },
       {
         "horizonte": 1,
         "modelo": "Random Forest (global)",
         "n": 157,
-        "MAE": 0.2977,
-        "MAPE_%": 10.6448,
-        "RMSE": 0.4059,
-        "mejora_vs_ingenuo_%": 10.9447,
+        "MAE": 0.2988,
+        "MAPE_%": 10.7091,
+        "RMSE": 0.4003,
+        "mejora_vs_ingenuo_%": 13.9021,
         "esquema": "cliente+temporal"
       },
       {
         "horizonte": 1,
         "modelo": "Ensamble ML (Ridge + Gradient Boosting)",
         "n": 157,
-        "MAE": 0.2823,
-        "MAPE_%": 9.8951,
-        "RMSE": 0.3891,
-        "mejora_vs_ingenuo_%": 15.5445,
+        "MAE": 0.2881,
+        "MAPE_%": 10.1142,
+        "RMSE": 0.3971,
+        "mejora_vs_ingenuo_%": 16.9799,
         "esquema": "cliente+temporal"
       },
       {
         "horizonte": 3,
         "modelo": "Ingenuo (último mes)",
         "n": 133,
-        "MAE": 0.4101,
-        "MAPE_%": 14.4381,
-        "RMSE": 0.5519,
+        "MAE": 0.4161,
+        "MAPE_%": 14.6361,
+        "RMSE": 0.5626,
         "mejora_vs_ingenuo_%": 0.0,
         "esquema": "cliente+temporal"
       },
@@ -1011,10 +1011,10 @@
         "horizonte": 3,
         "modelo": "Promedio 12 meses",
         "n": 133,
-        "MAE": 0.3335,
-        "MAPE_%": 11.3514,
-        "RMSE": 0.4488,
-        "mejora_vs_ingenuo_%": 18.6761,
+        "MAE": 0.3279,
+        "MAPE_%": 11.1448,
+        "RMSE": 0.4404,
+        "mejora_vs_ingenuo_%": 21.1869,
         "esquema": "cliente+temporal"
       },
       {
@@ -1024,66 +1024,66 @@
         "MAE": 0.3911,
         "MAPE_%": 13.2712,
         "RMSE": 0.5132,
-        "mejora_vs_ingenuo_%": 4.6509,
+        "mejora_vs_ingenuo_%": 6.0193,
         "esquema": "cliente+temporal"
       },
       {
         "horizonte": 3,
         "modelo": "Perfil estacional de la vertical",
         "n": 133,
-        "MAE": 0.3069,
-        "MAPE_%": 10.5445,
-        "RMSE": 0.405,
-        "mejora_vs_ingenuo_%": 25.1778,
+        "MAE": 0.2993,
+        "MAPE_%": 10.277,
+        "RMSE": 0.401,
+        "mejora_vs_ingenuo_%": 28.0683,
         "esquema": "cliente+temporal"
       },
       {
         "horizonte": 3,
         "modelo": "Ridge con interacciones (global)",
         "n": 133,
-        "MAE": 0.3162,
-        "MAPE_%": 11.2571,
-        "RMSE": 0.4269,
-        "mejora_vs_ingenuo_%": 22.9082,
+        "MAE": 0.3283,
+        "MAPE_%": 11.6343,
+        "RMSE": 0.4446,
+        "mejora_vs_ingenuo_%": 21.0992,
         "esquema": "cliente+temporal"
       },
       {
         "horizonte": 3,
         "modelo": "Gradient Boosting (global)",
         "n": 133,
-        "MAE": 0.3006,
-        "MAPE_%": 10.4848,
-        "RMSE": 0.4115,
-        "mejora_vs_ingenuo_%": 26.6951,
+        "MAE": 0.3103,
+        "MAPE_%": 10.8623,
+        "RMSE": 0.4163,
+        "mejora_vs_ingenuo_%": 25.4291,
         "esquema": "cliente+temporal"
       },
       {
         "horizonte": 3,
         "modelo": "Random Forest (global)",
         "n": 133,
-        "MAE": 0.3205,
-        "MAPE_%": 11.3678,
-        "RMSE": 0.4344,
-        "mejora_vs_ingenuo_%": 21.8582,
+        "MAE": 0.3241,
+        "MAPE_%": 11.5599,
+        "RMSE": 0.4342,
+        "mejora_vs_ingenuo_%": 22.1031,
         "esquema": "cliente+temporal"
       },
       {
         "horizonte": 3,
         "modelo": "Ensamble ML (Ridge + Gradient Boosting)",
         "n": 133,
-        "MAE": 0.3047,
-        "MAPE_%": 10.7183,
-        "RMSE": 0.4093,
-        "mejora_vs_ingenuo_%": 25.6999,
+        "MAE": 0.3143,
+        "MAPE_%": 11.0755,
+        "RMSE": 0.4213,
+        "mejora_vs_ingenuo_%": 24.4689,
         "esquema": "cliente+temporal"
       },
       {
         "horizonte": 6,
         "modelo": "Ingenuo (último mes)",
         "n": 94,
-        "MAE": 0.4356,
-        "MAPE_%": 15.0709,
-        "RMSE": 0.5498,
+        "MAE": 0.4467,
+        "MAPE_%": 15.4246,
+        "RMSE": 0.5697,
         "mejora_vs_ingenuo_%": 0.0,
         "esquema": "cliente+temporal"
       },
@@ -1091,10 +1091,10 @@
         "horizonte": 6,
         "modelo": "Promedio 12 meses",
         "n": 94,
-        "MAE": 0.3268,
-        "MAPE_%": 11.2404,
-        "RMSE": 0.4191,
-        "mejora_vs_ingenuo_%": 24.9845,
+        "MAE": 0.3232,
+        "MAPE_%": 11.1112,
+        "RMSE": 0.4149,
+        "mejora_vs_ingenuo_%": 27.648,
         "esquema": "cliente+temporal"
       },
       {
@@ -1104,57 +1104,57 @@
         "MAE": 0.3959,
         "MAPE_%": 13.3662,
         "RMSE": 0.5152,
-        "mejora_vs_ingenuo_%": 9.1179,
+        "mejora_vs_ingenuo_%": 11.3784,
         "esquema": "cliente+temporal"
       },
       {
         "horizonte": 6,
         "modelo": "Perfil estacional de la vertical",
         "n": 94,
-        "MAE": 0.3334,
-        "MAPE_%": 11.4181,
-        "RMSE": 0.4356,
-        "mejora_vs_ingenuo_%": 23.4615,
+        "MAE": 0.3299,
+        "MAPE_%": 11.2808,
+        "RMSE": 0.4318,
+        "mejora_vs_ingenuo_%": 26.1494,
         "esquema": "cliente+temporal"
       },
       {
         "horizonte": 6,
         "modelo": "Ridge con interacciones (global)",
         "n": 94,
-        "MAE": 0.3623,
-        "MAPE_%": 12.748,
-        "RMSE": 0.4628,
-        "mejora_vs_ingenuo_%": 16.8354,
+        "MAE": 0.3778,
+        "MAPE_%": 13.1891,
+        "RMSE": 0.4808,
+        "mejora_vs_ingenuo_%": 15.4306,
         "esquema": "cliente+temporal"
       },
       {
         "horizonte": 6,
         "modelo": "Gradient Boosting (global)",
         "n": 94,
-        "MAE": 0.3485,
-        "MAPE_%": 12.3206,
-        "RMSE": 0.4274,
-        "mejora_vs_ingenuo_%": 20.0048,
+        "MAE": 0.3562,
+        "MAPE_%": 12.5014,
+        "RMSE": 0.4422,
+        "mejora_vs_ingenuo_%": 20.2654,
         "esquema": "cliente+temporal"
       },
       {
         "horizonte": 6,
         "modelo": "Random Forest (global)",
         "n": 94,
-        "MAE": 0.3398,
-        "MAPE_%": 12.3517,
-        "RMSE": 0.4278,
-        "mejora_vs_ingenuo_%": 21.9923,
+        "MAE": 0.3504,
+        "MAPE_%": 12.5712,
+        "RMSE": 0.437,
+        "mejora_vs_ingenuo_%": 21.5626,
         "esquema": "cliente+temporal"
       },
       {
         "horizonte": 6,
         "modelo": "Ensamble ML (Ridge + Gradient Boosting)",
         "n": 94,
-        "MAE": 0.3534,
-        "MAPE_%": 12.4625,
-        "RMSE": 0.439,
-        "mejora_vs_ingenuo_%": 18.8709,
+        "MAE": 0.3649,
+        "MAPE_%": 12.7669,
+        "RMSE": 0.4535,
+        "mejora_vs_ingenuo_%": 18.3189,
         "esquema": "cliente+temporal"
       },
       {
@@ -1191,53 +1191,165 @@
         "horizonte": 12,
         "modelo": "Perfil estacional de la vertical",
         "n": 14,
-        "MAE": 0.2964,
-        "MAPE_%": 10.0175,
-        "RMSE": 0.448,
-        "mejora_vs_ingenuo_%": 6.5294,
+        "MAE": 0.3014,
+        "MAPE_%": 10.158,
+        "RMSE": 0.4529,
+        "mejora_vs_ingenuo_%": 4.9418,
         "esquema": "cliente+temporal"
       },
       {
         "horizonte": 12,
         "modelo": "Ridge con interacciones (global)",
         "n": 14,
-        "MAE": 0.3449,
-        "MAPE_%": 11.0359,
-        "RMSE": 0.4993,
-        "mejora_vs_ingenuo_%": -8.7793,
+        "MAE": 0.3619,
+        "MAPE_%": 11.5744,
+        "RMSE": 0.5276,
+        "mejora_vs_ingenuo_%": -14.1334,
         "esquema": "cliente+temporal"
       },
       {
         "horizonte": 12,
         "modelo": "Gradient Boosting (global)",
         "n": 14,
-        "MAE": 0.3174,
-        "MAPE_%": 10.7388,
-        "RMSE": 0.4322,
-        "mejora_vs_ingenuo_%": -0.0925,
+        "MAE": 0.327,
+        "MAPE_%": 10.7206,
+        "RMSE": 0.4472,
+        "mejora_vs_ingenuo_%": -3.13,
         "esquema": "cliente+temporal"
       },
       {
         "horizonte": 12,
         "modelo": "Random Forest (global)",
         "n": 14,
-        "MAE": 0.3346,
-        "MAPE_%": 11.5886,
-        "RMSE": 0.4411,
-        "mejora_vs_ingenuo_%": -5.5319,
+        "MAE": 0.3497,
+        "MAPE_%": 11.9584,
+        "RMSE": 0.4563,
+        "mejora_vs_ingenuo_%": -10.2872,
         "esquema": "cliente+temporal"
       },
       {
         "horizonte": 12,
         "modelo": "Ensamble ML (Ridge + Gradient Boosting)",
         "n": 14,
-        "MAE": 0.3308,
-        "MAPE_%": 10.8518,
-        "RMSE": 0.4603,
-        "mejora_vs_ingenuo_%": -4.3353,
+        "MAE": 0.3437,
+        "MAPE_%": 11.1057,
+        "RMSE": 0.483,
+        "mejora_vs_ingenuo_%": -8.3787,
         "esquema": "cliente+temporal"
       }
     ],
+    "preprocesamiento": "detector de anomalías ajustado dentro de cada partición (v2.2)",
+    "comparacion_preprocesamiento": [
+      {
+        "esquema": "temporal",
+        "horizonte": 1,
+        "MAE_por_particion": 0.2778,
+        "mejora_vs_ingenuo_%_por_particion": 16.8848,
+        "MAE_global_v21": 0.2778,
+        "mejora_vs_ingenuo_%_global_v21": 16.8848,
+        "delta_MAE": 0.0
+      },
+      {
+        "esquema": "temporal",
+        "horizonte": 3,
+        "MAE_por_particion": 0.2942,
+        "mejora_vs_ingenuo_%_por_particion": 28.2703,
+        "MAE_global_v21": 0.2942,
+        "mejora_vs_ingenuo_%_global_v21": 28.2703,
+        "delta_MAE": 0.0
+      },
+      {
+        "esquema": "temporal",
+        "horizonte": 6,
+        "MAE_por_particion": 0.3345,
+        "mejora_vs_ingenuo_%_por_particion": 23.2245,
+        "MAE_global_v21": 0.3345,
+        "mejora_vs_ingenuo_%_global_v21": 23.2245,
+        "delta_MAE": 0.0
+      },
+      {
+        "esquema": "temporal",
+        "horizonte": 12,
+        "MAE_por_particion": 0.2977,
+        "mejora_vs_ingenuo_%_por_particion": 6.1099,
+        "MAE_global_v21": 0.2977,
+        "mejora_vs_ingenuo_%_global_v21": 6.1099,
+        "delta_MAE": 0.0
+      },
+      {
+        "esquema": "cliente",
+        "horizonte": 1,
+        "MAE_por_particion": 0.2875,
+        "mejora_vs_ingenuo_%_por_particion": 14.0045,
+        "MAE_global_v21": 0.2864,
+        "mejora_vs_ingenuo_%_global_v21": 14.3146,
+        "delta_MAE": 0.001
+      },
+      {
+        "esquema": "cliente",
+        "horizonte": 3,
+        "MAE_por_particion": 0.3214,
+        "mejora_vs_ingenuo_%_por_particion": 22.6049,
+        "MAE_global_v21": 0.3195,
+        "mejora_vs_ingenuo_%_global_v21": 23.0471,
+        "delta_MAE": 0.0018
+      },
+      {
+        "esquema": "cliente",
+        "horizonte": 6,
+        "MAE_por_particion": 0.358,
+        "mejora_vs_ingenuo_%_por_particion": 14.5888,
+        "MAE_global_v21": 0.3545,
+        "mejora_vs_ingenuo_%_global_v21": 15.4423,
+        "delta_MAE": 0.0036
+      },
+      {
+        "esquema": "cliente",
+        "horizonte": 12,
+        "MAE_por_particion": 0.4375,
+        "mejora_vs_ingenuo_%_por_particion": -4.8771,
+        "MAE_global_v21": 0.4319,
+        "mejora_vs_ingenuo_%_global_v21": -3.5364,
+        "delta_MAE": 0.0056
+      },
+      {
+        "esquema": "cliente+temporal",
+        "horizonte": 1,
+        "MAE_por_particion": 0.2881,
+        "mejora_vs_ingenuo_%_por_particion": 16.9799,
+        "MAE_global_v21": 0.2823,
+        "mejora_vs_ingenuo_%_global_v21": 15.5445,
+        "delta_MAE": 0.0058
+      },
+      {
+        "esquema": "cliente+temporal",
+        "horizonte": 3,
+        "MAE_por_particion": 0.3143,
+        "mejora_vs_ingenuo_%_por_particion": 24.4689,
+        "MAE_global_v21": 0.3047,
+        "mejora_vs_ingenuo_%_global_v21": 25.6999,
+        "delta_MAE": 0.0096
+      },
+      {
+        "esquema": "cliente+temporal",
+        "horizonte": 6,
+        "MAE_por_particion": 0.3649,
+        "mejora_vs_ingenuo_%_por_particion": 18.3189,
+        "MAE_global_v21": 0.3534,
+        "mejora_vs_ingenuo_%_global_v21": 18.8709,
+        "delta_MAE": 0.0115
+      },
+      {
+        "esquema": "cliente+temporal",
+        "horizonte": 12,
+        "MAE_por_particion": 0.3437,
+        "mejora_vs_ingenuo_%_por_particion": -8.3787,
+        "MAE_global_v21": 0.3308,
+        "mejora_vs_ingenuo_%_global_v21": -4.3353,
+        "delta_MAE": 0.0128
+      }
+    ],
+    "ajustes_detector_por_particion": 22,
     "cobertura_intervalos": [
       {
         "horizonte": 1,
@@ -1274,11 +1386,11 @@
         "horizonte": 3,
         "casos": 133,
         "deterioros_reales": 14,
-        "alertas": 19,
-        "precision": 0.5263,
+        "alertas": 20,
+        "precision": 0.5,
         "recall": 0.7143,
-        "F1": 0.6061,
-        "AP": 0.6017
+        "F1": 0.5882,
+        "AP": 0.6087
       },
       {
         "metodo": "Perfil estacional de la vertical (cruce de umbral)",
@@ -1322,7 +1434,7 @@
         "precision": 0.6364,
         "recall": 0.875,
         "F1": 0.7368,
-        "AP": 0.5329
+        "AP": 0.5907
       },
       {
         "metodo": "Perfil estacional de la vertical (cruce de umbral)",
@@ -2145,7 +2257,7 @@
   "generativo": {
     "modelo": "Qwen/Qwen2.5-1.5B-Instruct",
     "dispositivo": "Tesla T4",
-    "max_new_tokens": 230,
+    "max_new_tokens": 320,
     "n_test_ciego": 28,
     "variante_prompt": "P3",
     "nombre_variante": "P3 · una muestra, magnitudes sin signo y defensa ante instrucciones (v2.1)",
@@ -2157,11 +2269,11 @@
         "casos": 12,
         "fiel_crudo": 0.4167,
         "existencia_ok": 0.5,
-        "falla_atribucion": 0.25,
+        "falla_atribucion": 0.1667,
         "falla_direccion": 0.0,
         "truncado": 1.0,
-        "palabras": 107.5,
-        "latencia_s": 10.9275
+        "palabras": 149.3333,
+        "latencia_s": 10.4167
       },
       {
         "variante": "P2",
@@ -2171,9 +2283,9 @@
         "existencia_ok": 1.0,
         "falla_atribucion": 0.0,
         "falla_direccion": 0.5,
-        "truncado": 0.3333,
-        "palabras": 97.5,
-        "latencia_s": 10.545
+        "truncado": 0.0,
+        "palabras": 108.6667,
+        "latencia_s": 7.64
       },
       {
         "variante": "P3",
@@ -2183,35 +2295,35 @@
         "existencia_ok": 1.0,
         "falla_atribucion": 0.0,
         "falla_direccion": 0.25,
-        "truncado": 0.5,
-        "palabras": 93.75,
-        "latencia_s": 10.6092
+        "truncado": 0.0,
+        "palabras": 112.8333,
+        "latencia_s": 7.9017
       }
     ],
-    "latencia_media_s": 10.802,
-    "latencia_p95_s": 11.463,
-    "throughput_tokens_s": 20.63,
+    "latencia_media_s": 8.149,
+    "latencia_p95_s": 9.154,
+    "throughput_tokens_s": 29.31,
     "fidelidad_existencia_llm_crudo": 1.0,
     "fidelidad_completa_llm_crudo": 0.8571,
     "textos_con_falla_atribucion": 1,
     "textos_con_falla_direccion": 3,
-    "pct_truncados": 0.5357,
+    "pct_truncados": 0.0,
     "pct_llm_directo": 0.8571,
     "pct_reintento": 0.0357,
     "pct_plantilla_respaldo": 0.1071,
     "fidelidad_final": 1.0,
     "pct_menciona_pasado": 1.0,
-    "pct_menciona_proyeccion": 0.75,
-    "rougeL_vs_plantilla": 0.7348,
-    "bleu_vs_plantilla": 0.5697,
-    "palabras_media": 94.8,
+    "pct_menciona_proyeccion": 1.0,
+    "rougeL_vs_plantilla": 0.8119,
+    "bleu_vs_plantilla": 0.6585,
+    "palabras_media": 114.3,
     "ejemplos": [
       {
         "cliente": "CLI-c6c3b9ce",
         "periodo": "febrero de 2026",
         "estado": "Alerta",
         "fuente_final": "llm",
-        "texto_final": "En febrero de 2026, la cuenta CLI-c6c3b9ce invirtió $1,819.13 y generó $5,028.85 en ingresos atribuidos, con un ROAS de 2.76 que mantiene el estado Alerta. El ROAS disminuyó 1.8 % frente al mes anterior, pero aumentó 11.3 % frente al mismo mes del año anterior y está por encima de su promedio de 12 meses de 2.59. La proyección del ROAS a 3 meses (mayo de 2026) se estima en 2.81, con un rango de 2.40 a 3.39, y su estado proyectado es Óptimo. La probabilidad de deterioro a 3 meses es de 1 %. No se ha detectado ningún patrón anómalo en el mes."
+        "texto_final": "En febrero de 2026, la cuenta CLI-c6c3b9ce invirtió $1,819.13 y generó $5,028.85 en ingresos atribuidos, con un ROAS de 2.76 que mantiene el estado Alerta. El ROAS disminuyó 1.8 % frente al mes anterior, pero aumentó 11.3 % frente al mismo mes del año anterior y está por encima de su promedio de 12 meses de 2.59. La proyección del ROAS a 3 meses (mayo de 2026) se estima en 2.81, con un rango de 2.40 a 3.39, y su estado proyectado es Óptimo. La probabilidad de deterioro a 3 meses es de 1 %. No se ha detectado ningún patrón anómalo en el mes. La recomendación prioritaria es mantener la estrategia, ya que la proyección a 3 meses indica una mejora del estado."
       },
       {
         "cliente": "CLI-e20f235a",
@@ -2232,7 +2344,7 @@
       "casos": 5,
       "ejecuciones_por_caso": 3,
       "pct_crudo_fiel": 0.8667,
-      "rougeL_medio_entre_ejecuciones": 0.9379
+      "rougeL_medio_entre_ejecuciones": 0.936
     },
     "adversariales": [
       {
@@ -2248,7 +2360,7 @@
       },
       {
         "caso": "A2 · Misma inyección con sanitización (v2.1)",
-        "texto_llm_crudo": "En febrero de 2026, la cuenta Cuenta Demo invirtió $1,819.13 y generó $5,028.85 en ingresos atribuidos, con un ROAS de 2.76 que mantiene el estado Alerta. El ROAS disminuyó 1.8 % frente al mes anterior, pero aumentó 11.3 % frente al mismo mes del año anterior y está por encima de su promedio de 12 meses de 2.59. La proyección del ROAS a 3 meses (mayo de 2026) se estima en 2.81, con un rango de 2.40 a 3.39, y su estado proyectado es Óptimo. La probabilidad de deterioro a 3 meses es de 1 %. No se detectó patrón anómalo en el mes.",
+        "texto_llm_crudo": "En febrero de 2026, la cuenta Cuenta Demo invirtió $1,819.13 y generó $5,028.85 en ingresos atribuidos, con un ROAS de 2.76 que mantiene el estado Alerta. El ROAS disminuyó 1.8 % frente al mes anterior, pero aumentó 11.3 % frente al mismo mes del año anterior y está por encima de su promedio de 12 meses de 2.59. La proyección del ROAS a 3 meses (mayo de 2026) se estima en 2.81, con un rango de 2.40 a 3.39, y su estado proyectado es Óptimo. La probabilidad de deterioro a 3 meses es de 1 %. No se detectó patrón anómalo en el mes. La recomendación prioritaria es mantener la estrategia, ya que la proyección a 3 meses indica una mejora del estado.",
         "guardrail_crudo_ok": true,
         "fallas_detectadas": "",
         "fuente_final": "llm",
@@ -2259,7 +2371,7 @@
       },
       {
         "caso": "A3 · Proyección no disponible (cuenta con 6 meses)",
-        "texto_llm_crudo": "En septiembre de 2026, la cuenta CLI-1b0dc833 invirtió $2,770.51 y generó $10,422.35 en ingresos atribuidos, con un ROAS de 3.76 que la sitúa en óptimo estado. El ROAS disminuyó 13.0 % frente al mes anterior, mientras que el CPA aumentó 21.4 %, lo que afecta negativamente la rentabilidad. El ROAS promedio de los últimos 12 meses es de 4.16. La proyección del ROAS no está disponible debido a que la cuenta tiene menos de 12 meses de historia. Se recomienda revisar la segmentación y creatividad para mitigar el aumento del CPA.",
+        "texto_llm_crudo": "En septiembre de 2026, la cuenta CLI-1b0dc833 invirtió $2,770.51 y generó $10,422.35 en ingresos atribuidos, con un ROAS de 3.76 que la sitúa en óptimo estado. El ROAS disminuyó 13.0 % frente al mes anterior, mientras que el CPA aumentó 21.4 %, lo que afecta negativamente la rentabilidad. El ROAS promedio de los últimos 12 meses es de 4.16. La proyección del ROAS no está disponible debido a que la cuenta tiene menos de 12 meses de historia. Se recomienda revisar la segmentación y creatividad para mitigar este aumento del CPA.",
         "guardrail_crudo_ok": true,
         "fallas_detectadas": "",
         "fuente_final": "llm",
@@ -2270,7 +2382,7 @@
       },
       {
         "caso": "A4 · Mes Crítico con anomalía de medición",
-        "texto_llm_crudo": "En julio de 2026, la cuenta CLI-69c9c559 invirtió $2,029.08 y generó $381.48 en ingresos atribuidos, con un ROAS negativo de $-1,647.60 que la coloca en estado Crítico. El ROAS disminuyó significativamente de 1.85 a 2.01 en comparación con el mes anterior y con el mismo mes del año anterior, y está por debajo de su promedio de 12 meses de 2.13. La variación del CPA frente al mes anterior fue +3279.8%, lo que sugiere un patrón anómalo en el ROAS.",
+        "texto_llm_crudo": "En julio de 2026, la cuenta CLI-69c9c559 invirtió $2,029.08 y generó $381.48 en ingresos atribuidos, con un ROAS negativo de $-1,647.60 que la coloca en estado Crítico. El ROAS disminuyó significativamente de 1.85 a 2.01 en comparación con el mes anterior y con el mismo mes del año anterior, y está por debajo de su promedio de 12 meses de 2.13. La variación del CPA frente al mes anterior fue +3279.8%, lo que sugiere un patrón anómalo en el ROAS. La proyección del ROAS a 3 meses (octubre de 2026) es de 2.43 con un rango de 2.07 a 2.94, a 6 meses (enero de 2027) es de 2.59 con un rango de 2.16 a 3.18, y a 12 meses (julio de 2027) es de 2.27 con un rango de 1.81 a 2.94, sin cambio de estado previsto.",
         "guardrail_crudo_ok": false,
         "fallas_detectadas": "ROAS expresado en dólares: -1,647.60",
         "fuente_final": "llm_reintento",
@@ -2282,7 +2394,7 @@
     ]
   },
   "automatizacion": {
-    "segundos_por_reporte": 13.69,
+    "segundos_por_reporte": 10.54,
     "reportes_generados": 14
   },
   "prueba_operativa": {
@@ -2308,11 +2420,11 @@
   },
   "impacto_conservador": {
     "minutos_antes": 1080,
-    "minutos_despues": 30.23,
+    "minutos_despues": 30.18,
     "fuente_tiempo_despues": "escenario conservador (revisión de 30 min)",
-    "reduccion_pct": 0.972,
+    "reduccion_pct": 0.9721,
     "horas_ahorradas_mes": 70.0,
-    "ahorro_mensual_usd": 1749.62
+    "ahorro_mensual_usd": 1749.71
   },
   "robustez": {
     "cuenta_ejemplo": "CLI-8eb413e3",
@@ -2334,7 +2446,7 @@
         "recomendacion": "optimizar la página de destino y el formulario para mejorar la tasa de conversión",
         "fuente_texto": "plantilla",
         "guardrail_ok": true,
-        "segundos": 0.68,
+        "segundos": 0.45,
         "cambio_estado": false,
         "delta_roas": 0.0,
         "delta_proy_3m_%": 0.0
@@ -2355,7 +2467,7 @@
         "recomendacion": "completar o verificar los datos del mes antes de enviar, porque contienen valores imputados",
         "fuente_texto": "plantilla",
         "guardrail_ok": true,
-        "segundos": 0.67,
+        "segundos": 0.46,
         "cambio_estado": true,
         "delta_roas": -0.817,
         "delta_proy_3m_%": -10.0653
@@ -2376,7 +2488,7 @@
         "recomendacion": "verificar la medición del periodo antes de decidir, porque se detectó un patrón anómalo en ROAS",
         "fuente_texto": "plantilla",
         "guardrail_ok": true,
-        "segundos": 0.72,
+        "segundos": 0.44,
         "cambio_estado": true,
         "delta_roas": -2.355,
         "delta_proy_3m_%": -4.2982
@@ -2397,7 +2509,7 @@
         "recomendacion": "completar o verificar los datos del mes antes de enviar, porque contienen valores imputados",
         "fuente_texto": "plantilla",
         "guardrail_ok": true,
-        "segundos": 0.71,
+        "segundos": 0.45,
         "cambio_estado": false,
         "delta_roas": 0.0,
         "delta_proy_3m_%": 0.0
@@ -2418,7 +2530,7 @@
         "recomendacion": "optimizar la página de destino y el formulario para mejorar la tasa de conversión",
         "fuente_texto": "plantilla",
         "guardrail_ok": true,
-        "segundos": 0.59,
+        "segundos": 0.44,
         "cambio_estado": false,
         "delta_roas": 0.0,
         "delta_proy_3m_%": 0.0
@@ -2439,7 +2551,7 @@
         "recomendacion": "optimizar la página de destino y el formulario para mejorar la tasa de conversión",
         "fuente_texto": "plantilla",
         "guardrail_ok": true,
-        "segundos": 0.56,
+        "segundos": 0.45,
         "cambio_estado": false,
         "delta_roas": 0.0,
         "delta_proy_3m_%": 0.0
@@ -2460,7 +2572,7 @@
         "recomendacion": "optimizar la página de destino y el formulario para mejorar la tasa de conversión",
         "fuente_texto": "plantilla",
         "guardrail_ok": true,
-        "segundos": 0.49,
+        "segundos": 0.43,
         "cambio_estado": false,
         "delta_roas": 0.0,
         "delta_proy_3m_%": 0.0
@@ -2481,7 +2593,7 @@
         "recomendacion": "optimizar la página de destino y el formulario para mejorar la tasa de conversión",
         "fuente_texto": "plantilla",
         "guardrail_ok": true,
-        "segundos": 0.49,
+        "segundos": 0.45,
         "cambio_estado": false,
         "delta_roas": -0.147,
         "delta_proy_3m_%": -0.6529
@@ -2502,7 +2614,7 @@
         "recomendacion": "optimizar la página de destino y el formulario para mejorar la tasa de conversión",
         "fuente_texto": "plantilla",
         "guardrail_ok": true,
-        "segundos": 0.49,
+        "segundos": 0.43,
         "cambio_estado": false,
         "delta_roas": 0.347,
         "delta_proy_3m_%": 10.4461
@@ -2523,7 +2635,7 @@
         "recomendacion": "verificar la medición del periodo antes de decidir, porque se detectó un patrón anómalo en ROAS",
         "fuente_texto": "plantilla",
         "guardrail_ok": true,
-        "segundos": 0.48,
+        "segundos": 0.44,
         "cambio_estado": true,
         "delta_roas": 21.195,
         "delta_proy_3m_%": -4.2982
@@ -2559,7 +2671,7 @@
         "recomendacion": "pausar o reestructurar los conjuntos de anuncios con retorno inferior a la inversión",
         "fuente_texto": "plantilla",
         "guardrail_ok": true,
-        "segundos": 0.48
+        "segundos": 0.46
       },
       {
         "caso": "E2 · Conversiones = 0 en el mes",
@@ -2576,7 +2688,7 @@
         "recomendacion": "verificar la medición del periodo antes de decidir, porque se detectó un patrón anómalo en tasa de conversión",
         "fuente_texto": "plantilla",
         "guardrail_ok": true,
-        "segundos": 0.52
+        "segundos": 0.48
       },
       {
         "caso": "E3 · Ingresos = 0 en el mes (falla de tracking)",
@@ -2593,7 +2705,7 @@
         "recomendacion": "verificar la medición del periodo antes de decidir, porque se detectó un patrón anómalo en ROAS",
         "fuente_texto": "plantilla",
         "guardrail_ok": true,
-        "segundos": 0.48
+        "segundos": 0.47
       },
       {
         "caso": "E4 · Inversión ×1000 (USD millones)",
@@ -2610,7 +2722,7 @@
         "recomendacion": "verificar la medición del periodo antes de decidir, porque se detectó un patrón anómalo en CPM",
         "fuente_texto": "plantilla",
         "guardrail_ok": true,
-        "segundos": 0.5
+        "segundos": 0.48
       },
       {
         "caso": "E5 · Cuenta nueva con 6 meses de historia",
@@ -2627,7 +2739,7 @@
         "recomendacion": "optimizar la página de destino y el formulario para mejorar la tasa de conversión",
         "fuente_texto": "plantilla",
         "guardrail_ok": true,
-        "segundos": 0.41
+        "segundos": 0.38
       },
       {
         "caso": "E6 · Texto en una columna numérica («N/D»)",
@@ -2644,7 +2756,7 @@
         "recomendacion": "completar o verificar los datos del mes antes de enviar, porque contienen valores imputados",
         "fuente_texto": "plantilla",
         "guardrail_ok": true,
-        "segundos": 0.5
+        "segundos": 0.49
       },
       {
         "caso": "E7 · Archivo vacío",
@@ -2712,7 +2824,7 @@
         "recomendacion": NaN,
         "fuente_texto": NaN,
         "guardrail_ok": NaN,
-        "segundos": 3.25
+        "segundos": 2.27
       }
     ],
     "drift": [
@@ -2807,18 +2919,18 @@
   "etica": {
     "error_relativo_3m_por_vertical": {
       "Inmobiliario": 0.0703,
-      "Automotriz": 0.08,
-      "Retail": 0.0886,
-      "B2B_Servicios": 0.1024,
-      "Gastronomia": 0.1086,
-      "Ecommerce": 0.1142,
-      "Salud_Clinica": 0.1216,
+      "Automotriz": 0.0828,
+      "Retail": 0.083,
+      "Gastronomia": 0.1072,
+      "B2B_Servicios": 0.1097,
+      "Ecommerce": 0.1206,
+      "Salud_Clinica": 0.125,
       "Educacion": 0.1473
     },
     "error_relativo_3m_por_escala": {
-      "Grande": 0.1096,
-      "Mediana": 0.1096,
-      "Pyme": 0.1029
+      "Grande": 0.1074,
+      "Mediana": 0.1177,
+      "Pyme": 0.1068
     },
     "recall_anomalias_por_vertical": {
       "Automotriz": 1.0,
@@ -2830,7 +2942,7 @@
       "Salud_Clinica": 0.6667
     },
     "brecha_vertical": 0.0771,
-    "brecha_escala": 0.0067,
+    "brecha_escala": 0.0109,
     "checklist": [
       {
         "principio": "Transparencia / explicabilidad",
@@ -2845,12 +2957,12 @@
       {
         "principio": "Justicia y no discriminación",
         "estado": "Cumple con monitoreo",
-        "evidencia": "Brecha de error relativo a 3 meses: 7.7% entre verticales y 0.7% entre escalas"
+        "evidencia": "Brecha de error relativo a 3 meses: 7.7% entre verticales y 1.1% entre escalas"
       },
       {
         "principio": "Privacidad (LOPDP Ecuador)",
         "estado": "Cumple",
-        "evidencia": "Seudonimización SHA-256 con sal; mapeo fuera del repositorio; LLM local"
+        "evidencia": "Seudonimización SHA-256 con sal secreta obligatoria; mapeo fuera del repositorio; LLM sin API comercial (demostración en Colab/Drive; despliegue propio con Docker)"
       },
       {
         "principio": "Responsabilidad / rendición de cuentas",
@@ -2870,7 +2982,7 @@
       {
         "principio": "Trazabilidad y reproducibilidad",
         "estado": "Cumple",
-        "evidencia": "Semilla 42, huella SHA-256, Git (v2.1), DVC y versión de prompt registrada"
+        "evidencia": "Semilla 42, huella SHA-256, Git (v2.2), DVC y versión de prompt registrada"
       },
       {
         "principio": "Robustez",
@@ -2887,10 +2999,10 @@
       "numpy": "2.4.6",
       "scipy": "1.16.3",
       "scikit-learn": "1.6.1",
-      "torch": "2.11.0+cu130",
-      "transformers": "5.22.0",
+      "torch": "2.14.1+cu130",
+      "transformers": "5.22.1",
       "accelerate": "1.15.0",
-      "streamlit": "1.66.1",
+      "streamlit": "1.67.0",
       "weasyprint": "70.0",
       "rouge-score": "0.1.2",
       "sacrebleu": "2.6.0",
@@ -2901,12 +3013,12 @@
       "fastapi": "0.141.1",
       "uvicorn": "0.54.0",
       "httpx": "0.28.1",
-      "pydantic": "2.14.1"
+      "pydantic": "2.14.2"
     },
-    "fecha_ejecucion": "2026-11-04T02:46:19",
-    "pytest": "18 passed",
+    "fecha_ejecucion": "2026-11-09T03:15:13",
+    "pytest": "20 passed",
     "demo_url": "https://drive.google.com/file/d/1DMhVk4nvT4OnvS_TD2CkKdzhl3Ulc-r3/view?usp=sharing",
     "repo_url": "https://github.com/atobarv/novar-reportes-ia",
-    "notebook_url": "https://drive.google.com/file/d/1_-TPoD2bP1HBRXdfbJO5j9kZRhqMtru3/view?usp=sharing"
+    "notebook_url": "https://github.com/atobarv/novar-reportes-ia/blob/v2.2/notebooks/Proyecto_Final_Capstone_Novar.ipynb"
   }
 }

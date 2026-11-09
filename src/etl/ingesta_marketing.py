@@ -201,11 +201,32 @@ def limpiar(df: pd.DataFrame) -> tuple[pd.DataFrame, dict]:
     return df, calidad
 
 
+SALES_INSEGURAS = {"", "novar", "sal", "salt", "secret", "secreto", "changeme", "123456"}
+LARGO_MINIMO_SAL = 16
+
+
+def validar_sal(sal: str | None) -> str:
+    """La seudonimización solo protege si la sal es secreta: se exige una sal configurada, de al menos 16
+    caracteres y distinta de valores conocidos. No existe sal predeterminada (observación NC2, semana 11)."""
+    if not sal or sal.strip().lower() in SALES_INSEGURAS or len(sal.strip()) < LARGO_MINIMO_SAL:
+        raise ValueError("Sal de seudonimización no configurada o insegura: defina la variable de entorno NOVAR_SAL "
+                         f"con un valor secreto de al menos {LARGO_MINIMO_SAL} caracteres (por ejemplo, "
+                         "python -c \"import secrets; print(secrets.token_hex(16))\") y guárdela fuera del repositorio.")
+    return sal.strip()
+
+
+def sal_configurada() -> str:
+    """Sal tomada de la variable de entorno NOVAR_SAL (o de un archivo .env que no se versiona)."""
+    import os
+    return validar_sal(os.environ.get("NOVAR_SAL"))
+
+
 def anonimizar(df: pd.DataFrame, sal: str, ruta_mapeo: str | Path | None = None) -> pd.DataFrame:
-    """Seudonimiza el nombre del cliente (SHA-256 + sal). El mapeo se guarda fuera del repo."""
+    """Seudonimiza el nombre del cliente (SHA-256 + sal secreta). El mapeo se guarda fuera del repo."""
     df = df.copy()
     if df["cliente"].str.match(r"^CLI-[0-9a-f]{8}$").all():
         return df  # ya anonimizado
+    sal = validar_sal(sal)
     mapeo = {n: "CLI-" + hashlib.sha256((sal + n).encode()).hexdigest()[:8]
              for n in sorted(df["cliente"].unique())}
     df["cliente"] = df["cliente"].map(mapeo)

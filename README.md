@@ -1,10 +1,10 @@
-# Sistema de Generación Inteligente de Reportes de Marketing · Novar Agencia · v2.1
+# Sistema de Generación Inteligente de Reportes de Marketing · Novar Agencia · v2.2
 
 Prototipo del proyecto de titulación de la **Maestría en Inteligencia Artificial Aplicada (UDLA – FICA)**.
 Autor: Julio Alejandro Tobar Valencia · Tutor: MSc. Paulo Guerra Terán · Sponsor: Novar Agencia (Quito, Ecuador).
 Licencia: MIT (ver `LICENSE`). Datos: simulados y seudonimizados.
 
-**Notebook (Colab):** https://drive.google.com/file/d/1_-TPoD2bP1HBRXdfbJO5j9kZRhqMtru3/view?usp=sharing
+**Notebook (Colab):** https://github.com/atobarv/novar-reportes-ia/blob/v2.2/notebooks/Proyecto_Final_Capstone_Novar.ipynb
 **Video demo:** https://drive.google.com/file/d/1DMhVk4nvT4OnvS_TD2CkKdzhl3Ulc-r3/view?usp=sharing
 
 ## 1. Problema
@@ -67,10 +67,10 @@ Exportaciones CSV/Excel ─► ETL (validación, imputación marcada, consolidac
 ## 6. Resultados (cuentas y meses no vistos)
 | Horizonte | MAE del ROAS | Mejora vs pronóstico ingenuo |
 |---|---|---|
-| 1 meses | 0.282 | +15.5 % |
-| 3 meses | 0.305 | +25.7 % |
-| 6 meses | 0.353 | +18.9 % |
-| 12 meses | 0.331 | -4.3 % |
+| 1 meses | 0.288 | +17.0 % |
+| 3 meses | 0.314 | +24.5 % |
+| 6 meses | 0.365 | +18.3 % |
+| 12 meses | 0.344 | -8.4 % |
 
 | Detección de anomalías | Esquema | Precisión | Recall | F1 |
 |---|---|---|---|---|
@@ -80,12 +80,12 @@ Exportaciones CSV/Excel ─► ETL (validación, imputación marcada, consolidac
 | Regla |z ROAS| > 3 | temporal | 85.7% | 54.5% | 66.7% |
 
 **Redacción (test ciego N=28, prompt P3)**: fidelidad final 100% ·
-texto del LLM sin corrección 86% · latencia media 10.80 s.
+texto del LLM sin corrección 86% · latencia media 8.15 s.
 
 **Impacto:** 18 h → 0.50 h por cliente en el escenario conservador
 (−97.2%); 0.05 h (medido en la prueba operativa).
 
-**Pruebas automatizadas:** 18 passed
+**Pruebas automatizadas:** 20 passed
 
 ## 7. Robustez y límites de uso
 | Métrica (deriva) | Cambio de la media | PSI | Nivel |
@@ -148,7 +148,7 @@ curl -X POST http://localhost:8000/reporte -H "Content-Type: application/json" \
 ```
 ```json
 {
- "version": "2.1",
+ "version": "2.2",
  "cuenta": "CLI-1b0dc833",
  "mes": "septiembre de 2026",
  "estado": "Óptimo",
@@ -210,8 +210,19 @@ Entrada inválida → `422` con `{"detail": "La columna «ingresos_usd» no cont
 ## 10. Versiones
 `v1.0` pipeline inicial · `v1.1` guardrail de atribución, robustez del clasificador · `v2.0` reglas + ML para proyección,
 anomalías y deterioro; validación por cliente y fecha; prueba operativa · `v2.1` robustez, versiones del prompt,
-endpoint REST, validación de entradas y licencia. Ver `CHANGELOG.md`.
+endpoint REST, validación de entradas y licencia · `v2.2` preprocesamiento ajustado dentro de cada partición, sal
+secreta obligatoria y límite de 320 tokens. Ver `CHANGELOG.md`.
 
-## 11. Ética
-Seudonimización (LOPDP), LLM local, aprobación humana obligatoria, auditoría de error por vertical y escala, y
-declaración de límites en `docs/MODEL_CARD.md`.
+## 11. Ética, privacidad y entorno de ejecución
+- **Demostración (este repositorio):** se ejecutó en Google Colab con archivos en Google Drive, con **datos
+  simulados**. El LLM (Qwen2.5-1.5B) corre dentro de la sesión, sin API comercial de terceros; Colab y Drive sí son
+  servicios de Google, así que esta demostración no es infraestructura exclusiva de la agencia.
+- **Despliegue propio (previsto):** `docker compose up` en un equipo de la agencia; en ese caso los datos de los
+  clientes no salen de ese equipo. Requiere GPU o tolera ~5–10 veces más latencia en CPU.
+- **Seudonimización:** SHA-256 con una **sal secreta obligatoria** (`NOVAR_SAL` en `.env`, que no se versiona; mínimo
+  16 caracteres). Sin sal válida el tablero y la API rechazan la seudonimización en lugar de usar una sal pública.
+  El mapeo nombre ↔ código se guarda fuera del repositorio. Es seudonimización, no anonimización: quien tenga la sal
+  y los nombres puede revertirla.
+- **Costos:** el experimento no tuvo desembolso adicional (Colab Pro ya disponible; modelos de código abierto). Operar
+  el sistema sí tiene costos: equipo con GPU o suscripción de cómputo, mantenimiento y tiempo de revisión humana.
+- Aprobación humana obligatoria, auditoría de error por vertical y escala, y límites declarados en `docs/MODEL_CARD.md`.

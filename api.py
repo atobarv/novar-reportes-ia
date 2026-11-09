@@ -1,5 +1,5 @@
 """
-Endpoint REST ligero (FastAPI) · Sistema de Generación Inteligente de Reportes de Marketing · v2.1
+Endpoint REST ligero (FastAPI) · Sistema de Generación Inteligente de Reportes de Marketing · v2.2
 
 Ejecutar:   uvicorn api:app --port 8000
 Documentación interactiva (OpenAPI): http://localhost:8000/docs
@@ -24,11 +24,11 @@ sys.path.insert(0, str(RAIZ))
 
 from src.agents.llm_narrative_generator import (AgenteAnalista, AgenteExtractor, AgentePronostico,  # noqa: E402
                                                 GuardrailNumerico, bloque_datos, plantilla_determinista)
-from src.etl.ingesta_marketing import anonimizar, limpiar  # noqa: E402
+from src.etl.ingesta_marketing import anonimizar, limpiar, sal_configurada  # noqa: E402
 from src.features.feature_engineering import preparar_dataset  # noqa: E402
 from src.models.anomalias import caracteristicas, imputar_anomalias  # noqa: E402
 
-VERSION = "2.1"
+VERSION = "2.2"
 app = FastAPI(title="Novar · Reportes inteligentes", version=VERSION,
               description="Borrador de reporte mensual con comparativo histórico y proyección del ROAS.")
 _ARTEFACTOS = {}
@@ -57,7 +57,8 @@ class Solicitud(BaseModel):
     registros: list[Registro] = Field(..., description="Historia mensual (ideal: todas las cuentas y ≥ 12 meses)")
     cliente: str = Field(..., description="Cuenta a reportar")
     mes: str | None = Field(None, description="Mes a reportar (AAAA-MM); por defecto, el último")
-    sal: str | None = Field(None, description="Si se envía, las cuentas se seudonimizan con SHA-256 + sal")
+    seudonimizar: bool = Field(True, description="Seudonimiza las cuentas con SHA-256 y la sal secreta del servidor "
+                                                "(variable NOVAR_SAL); la sal nunca viaja en la solicitud")
 
 
 @app.get("/salud")
@@ -71,10 +72,11 @@ def reporte(sol: Solicitud):
         crudo = pd.DataFrame([r.model_dump() for r in sol.registros])
         df, calidad = limpiar(crudo)
         cuenta = sol.cliente
-        if sol.sal:
-            df = anonimizar(df, sol.sal)
+        if sol.seudonimizar and not str(cuenta).startswith("CLI-"):
+            sal = sal_configurada()                  # ValueError → 422 si el servidor no tiene una sal segura
+            df = anonimizar(df, sal)
             import hashlib
-            cuenta = "CLI-" + hashlib.sha256((sol.sal + sol.cliente).encode()).hexdigest()[:8]
+            cuenta = "CLI-" + hashlib.sha256((sal + sol.cliente).encode()).hexdigest()[:8]
         df, _ = preparar_dataset(df)
         if cuenta not in set(df["cliente"]):
             raise ValueError(f"La cuenta «{sol.cliente}» no tiene meses con actividad en los registros enviados.")

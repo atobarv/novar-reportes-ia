@@ -1,5 +1,5 @@
 """
-Pruebas automatizadas del prototipo v2.1 (pytest).
+Pruebas automatizadas del prototipo v2.2 (pytest).
 Ejecutar desde la raíz del repositorio:  python -m pytest tests -v
 """
 import sys
@@ -18,7 +18,7 @@ from src.etl.ingesta_marketing import anonimizar, limpiar  # noqa: E402
 from src.etl.simulador_temporal import generar_dataset_temporal  # noqa: E402
 from src.features.feature_engineering import calcular_kpis, preparar_dataset  # noqa: E402
 from src.models.anomalias import DetectorAnomalias, caracteristicas, imputar_anomalias  # noqa: E402
-from src.models.pronostico import Pronosticador, _particiones, construir_pares  # noqa: E402
+from src.models.pronostico import PreprocesoPorParticion, Pronosticador, _particiones, construir_pares  # noqa: E402
 from src.rules.reglas_negocio import estado_por_regla, es_deterioro  # noqa: E402
 
 
@@ -63,9 +63,23 @@ def test_limpieza_formatos_y_fuga():
     assert calidad["columnas_excluidas_por_fuga"] == ["status_code"]
 
 
+def test_sal_obligatoria_y_segura(monkeypatch):
+    from src.etl.ingesta_marketing import sal_configurada, validar_sal
+    for mala in (None, "", "novar", "corta123"):
+        with pytest.raises(ValueError, match="NOVAR_SAL"):
+            validar_sal(mala)
+    monkeypatch.delenv("NOVAR_SAL", raising=False)
+    with pytest.raises(ValueError):
+        sal_configurada()
+    with pytest.raises(ValueError):
+        anonimizar(pd.DataFrame({"cliente": ["Clínica Sur"]}), "novar")
+    monkeypatch.setenv("NOVAR_SAL", "a3f9" * 8)
+    assert sal_configurada() == "a3f9" * 8
+
+
 def test_seudonimizacion():
     df = pd.DataFrame({"cliente": ["Clínica Uno", "Clínica Uno", "Tienda Dos"]})
-    a = anonimizar(df, "s1")
+    a = anonimizar(df, "s1-" + "x" * 16)
     assert a["cliente"].nunique() == 2 and a["cliente"].str.match(r"^CLI-[0-9a-f]{8}$").all()
 
 
@@ -88,6 +102,26 @@ def test_particiones_por_cliente_y_fecha(datos):
     for tr, te in _particiones(P, "cliente+temporal", corte=35):
         assert set(P.loc[tr, "cliente"]).isdisjoint(set(P.loc[te, "cliente"]))
         assert P.loc[tr, "t_objetivo"].max() <= 35 <= P.loc[te, "t"].min()
+
+
+def test_detector_se_ajusta_dentro_de_cada_particion(datos):
+    """NC1: alterar los datos de las cuentas de prueba no cambia la imputación de las cuentas de entrenamiento,
+    porque el detector se ajusta solo con filas de entrenamiento (y los puntajes z son causales por cuenta)."""
+    df, _ = datos
+    pre = PreprocesoPorParticion(df, caracteristicas(df), lambda: DetectorAnomalias(tasa=0.06, seed=42))
+    corte = 35
+    Q, tr, te = next(pre.particiones(pre.base, "cliente+temporal", corte))
+    prueba = set(pre.base.loc[te, "cliente"]); entreno = set(pre.base.loc[tr, "cliente"])
+    assert prueba and not prueba & entreno
+    assert pre.registro[-1]["filas_ajuste_detector"] == int((df["cliente"].isin(entreno) & (pre.pos <= corte)).sum())
+    alterado = df.copy()
+    m = alterado["cliente"].isin(prueba)
+    alterado.loc[m, "ingresos_usd"] *= 25
+    alterado.loc[m, "roas"] = alterado.loc[m, "ingresos_usd"] / alterado.loc[m, "gasto_usd"]
+    pre2 = PreprocesoPorParticion(alterado, caracteristicas(alterado), lambda: DetectorAnomalias(tasa=0.06, seed=42))
+    Q2, tr2, _ = next(pre2.particiones(pre2.base, "cliente+temporal", corte))
+    cols = ["rel_t", "rel_media3", "perfil_cuenta", "perfil_vertical", "rel_objetivo"]
+    assert np.allclose(Q.loc[tr, cols].values, Q2.loc[tr2, cols].values, equal_nan=True)
 
 
 def test_detector_supera_regla(datos, sistema):
